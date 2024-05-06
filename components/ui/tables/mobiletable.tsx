@@ -104,8 +104,6 @@ const handlePageClick = async (selected: { selected: number }) => {
     setTotalPages(data.totalPages)
     }
     setCurrentPage(newPage)
-    console.log("result total page",totalPages);
-    console.log("result select",currentPage);
   } catch ( error) {
     console.error('Error fetching inventory data:', error)
   }

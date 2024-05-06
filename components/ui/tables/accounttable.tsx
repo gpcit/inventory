@@ -47,6 +47,7 @@ async function fetchMobile () {
 }
 useEffect(() => {
   async function fetchAccountInventory () {
+    console.log("account table: ", getTableName)
     try {
       if(queryValue) {
         const apiUrlEndpoint = `/api/${getTableName}/accounts/?query=${queryValue}`
@@ -164,7 +165,7 @@ const closeModal = () => {
                 
               </tr>
             </thead>
-            {(accountInventories.length === null || accountInventories.length === 0) ? (
+            {(accountInventories?.length === null || accountInventories?.length === 0) ? (
                 <div className=""><span className=""> No data found... </span></div>
               ) : (
                 <>

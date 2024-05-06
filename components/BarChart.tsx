@@ -54,6 +54,8 @@ const fetchData = async () => {
       const gpclaptopData = await gpcLaptop.json();
       const gpcmacData = await gpcMac.json();
       const gpcMobileData = await gpcMobile.json();
+
+      console.log("Result for mobile: ", gpcMobileData)
       
       const lsidesktopData = await lsiDesktop.json();
       const lsilaptopData = await lsiLaptop.json();

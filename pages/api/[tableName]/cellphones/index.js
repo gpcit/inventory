@@ -13,7 +13,7 @@ export default async function handler (req, res) {
           let values = []
             if(searchQuery) {
               data = `SELECT * FROM ${tableName}
-              WHERE department LIKE ? OR number LIKE ? OR serial_number LIKE ? LIMIT 5`;
+              WHERE department LIKE ? OR number LIKE ? OR serial_number LIKE ? LIMIT 10`;
               values = [`%${searchQuery}%`, `%${searchQuery}%`, `%${searchQuery}%`, itemPerPage, (page - 1) * itemPerPage]
             
             } else {

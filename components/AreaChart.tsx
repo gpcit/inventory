@@ -50,26 +50,47 @@ export default function AreaChartView({tableName, mobileTable}: {tableName: stri
 // console.log(" Area Chart GPC Data to count", gpcDataToCount)
 const fetchData = async () => {
     try {
-        const [gpcDesktop, gpcLaptop, gpcMac, gpcMobile, lsiDesktop, lsiLaptop, lsiMac, lsiMobile, gkcDesktop, gkcLaptop, gkcMac, gkcMobile, gsrcDesktop, gsrcLaptop, gsrcMac, gsrcMobile] = await Promise.all([
-          fetch(`${process.env.NEXT_PUBLIC_URL}/api/gpc_inventory/computer_type/desktop`),
-          fetch(`${process.env.NEXT_PUBLIC_URL}/api/gpc_inventory/computer_type/laptop`),
-          fetch(`${process.env.NEXT_PUBLIC_URL}/api/gpc_inventory/computer_type/mac`),
-          fetch(`${process.env.NEXT_PUBLIC_URL}/api/gpc_mobile_inventory/countMobile`),
-  
-          fetch(`${process.env.NEXT_PUBLIC_URL}/api/lsi_inventory/computer_type/desktop`),
-          fetch(`${process.env.NEXT_PUBLIC_URL}/api/lsi_inventory/computer_type/laptop`),
-          fetch(`${process.env.NEXT_PUBLIC_URL}/api/lsi_inventory/computer_type/mac`),
-          fetch(`${process.env.NEXT_PUBLIC_URL}/api/lsi_mobile_inventory/countMobile`),
-  
-          fetch(`${process.env.NEXT_PUBLIC_URL}/api/gkc_inventory/computer_type/desktop`),
-          fetch(`${process.env.NEXT_PUBLIC_URL}/api/gkc_inventory/computer_type/laptop`),
-          fetch(`${process.env.NEXT_PUBLIC_URL}/api/gkc_inventory/computer_type/mac`),
-          fetch(`${process.env.NEXT_PUBLIC_URL}/api/gkc_mobile_inventory/countMobile`),
-  
-          fetch(`${process.env.NEXT_PUBLIC_URL}/api/gsrc_inventory/computer_type/desktop`),
-          fetch(`${process.env.NEXT_PUBLIC_URL}/api/gsrc_inventory/computer_type/laptop`),
-          fetch(`${process.env.NEXT_PUBLIC_URL}/api/gsrc_inventory/computer_type/mac`),
-          fetch(`${process.env.NEXT_PUBLIC_URL}/api/gsrc_mobile_inventory/countMobile`),
+        const [
+          gpcDesktop, gpcLaptop, gpcMac, gpcMobile,
+          gpcSQDesktop, gpcSQLaptop, gpcSQMac, 
+          lsiDesktop, lsiLaptop, lsiMac, lsiMobile,
+          lsiCanDesktop, lsiCanLaptop, lsiCanMac, 
+          gkcDesktop, gkcLaptop, gkcMac, gkcMobile, 
+          gsrcDesktop, gsrcLaptop, gsrcMac, gsrcMobile
+        ] = await Promise.all([
+          // Balintawak
+          fetch(`/api/gpc_inventory/computer_type/desktop`),
+          fetch(`/api/gpc_inventory/computer_type/laptop`),
+          fetch(`/api/gpc_inventory/computer_type/mac`),
+          fetch(`/api/gpc_mobile_inventory/countMobile`),
+
+          // SQ
+          fetch(`/api/gpc_sq_inventory/computer_type/desktop`),
+          fetch(`/api/gpc_sq_inventory/computer_type/laptop`),
+          fetch(`/api/gpc_sq_inventory/computer_type/mac`),
+
+          // Valenzuela
+          fetch(`/api/lsi_inventory/computer_type/desktop`),
+          fetch(`/api/lsi_inventory/computer_type/laptop`),
+          fetch(`/api/lsi_inventory/computer_type/mac`),
+          fetch(`/api/lsi_mobile_inventory/countMobile`),
+
+          // Canlubang
+          fetch(`/api/lsi_can_inventory/computer_type/desktop`),
+          fetch(`/api/lsi_can_inventory/computer_type/laptop`),
+          fetch(`/api/lsi_can_inventory/computer_type/mac`),
+          
+          // Greenkraft
+          fetch(`/api/gkc_inventory/computer_type/desktop`),
+          fetch(`/api/gkc_inventory/computer_type/laptop`),
+          fetch(`/api/gkc_inventory/computer_type/mac`),
+          fetch(`/api/gkc_mobile_inventory/countMobile`),
+          
+          // Green Siam
+          fetch(`/api/gsrc_inventory/computer_type/desktop`),
+          fetch(`/api/gsrc_inventory/computer_type/laptop`),
+          fetch(`/api/gsrc_inventory/computer_type/mac`),
+          fetch(`/api/gsrc_mobile_inventory/countMobile`),
         ]);
         if (!gpcDesktop.ok || !lsiDesktop.ok || !gkcDesktop.ok || !gsrcDesktop.ok) {
           throw new Error('Failed to fetch data');
@@ -78,11 +99,19 @@ const fetchData = async () => {
         const gpclaptopData = await gpcLaptop.json();
         const gpcmacData = await gpcMac.json();
         const gpcMobileData = await gpcMobile.json();
+
+        const gpcSQdesktopData = await gpcSQDesktop.json();
+        const gpcSQlaptopData = await gpcSQLaptop.json();
+        const gpcSQmacData = await gpcSQMac.json();
         
         const lsidesktopData = await lsiDesktop.json();
         const lsilaptopData = await lsiLaptop.json();
         const lsimacData = await lsiMac.json();
         const lsiMobileData = await lsiMobile.json();
+
+        const lsiCandesktopData = await lsiCanDesktop.json();
+        const lsiCanlaptopData = await lsiCanLaptop.json();
+        const lsiCanmacData = await lsiCanMac.json();
   
         const gkcdesktopData = await gkcDesktop.json();
         const gkclaptopData = await gkcLaptop.json();
@@ -95,12 +124,12 @@ const fetchData = async () => {
         const gsrcMobileData = await gsrcMobile.json();
         
         
-        setGpcDataToCount(gpcdesktopData.count + gpcmacData.count);
-        setGpcLaptopToCount(gpclaptopData.count)
+        setGpcDataToCount(gpcdesktopData.count + gpcmacData.count + gpcSQdesktopData.count + gpcSQmacData.count);
+        setGpcLaptopToCount(gpclaptopData.count + gpcSQlaptopData.count)
         setGpcMobileToCount(gpcMobileData.count)
   
-        setLsiDataToCount(lsidesktopData.count + lsimacData.count);
-        setLsiLaptopToCount(lsilaptopData.count)
+        setLsiDataToCount(lsidesktopData.count + lsimacData.count + lsiCandesktopData + lsiCanmacData);
+        setLsiLaptopToCount(lsilaptopData.count + lsiCanlaptopData)
         setLsiMobileToCount(lsiMobileData.count)
   
         setGkcDataToCount(gkcdesktopData.count + gkcmacData.count);

@@ -30,8 +30,6 @@ export default function Page() {
 
     const handleDropdown = (value: string) => {
         const pageLoading = toast.loading(`Selecting company, Please wait...`, {duration: 3000})
-       
-        
         setTimeout(() => {
             toast.success(`Loading Successful`, {id: pageLoading})
             if(value === 'gpc_inventory') {
@@ -40,12 +38,15 @@ export default function Page() {
             } else if (value === 'lsi_inventory') {
                 setBranch('Valenzuela')
                 setTablename('lsi_accounts')
+            } else if (value === 'gkc_inventory') {
+                setTablename('gkc_accounts')
+            } else if (value === 'gsrc_inventory') {
+                setTablename('gsrc_accounts')
             } else {
                 setBranch('')
             }
             setCompany(value)
             setValue(value)
-            
         }, 2000)
         
     }
@@ -110,7 +111,7 @@ export default function Page() {
                     
                    {name !== '' && <> <Search placeholder="Search...." /><CreateInventory onClick={openModal}/> </>}
                 </div>
-                    {gettable !== '' && (tableAccounts?.length === 0 || tableAccounts === null) && <Upload tablename={gettable} onDataUploaded={dataUploaderHandler}/>}
+                    {gettable !== '' && (tableAccounts?.length === 0 || tableAccounts === null || tableAccounts === undefined) && <Upload tablename={gettable} onDataUploaded={dataUploaderHandler}/>}
                 <div className="flex flex-row items-center mt-1">
                     <div className="relative flex flex-col items-center justify-between md:mt-2">
                         <label className="">Select Company:</label>

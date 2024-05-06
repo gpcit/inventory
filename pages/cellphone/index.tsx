@@ -5,7 +5,7 @@ import { lusitana } from "@/styles/font";
 import {CreateInventory} from "@/components/ui/buttons";
 import { Fragment, use, useEffect, useState } from "react";
 import Dropdown from "@/components/ui/dropdowns/dropdown";
-import AccountTableInventory from "@/components/ui/tables/mobiletable";
+import MobileTableInventory from "@/components/ui/tables/mobiletable";
 import  {tableName}  from "@/lib/company";
 import Form from "@/components/ui/inventory/create-data/CreateMobile";
 import Modal from "@/components/modal";
@@ -31,6 +31,7 @@ const [dataUploaderHandler, setDataUploaderHandler] = useState<() => void>(() =>
             setTableName(value)
             setValue(value)
         }, 2000)
+        console.log("current table: ", tableName)
     }
     
     const openModal = () => {
@@ -80,7 +81,7 @@ const [dataUploaderHandler, setDataUploaderHandler] = useState<() => void>(() =>
                         <Dropdown onCompanyChange={handleDropdown} />
                     </div>
                 </div>
-                {name !== '' && <AccountTableInventory getTableName={getTable} onDataSubmitted={handleFormSubmit}/>}
+                {name !== '' && <MobileTableInventory getTableName={getTable} onDataSubmitted={handleFormSubmit}/>}
                 {isModalOpen && (
                         <Modal onClose={closeModal} title="Mobile" companyName={name} onSubmit={handleFormSubmit} tablename={getTable}>
                             <Form gettableName={getTable} onDataSubmitted={handleFormSubmit}/>
