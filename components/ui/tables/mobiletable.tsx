@@ -9,13 +9,15 @@ import BarcodeMobileModal from "@/components/QRCodeMobileModal";
 import {tableName} from "@/lib/company";
 import MobileEditModal from "@/components/ModalEditInventory";
 import DeleteMobileModal from "../inventory/delete-data/DeleteMobileInventory";
+import { XCircleIcon, CheckCircleIcon } from "@heroicons/react/24/solid";
 
 interface MobileInventoryProps {
     getTableName: string,
     onDataSubmitted: () => void;
+    triggerValue: string
 }
 
-export default function MobileTableInventory ({getTableName, onDataSubmitted}: MobileInventoryProps) {
+export default function MobileTableInventory ({triggerValue, getTableName, onDataSubmitted}: MobileInventoryProps) {
 
 const [mobileInventory, setMobileInventory] = useState<MobileInventoryList[]>([])
 const [selectedId, setSelectedId] = useState<number | null>(null)
@@ -30,19 +32,37 @@ const [modalData, setModalData] = useState<any>(null)
 const getQuery = new URLSearchParams(window.location.search)
 const queryValue = getQuery.get('query')
 let company = tableName.find(company => company.name === getTableName)?.company || getTableName
-async function fetchMobile () {
+
+console.log("value for trigger: ", triggerValue)
+// function for fetching data for Mobile
+async function fetchMobile (trigger: string) {
   try {
+    let apiUrlEndpoint;
+    let response
+    let data
     if(queryValue) {
-      const apiUrlEndpoint = `/api/${getTableName}/cellphones/?query=${queryValue}`
-      const response = await fetch(apiUrlEndpoint);
-      const data = await response.json();
+      if(trigger === 'active') {
+        apiUrlEndpoint = `/api/${getTableName}/cellphones/?query=${queryValue}`
+        response = await fetch(apiUrlEndpoint);
+        data = await response.json();
+      } else {
+        apiUrlEndpoint = `/api/${getTableName}/cellphones/inactive/?query=${queryValue}`
+        response = await fetch(apiUrlEndpoint);
+        data = await response.json();
+      }
       setMobileInventory(data.results)
       setTotalPages(data.totalPages);
+      setCurrentPage(1);
     } else {
-      const apiUrlEndpoint = `/api/${getTableName}/cellphones/?page=${currentPage}`;
-      const response = await fetch(apiUrlEndpoint);
-      const data = await response.json()
-      
+      if(trigger === 'active') {
+        apiUrlEndpoint = `/api/${getTableName}/cellphones/?page=${currentPage}`;
+        response = await fetch(apiUrlEndpoint);
+        data = await response.json()
+      } else {
+        apiUrlEndpoint = `/api/${getTableName}/cellphones/inactive/?page=${currentPage}`;
+        response = await fetch(apiUrlEndpoint);
+        data = await response.json()
+      }
       setMobileInventory(data.results);
       setCurrentPage(1);
       setTotalPages(data.totalPages)
@@ -54,17 +74,34 @@ async function fetchMobile () {
 useEffect(() => {
   async function fetchMobileInventory () {
     try {
-      if(queryValue) {
-        const apiUrlEndpoint = `/api/${getTableName}/cellphones/?query=${queryValue}`
-        const response = await fetch(apiUrlEndpoint);
-        const data = await response.json();
+    let apiUrlEndpoint;
+    let response
+    let data
+    let get_serial
+    if(queryValue) {
+      if(triggerValue === 'active') {
+        apiUrlEndpoint = `/api/${getTableName}/cellphones/?query=${queryValue}`
+        response = await fetch(apiUrlEndpoint);
+        data = await response.json();
+      } else {
+        apiUrlEndpoint = `/api/${getTableName}/cellphones/inactive/?query=${queryValue}`
+        response = await fetch(apiUrlEndpoint);
+        data = await response.json();
+      }
         setMobileInventory(data.results)
         setTotalPages(data.totalPages);
       } else {
-        const apiUrlEndpoint = `/api/${getTableName}/cellphones`;
-        const response = await fetch(apiUrlEndpoint);
-        const data = await response.json()
-        const get_serial = data.data?.map((res: { serial_number: any; }) => res.serial_number)
+        if (triggerValue === 'active') {
+          apiUrlEndpoint = `/api/${getTableName}/cellphones`;
+          response = await fetch(apiUrlEndpoint);
+          data = await response.json()
+          get_serial = data.data?.map((res: { serial_number: any; }) => res.serial_number)
+        } else {
+          apiUrlEndpoint = `/api/${getTableName}/cellphones/inactive`
+          response = await fetch(apiUrlEndpoint);
+          data = await response.json();
+          get_serial = data.data?.map((res: { serial_number: any; }) => res.serial_number)
+        }
         setDuplicate(get_serial)
         setMobileInventory(data.results);
         setCurrentPage(1);
@@ -74,32 +111,62 @@ useEffect(() => {
         console.error('Error fetching data', error)
     }
   }
-        fetchMobileInventory()
-}, [getTableName, onDataSubmitted, queryValue])
-console.log("Result for duplicate: ", duplicate)
+    fetchMobileInventory()
+}, [getTableName, queryValue, triggerValue, onDataSubmitted])
+
+// action button for edit
 const handleEditSubmit = async () => {
-  closeEditModal();
-  fetchMobile();
+ 
+  if(triggerValue === 'active') {
+    fetchMobile('active')
+    closeEditModal();
+    onDataSubmitted()
+  } else {
+    fetchMobile('inactive')
+    closeEditModal();
+    onDataSubmitted()
+  }
+  ;
 }
+// action button for delete
 const handleDeleteSubmit = async () => {
   closeDeleteModal();
-  fetchMobile();
+  if(triggerValue === 'active') {
+    fetchMobile('active')
+  } else {
+    fetchMobile('inactive')
+  }
 }
 
+// function for pagination
 const handlePageClick = async (selected: { selected: number }) => {
   try {
     const newPage = selected.selected + 1
-    
+    let apiUrlEndpoint;
+    let response;
+    let data;
     if (newPage > currentPage) {
-    const apiUrlEndpoint = `/api/${getTableName}/cellphones?page=${newPage}`;
-    const response = await fetch(apiUrlEndpoint);
-    const data = await response.json()
-    setMobileInventory(data.results)
-    setTotalPages(data.totalPages)
+      if(triggerValue === 'active') {
+        apiUrlEndpoint = `/api/${getTableName}/cellphones?page=${newPage}`;
+        response = await fetch(apiUrlEndpoint);
+        data = await response.json()
+      } else {
+        apiUrlEndpoint = `/api/${getTableName}/cellphones/inactive?page=${newPage}`;
+        response = await fetch(apiUrlEndpoint);
+        data = await response.json()
+      }
+        setMobileInventory(data.results)
+        setTotalPages(data.totalPages)
     } else if (newPage < currentPage) {
-    const apiUrlEndpoint = `/api/${getTableName}/cellphones?page=${newPage}`;
-    const response = await fetch(apiUrlEndpoint);
-    const data = await response.json()
+      if (triggerValue === 'active') {
+        apiUrlEndpoint = `/api/${getTableName}/cellphones?page=${newPage}`;
+        response = await fetch(apiUrlEndpoint);
+        data = await response.json()
+      } else {
+        apiUrlEndpoint = `/api/${getTableName}/cellphones/inactive?page=${newPage}`;
+        response = await fetch(apiUrlEndpoint);
+        data = await response.json()
+      }
     setMobileInventory(data.results)
     setTotalPages(data.totalPages)
     }
@@ -109,7 +176,6 @@ const handlePageClick = async (selected: { selected: number }) => {
   }
   
 };
-
 const handleSave = async () => {
   try {
       // Call any necessary functions or perform any actions here
@@ -145,7 +211,6 @@ const viewDetails = async (id: number) => {
 const openModal = async (id: number) => {
   setSelectedId(id)
   setIsModalOpen(true)
-  console.log(selectedId)
   try {
     const res = await fetch (`/api/${getTableName}/cellphones/${id}`)
     if(!res.ok){
@@ -186,6 +251,7 @@ const closeDeleteModal = () => {
   setIsDeleteModalOpen(false);
   setSelectedId(null)
 }
+
        return (  
         <div className="overflow-x-auto sm:p-2">
           <div className="inline-block min-w-full align-middle">
@@ -203,9 +269,6 @@ const closeDeleteModal = () => {
                       Brand
                     </th>
                     <th scope="col" className="px-3 py-1 font-extrabold">
-                      Model / Specs
-                    </th>
-                    <th scope="col" className="px-3 py-1 font-extrabold">
                       IMEI
                     </th>
                     <th scope="col" className="px-3 py-1 font-extrabold">
@@ -213,6 +276,9 @@ const closeDeleteModal = () => {
                     </th>
                     <th scope="col" className="px-3 py-1 font-extrabold">
                       Number
+                    </th>
+                    <th scope="col" className="px-3 py-1 font-extrabold text-center">
+                      Status
                     </th>
                     <th scope="col" className="px-3 py-1 font-extrabold">
                       Date Issued
@@ -224,7 +290,7 @@ const closeDeleteModal = () => {
                 </thead>
                 
                 <tbody className="bg-white cursor-pointer">
-                  {mobileInventory.length === null || mobileInventory.length === 0 ? (
+                  {mobileInventory?.length === null || mobileInventory?.length === 0 ? (
                     <span> No data found... </span>
                   ): (
                     <>
@@ -242,13 +308,6 @@ const closeDeleteModal = () => {
                           {inventory.brand}
                         </td>
                         <td className="px-3 py-3 whitespace-nowrap">
-                          {inventory.model_specs?.split(",").map((item, index) => (
-                            <div key={index}>
-                              {item.trim()}
-                            </div>
-                          ))}
-                        </td>
-                        <td className="px-3 py-3 whitespace-nowrap">
                         {inventory.imei?.split("IMEI").map((imei, index) => (
                             index > 0 && (
                                 <div key={index}>
@@ -263,11 +322,16 @@ const closeDeleteModal = () => {
                         <td className="px-3 py-3 whitespace-nowrap">
                         {inventory.number}
                         </td>
+                        <td className="px-3 py-3 whitespace-nowrap ">
+                          <div className="flex justify-center items-center">
+                            {inventory.is_active_id === 1 ? <CheckCircleIcon className="rounded-full w-5 h-5  text-green-800"/> : <XCircleIcon className="rounded-full w-5 h-5  text-red-800"/>}
+                          </div>
+                        </td>
                         <td className="px-3 py-3 whitespace-nowrap">
                           {inventory.date_issued}
                         </td>
-                        <td className="py-3 pl-6 whitespace-nowrap">
-                          <div className="flex items-center gap-3">
+                        <td className="py-3 pl-6 whitespace-nowrap ">
+                          <div className="flex justify-center items-center gap-3">
                             <UpdateMobileInventory id={inventory.id} onClick={openModal}/>
                             
                             <QRGeneratorButton 
@@ -288,6 +352,7 @@ const closeDeleteModal = () => {
                       <BarcodeMobileModal modalData={modalData} company={company} tablename={getTableName} id={selectedId} onClose={closeQrModal} />
                     )}
                     {isModalOpen && (
+                      
                       <EditMobileModal onClose={closeEditModal} onSubmit={handleEditSubmit} id={selectedId} tablename={getTableName}/>  
                     )}
                     {isDeleteModalOpen && (

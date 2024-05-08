@@ -13,19 +13,19 @@ export default async function handler (req, res) {
           let pageTotal;
           let values = []
             if(searchQuery) {
-              pageTotal = `SELECT COUNT(*) as total FROM ${tableName} WHERE is_active_id = 1`
-              data = `SELECT * FROM ${tableName}
+                pageTotal = `SELECT COUNT(*) as total FROM ${tableName} WHERE is_active_id = 2`
+                data = `SELECT * FROM ${tableName}
                       WHERE (assigned_to LIKE ? OR department LIKE ? OR number LIKE ? OR serial_number LIKE ?) 
-                      AND is_active_id = 1 
+                      AND is_active_id = 2 
                       LIMIT ? 
                       OFFSET ?`;
               values = [`%${searchQuery}%`, `%${searchQuery}%`, `%${searchQuery}%`, `%${searchQuery}%`, itemPerPage, (page - 1) * itemPerPage]
             
             } else {
-              pageTotal = `SELECT COUNT(*) as total FROM ${tableName} WHERE is_active_id = 1`
-              data = `SELECT * FROM ${tableName} WHERE is_active_id = 1 ORDER BY date_created desc LIMIT ? OFFSET ?`;
-              values = [itemPerPage, (page - 1) * itemPerPage]
-              }
+                pageTotal = `SELECT COUNT(*) as total FROM ${tableName} WHERE is_active_id = 2`
+                data = `SELECT * FROM ${tableName} WHERE is_active_id = 2 ORDER BY date_created desc LIMIT ? OFFSET ?`;
+                values = [itemPerPage, (page - 1) * itemPerPage]
+            }
             const [inventory, totalCountRows] = await Promise.all([
               query(data, values),
               query(pageTotal)
@@ -49,7 +49,7 @@ export default async function handler (req, res) {
         const inclusion = req.body.inclusion;
         const comment = req.body.comment;
         const date_issued = req.body.date_issued
-        const is_active_id = 1
+        const is_active_id = req.body.is_active_id
         const date_purchased = req.body.date_purchased
         if (!assigned_to || !brand) {
           return res.status(400).json({ error: 'Missing required fields' });

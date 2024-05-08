@@ -30,7 +30,7 @@ const EditInventoryModal: React.FC<ModalProps> = ({onClose, onSubmit, tablename,
   // handle for changing the value in inputs
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
-    setFormData(prevState => ({
+    setFormData((prevState) => ({
       ...prevState,
       [name]: value,
     }));

@@ -12,26 +12,27 @@ export default function OldMobile() {
 
    
     useEffect(() => {
-        const fetchOldUnit = async (page: number) => {
+        const fetchOldUnit = async () => {
+            let get_date;
             try {
-                const response = await fetch(`/api/mobile-oldunit?page=${page}`)
+                const response = await fetch(`/api/mobile-oldunit`)
                 if(response.ok){
                     const data = await response.json()
-                    const get_date = data?.inventory.map((date: any) => date.date_issued)
-                    console.log(get_date);
+                    get_date = data?.inventory?.map((date: any) => date.date_issued)
                     setInventories(data.results)
                     setTotalPages(data.totalPages)
-                    setCurrentPage(page)
-                } else {
+                }
+                 else {
                     throw new Error ('Failed to fetch data')
                 }
             } catch (error) {
                 console.error('Error Fetching Old Mobile:', error)
             }
+            
         }
-        fetchOldUnit(currentPage)
+        fetchOldUnit()
         // console.log("this is current page inside useEffect: ", currentPage)
-    }, [currentPage])
+    },)
     
     const handlePageClick = async (selected: { selected: number }) => {
         try {
@@ -129,47 +130,49 @@ export default function OldMobile() {
                             </tr>
                         </thead>
                         <tbody className="bg-white">
-                          
-                  {inventories.map((inventory) => (
-                    <tr key={inventory.id + inventory.source_table}
-                      className="w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
-                    >
-                    <td className="px-3 py-3 pl-6 whitespace-nowrap">
-                        {inventory.source_table}
-                    </td>
-                      <td className="py-3 pl-6 whitespace-nowrap">
-                        <div className="flex items-center gap-3">
-                          <p>{inventory.assigned_to}</p>
-                        </div>
-                      </td>
-                      <td className="px-3 py-3 whitespace-nowrap">
-                        {inventory.imei?.split("IMEI").map((imei, index) => (
-                            index > 0 && (
-                            <div key={index}>
-                                IMEI{imei.trim()}
-                            </div>
-                        )
-                        ))}
-                      </td>
-                      <td className="px-3 py-3 whitespace-nowrap">
-                        {inventory.serial_number}
-                      </td>
-                      <td className="px-3 py-3 whitespace-nowrap">
-                        {inventory.date_issued}
-                      </td>
-                      <td className="px-3 py-3 whitespace-nowrap">
-                        {calculateYearsAge(inventory.date_issued)} 
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
+                            {inventories.map((inventory) => (
+                            <tr key={inventory.id + inventory.source_table}
+                                className="w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
+                                >
+                                <td className="px-3 py-3 pl-6 whitespace-nowrap">
+                                    {inventory.source_table}
+                                </td>
+                                <td className="py-3 pl-6 whitespace-nowrap">
+                                    <div className="flex items-center gap-3">
+                                    <p>{inventory.assigned_to}</p>
+                                    </div>
+                                </td>
+                                <td className="px-3 py-3 whitespace-nowrap">
+                                    {inventory.imei?.split("IMEI").map((imei, index) => (
+                                        index > 0 && (
+                                        <div key={index}>
+                                            IMEI{imei.trim()}
+                                        </div>
+                                    )
+                                    ))}
+                                </td>
+                                <td className="px-3 py-3 whitespace-nowrap">
+                                    {inventory.serial_number}
+                                </td>
+                                <td className="px-3 py-3 whitespace-nowrap">
+                                    {inventory.date_issued}
+                                </td>
+                                <td className="px-3 py-3 whitespace-nowrap">
+                                    {calculateYearsAge(inventory.date_issued)} 
+                                </td>
+                            </tr>
+                            ))}
+                        </tbody>
                     </table>
                 </div>
-                
             </div>
-            
         </div>
-        <CustomPagination pageCount={totalPages} currentPage={currentPage} onPageChange={handlePageClick}/>
+        {totalPages === 0 ? (
+            <div className='flex justify-center items-center text-sm'><span>***** There's no data  *****</span></div>
+        ) : (
+            <CustomPagination pageCount={totalPages} currentPage={currentPage} onPageChange={handlePageClick}/>
+        )  
+        }
         </>
         )
 }

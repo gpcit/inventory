@@ -31,13 +31,16 @@ const EditAccountModal: React.FC<ModalProps> = ({onClose, onSubmit, tablename, i
     }));
   };
   // handle for changing the value of dropdown
-  const handleChangeStatus = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleChangeStatus = (event: React.ChangeEvent<HTMLSelectElement | HTMLTextAreaElement>) => {
     const selectedValue = event.target.value
     setFormData(prevState => ({
       ...prevState,
       is_active_id: selectedValue
     }));
-   }
+
+    console.log("Result for selected value: ", selectedValue)
+  }
+
 
   // handle for getting the specific data in database using the unique id
   
@@ -56,7 +59,6 @@ const EditAccountModal: React.FC<ModalProps> = ({onClose, onSubmit, tablename, i
       }
     }
     fetchAccountTable()
-    console.log("Result of the status inside fetchAccount: ", getstatus)
   }, [tablename, id, getstatus])
 
   // this function to be called upon clicking the save button in edit modal and automaticall save in the database and show in the table

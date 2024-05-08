@@ -24,7 +24,6 @@ export default function Oldunit (){
     useEffect(() => {
           fetchOldUnit()
     }, [])
-
     function calculateYearsAge(datePurchased: string): string {
     const now = new Date();
     const purchasedDate = new Date(datePurchased);
@@ -86,41 +85,48 @@ export default function Oldunit (){
                         </tr>
                     </thead>
                     <tbody className="bg-white">
-              {inventories.map((inventory) => (
-                <tr key={inventory.id}
-                  className="w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
-                >
-                <td className="px-3 py-3 pl-6 whitespace-nowrap">
-                    {inventory.source_table}
-                </td>
-                  <td className="py-3 pl-6 whitespace-nowrap">
-                    <div className="flex items-center gap-3">
-                      <p>{inventory.pc_name}</p>
-                    </div>
-                  </td>
-                  <td className="px-3 py-3 whitespace-nowrap">
-                    {inventory.mac_address}
-                  </td>
-                  {/* <td className="px-3 py-3 whitespace-nowrap">
-                    {inventory.computer_type}
-                  </td>
-                  <td className="px-3 py-3 whitespace-nowrap">
-                    {inventory.specs}
-                  </td>
-                  <td className="px-3 py-3 whitespace-nowrap">
-                    {inventory.supplier}
-                  </td> */}
-                  <td className="px-3 py-3 whitespace-nowrap">
-                    {inventory.date_purchased}
-                  </td>
-                  <td className="px-3 py-3 whitespace-nowrap">
-                    {calculateYearsAge(inventory.date_purchased)}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
+                        {inventories.map((inventory) => (
+                          <tr
+                            key={inventory.id}
+                            className="w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
+                          >
+                            <td className="px-3 py-3 pl-6 whitespace-nowrap">
+                              {inventory.source_table}
+                            </td>
+                            <td className="py-3 pl-6 whitespace-nowrap">
+                              <div className="flex items-center gap-3">
+                                <p>{inventory.pc_name}</p>
+                              </div>
+                            </td>
+                            <td className="px-3 py-3 whitespace-nowrap">
+                              {inventory.mac_address}
+                            </td>
+                            {/* Uncomment and add other fields as needed */}
+                            {/* <td className="px-3 py-3 whitespace-nowrap">
+                              {inventory.computer_type}
+                            </td>
+                            <td className="px-3 py-3 whitespace-nowrap">
+                              {inventory.specs}
+                            </td>
+                            <td className="px-3 py-3 whitespace-nowrap">
+                              {inventory.supplier}
+                            </td> */}
+                            <td className="px-3 py-3 whitespace-nowrap">
+                              {inventory.date_purchased}
+                            </td>
+                            <td className="px-3 py-3 whitespace-nowrap">
+                              {calculateYearsAge(inventory.date_purchased)}
+                            </td>
+                          </tr>
+                        ))}
+                    </tbody>
                 </table>
             </div>
+            {inventories.length === 0 ? (
+                  <div className='flex justify-center items-center text-sm'><span>***** There's no data  *****</span></div>
+                ): (
+                  ''
+                )}
         </div>
     </div>
     )

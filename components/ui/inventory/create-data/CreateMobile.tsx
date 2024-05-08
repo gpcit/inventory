@@ -1,15 +1,18 @@
 'use client'
 import { useState, useEffect, FormEvent } from 'react';
 import toast from 'react-hot-toast';
+import { status } from '@/lib/company';
 
 interface FormProps {
   gettableName: string;
+  triggerValue: string;
   onDataSubmitted: () => void; // Callback function to handle data submission
 }
 
-export default function Form({ gettableName, onDataSubmitted }: FormProps) {
+export default function Form({triggerValue, gettableName, onDataSubmitted }: FormProps) {
   const [isDuplicate, setIsDuplicate] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [getTriggerValue, setGetTriggerValue] = useState(0)
   const [formData, setFormData] = useState({
     assigned_to: '',
     department: '',
@@ -22,10 +25,11 @@ export default function Form({ gettableName, onDataSubmitted }: FormProps) {
     inclusion: '',
     date_issued: '',
     comment: '',
-    date_purchased: ''
+    date_purchased: '',
+    is_active_id: 1
   });
   // const [create, setCreated] = useState(false);
-
+  
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prevState => ({
@@ -34,11 +38,12 @@ export default function Form({ gettableName, onDataSubmitted }: FormProps) {
     }));
    
   };
-  
+  console.log("Result for trigger: ", triggerValue)
   async function addMobileInventory(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const addToastLoading = toast.loading('Adding new data. Please wait...', {duration: 3500, position: "top-center"})
     try {
+      let res;
       const postInventory = {
         method: "POST",
         headers: {
@@ -56,12 +61,17 @@ export default function Form({ gettableName, onDataSubmitted }: FormProps) {
         inclusion: formData.inclusion,
         comment: formData.comment,
         date_issued: formData.date_issued,
-        date_purchased: formData.date_purchased
+        date_purchased: formData.date_purchased,
+        is_active_id: formData.is_active_id
           // tableName: gettableName
         }),
       };
-      const res = await fetch(`/api/${gettableName}/cellphones`, postInventory);
-      const response = await res.json();
+      if(triggerValue === 'active') {
+        res = await fetch(`/api/${gettableName}/cellphones`, postInventory);
+      } else {
+        res = await fetch(`/api/${gettableName}/cellphones/inactive`, postInventory);
+      }
+       const response = await res.json();
       if (response && response.response && response.response.message === "success") {
         setTimeout(() => {
           setFormData({
@@ -76,7 +86,8 @@ export default function Form({ gettableName, onDataSubmitted }: FormProps) {
           inclusion: '',
           comment: '',
           date_issued: '',
-          date_purchased: ''
+          date_purchased: '',
+          is_active_id: 0
           });
           onDataSubmitted();
           toast.success("Data has been successfully added", {id: addToastLoading});
@@ -92,13 +103,21 @@ export default function Form({ gettableName, onDataSubmitted }: FormProps) {
       toast.error('Unable to add new data')
     }
   }
+  const handleChangeStatus = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedValue = Number(event.target.value)
+    setFormData(prevState => ({
+      ...prevState,
+      is_active_id: selectedValue
+    }));
+  }
+ 
 
   return (
     <form onSubmit={addMobileInventory}>
       <div className="p-4 rounded-md grid grid-cols-6 border-2 border-x-gray-400 shadow-2xl mx-2 gap-1 bg-gray-200">
        
         {/* Assigned To */}
-        <div className="mb-4 col-span-4">
+        <div className="mb-2 col-span-4">
           <label htmlFor="assigned_to" className="block mb-2 text-sm font-semibold">
             Assigned To
           </label>
@@ -113,7 +132,7 @@ export default function Form({ gettableName, onDataSubmitted }: FormProps) {
           />
         </div>
         {/* Department */}
-        <div className="mb-4 col-span-2">
+        <div className="mb-2 col-span-2">
           <label htmlFor="department" className="block mb-2 text-sm font-semibold">
             Department
           </label>
@@ -129,7 +148,7 @@ export default function Form({ gettableName, onDataSubmitted }: FormProps) {
         </div>
 
         {/* Contact Number */}
-        <div className="mb-4 col-span-2">
+        <div className="mb-2 col-span-2">
           <label htmlFor="number" className="block mb-2 text-sm font-semibold">
             Number
           </label>
@@ -144,7 +163,7 @@ export default function Form({ gettableName, onDataSubmitted }: FormProps) {
           />
         </div>
         {/* Brand */}
-        <div className="mb-4 col-span-2">
+        <div className="mb-2 col-span-2">
           <label htmlFor="brand" className="block mb-2 text-sm font-semibold">
             Brand
           </label>
@@ -159,7 +178,7 @@ export default function Form({ gettableName, onDataSubmitted }: FormProps) {
           />
         </div>
         {/* Serial Number */}
-        <div className="mb-4 col-span-2">
+        <div className="mb-2 col-span-2">
           <label htmlFor="serial_number" className="block mb-2 text-sm font-semibold">
             Serial Number
           </label>
@@ -178,7 +197,7 @@ export default function Form({ gettableName, onDataSubmitted }: FormProps) {
         </div>
 
         {/* Email and Password */}
-        <div className="mb-4 col-span-3">
+        <div className="mb-2 col-span-3">
           <label htmlFor="email_password" className="block mb-2 text-sm font-semibold">
             Email and Password
           </label>
@@ -189,11 +208,11 @@ export default function Form({ gettableName, onDataSubmitted }: FormProps) {
             value={formData.email_password}
             onChange={handleChange}
             className="block w-full px-3 py-2 text-sm border border-gray-200 rounded-md focus:outline-none focus:border-black shadow-md"
-            placeholder="Enter Serial Number"
+            placeholder="Enter Email and Password"
           />
         </div>
         {/* IMEI */}
-        <div className="mb-4 col-span-3">
+        <div className="mb-2 col-span-3">
           <label htmlFor="imei" className="block mb-2 text-sm font-semibold">
             IMEI
           </label>
@@ -208,7 +227,7 @@ export default function Form({ gettableName, onDataSubmitted }: FormProps) {
         </div>
         
         {/* Inclusion */}
-        <div className="mb-4 col-span-2">
+        <div className="mb-2 col-span-2">
           <label htmlFor="inclusion" className="block mb-2 text-sm font-semibold">
             Inclusion
           </label>
@@ -223,7 +242,7 @@ export default function Form({ gettableName, onDataSubmitted }: FormProps) {
         </div>
 
         {/* Model Specs */}
-        <div className="mb-4 col-span-2">
+        <div className="mb-2 col-span-2">
           <label htmlFor="model_specs" className="block mb-2 text-sm font-semibold">
             Model / Specs
           </label>
@@ -237,7 +256,7 @@ export default function Form({ gettableName, onDataSubmitted }: FormProps) {
           />
         </div>
         {/* Comment */}
-        <div className="mb-4 col-span-2">
+        <div className="mb-2 col-span-2">
           <label htmlFor="comment" className="block mb-2 text-sm font-semibold">
             Comment
           </label>
@@ -251,7 +270,7 @@ export default function Form({ gettableName, onDataSubmitted }: FormProps) {
           />
         </div>
         {/* Date Issued */}
-        <div className="mb-4 col-span-3">
+        <div className="mb-2 col-span-3">
           <label htmlFor="date_issued" className="block mb-2 text-sm font-semibold">
             Date Issued
           </label>
@@ -265,7 +284,7 @@ export default function Form({ gettableName, onDataSubmitted }: FormProps) {
           />
         </div>
         {/* Date Purchased */}
-        <div className="mb-4 col-span-3">
+        <div className="mb-2 col-span-3">
           <label htmlFor="date_purchased" className="block mb-2 text-sm font-semibold">
             Date Purchased
           </label>
@@ -278,6 +297,23 @@ export default function Form({ gettableName, onDataSubmitted }: FormProps) {
             className="block w-full px-3 py-2 text-sm border border-gray-200 rounded-md focus:outline-none focus:border-black shadow-md"
           />
         </div>
+        {/* Status */}
+        <div className=" col-span-3 flex flex-row sm:col-start-5 justify-center items-center">
+                  <label htmlFor="is_active_id" className="block mb-1 mx-2 text-sm font-semibold">
+                    Status:
+                  </label>
+                  <select 
+                    id='is_active_id'
+                    name='is_active_id'
+                    value={formData.is_active_id}
+                    onChange={handleChangeStatus}
+                    className="block w-full px-2 py-2 text-sm border border-gray-100 rounded-md focus:outline-none focus:border-black shadow-md"
+                    >
+                      {status.map((status) => (
+                      <option key={status.name} value={status.value}>{status.name}</option>
+                      ))}
+                  </select>
+          </div>
       </div>
       <div className="flex justify-end py-2 mt-2">
           <button

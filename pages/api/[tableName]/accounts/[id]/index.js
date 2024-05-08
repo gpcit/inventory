@@ -8,12 +8,12 @@ export default async function handler(req, res) {
           if (id) { // If ID is provided, fetch specific data
               const data = `SELECT * FROM ${tableName} WHERE id = ?`;
               const values = [id];
-              const inventory = await query(data, values);
+              const account = await query(data, values);
 
-              if (inventory.length === 0) {
-                  return res.status(404).json({ error: 'Inventory not found' });
+              if (account.length === 0) {
+                  return res.status(404).json({ error: 'Account not found' });
               }
-              res.status(200).json({ results: inventory });
+              res.status(200).json({ results: account });
             //   console.log(id)
             //   console.log({results: inventory})
           }

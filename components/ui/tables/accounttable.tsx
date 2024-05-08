@@ -24,30 +24,30 @@ const [modalData, setModalData] = useState<any>(null)
 const getQuery = new URLSearchParams(window.location.search)
 const queryValue = getQuery.get('query')
 let company = tableName.find(company => company.name === getTableName)?.company || getTableName
-async function fetchMobile () {
-  try {
-    if(queryValue) {
-      const apiUrlEndpoint = `/api/${getTableName}/accounts/?query=${queryValue}`
-      const response = await fetch(apiUrlEndpoint);
-      const data = await response.json();
-      setAccountInventories(data.results)
-      setTotalPages(data.totalPages);
-    } else {
-      const apiUrlEndpoint = `/api/${getTableName}/accounts/?page=${currentPage}`;
-      const response = await fetch(apiUrlEndpoint);
-      const data = await response.json()
+
+// async function fetchMobile () {
+//   try {
+//     if(queryValue) {
+//       const apiUrlEndpoint = `/api/${getTableName}/accounts/?query=${queryValue}`
+//       const response = await fetch(apiUrlEndpoint);
+//       const data = await response.json();
+//       setAccountInventories(data.results)
+//       setTotalPages(data.totalPages);
+//     } else {
+//       const apiUrlEndpoint = `/api/${getTableName}/accounts/?page=${currentPage}`;
+//       const response = await fetch(apiUrlEndpoint);
+//       const data = await response.json()
       
-      setAccountInventories(data.results);
-      setCurrentPage(1);
-      setTotalPages(data.totalPages)
-    }
-  } catch (error) {
-      console.error('Error fetching data', error)
-  }
-}
+//       setAccountInventories(data.results);
+//       setCurrentPage(1);
+//       setTotalPages(data.totalPages)
+//     }
+//   } catch (error) {
+//       console.error('Error fetching data', error)
+//   }
+// }
 useEffect(() => {
   async function fetchAccountInventory () {
-    console.log("account table: ", getTableName)
     try {
       if(queryValue) {
         const apiUrlEndpoint = `/api/${getTableName}/accounts/?query=${queryValue}`
@@ -71,7 +71,7 @@ useEffect(() => {
 }, [getTableName, onDataSubmitted, queryValue])
 const handleFormSubmit = async () => {
   closeModal();
-  fetchMobile();
+  // fetchMobile();
 }
 
 const handlePageClick = async (selected: { selected: number }) => {

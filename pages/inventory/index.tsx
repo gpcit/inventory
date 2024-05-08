@@ -101,14 +101,14 @@ export default function Page({searchParams,}:{searchParams?: {search?: string}})
      return (
         
         <Layout>
-            <div className=" p-5 border border-collapse rounded shadow-2xl mx-5 relative mt-5">
+            <div className=" p-5 border border-collapse rounded shadow-2xl shadow-black mx-5 relative mt-5 bg-white">
                 <div className="grid grid-rows-1 self-end w-full">
                     <h1 className={`${lusitana.className} text-2xl`}> {name} Inventory</h1>
                     
                     <div className="relative flex flex-col  w-28 top-2">
                     {(company === 'gpc_inventory' || company === 'lsi_inventory') && branchName.length > 1 && (
                         <>
-                        <span>Select Branch: </span>
+                        <span>Change Branch: </span>
                         <div className=" border-gray-400">
                              <GetBranch onCompanyChange={handleBranchChange} getCompany={company} />
                         </div>
@@ -123,7 +123,7 @@ export default function Page({searchParams,}:{searchParams?: {search?: string}})
                     {(tblName !== '' || company !=='') && (inventories?.length === 0 || inventories === undefined ) && <Upload tablename={tblName} onDataUploaded={dataUploaderHandler} />}
                 <div className="flex flex-row items-center mt-1">
                     <div className="relative flex flex-col items-center justify-between md:mt-2">
-                        <label className="">Select Company:</label>
+                        <label className="">{company === '' ? 'Select' : 'Change' } Company:</label>
                         <Dropdown onCompanyChange={handleCompanyChange} />
                     </div>
                 </div>
@@ -146,11 +146,11 @@ export default function Page({searchParams,}:{searchParams?: {search?: string}})
                      
             </div>
             { company === '' && 
-            <div className=" p-6 mt-2"> 
+            <div className=" p-6 mt-2 flex justify-center items-center"> 
                 <Card>
                     <Card.Header>{name} Inventory</Card.Header>
                     <Card.Body>
-                        <div className="lg:h-[500px] sm:h-[200px] flex justify-center items-center">
+                        <div className="lg:h-[500px] sm:h-[200px] ">
                             <AreaChartView tableName={table} mobileTable={mobileTable} />
                         </div>
                     </Card.Body>

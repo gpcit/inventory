@@ -28,6 +28,7 @@ const [legendPosition, setLegendPosition] = useState('right')
 
 const fetchData = async () => {
     try {
+        let get_date;
       const [gpcDesktop, gpcLaptop, gpcMac, gpcMobile, lsiDesktop, lsiLaptop, lsiMac, lsiMobile, gkcDesktop, gkcLaptop, gkcMac, gkcMobile, gsrcDesktop, gsrcMac, gsrcLaptop, gsrcMobile] = await Promise.all([
         fetch(`api/gpc_inventory/computer_type/desktop/oldunit`),
         fetch(`api/gpc_inventory/computer_type/laptop/oldunit`),
@@ -47,15 +48,17 @@ const fetchData = async () => {
         fetch(`api/gsrc_inventory/computer_type/mac/oldunit`),
         fetch(`api/gsrc_mobile_inventory/mobile-oldunit`),
       ]);
+      
       if (!gpcDesktop.ok || !lsiDesktop.ok || !gkcDesktop.ok || !gsrcDesktop.ok) {
         throw new Error('Failed to fetch data');
       }
+      
       const gpcdesktopData = await gpcDesktop.json();
       const gpclaptopData = await gpcLaptop.json();
       const gpcmacData = await gpcMac.json();
       const gpcMobileData = await gpcMobile.json();
 
-      console.log("Result for mobile: ", gpcMobileData)
+      get_date = gpcMobileData?.data?.map((date: { date_issued: any; }) => date.date_issued)
       
       const lsidesktopData = await lsiDesktop.json();
       const lsilaptopData = await lsiLaptop.json();
@@ -72,7 +75,7 @@ const fetchData = async () => {
       const gsrcmacpData = await gsrcMac.json();
       const gsrcMobileData = await gsrcMobile.json();
       
-      
+      if (get_date !== undefined || get_date !== null){
       setGpcDataToCount(gpcdesktopData.count + gpcmacData.count);
       setGpcLaptopToCount(gpclaptopData.count)
       setGpcMobileToCount(gpcMobileData.count)
@@ -88,7 +91,9 @@ const fetchData = async () => {
       setGsrcDataToCount(gsrcdesktopData.count + gsrcmacpData.count);
       setGsrcLaptopToCount(gsrclaptopData.count)
       setGsrcMobileToCount(gsrcMobileData.count)
-      
+      } else {
+        throw new Error(`date must not be empty or null`)
+      }
     } catch (error) {
       console.error('Error fetching data', error);
       

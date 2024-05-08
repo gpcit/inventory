@@ -76,8 +76,13 @@ export default function Form({ gettableName, onDataSubmitted }: FormProps) {
         }, 3000)
         
       } else {
-        toast.error('Unable to add new data', {id: addToastLoading})
+        setTimeout(() => {
+          toast.error(response.error, {id: addToastLoading})
+        }, 3000)
+        
+        
       }
+      
     } catch (error) {
       console.error('Error adding inventory:', error);
       toast.error('Unable to add new data')

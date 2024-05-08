@@ -52,14 +52,15 @@ export default function Page() {
     }
     const openModal = () => {
         setIsModalOpen(true)
+        console.log("result for clicking add new data: " ,gettable ,branch)
     }
     const closeModal = () => {
         setIsModalOpen(false)
     }
     const handleFormSubmit = () => {
-        dataUploaderHandler()
         closeModal()
     }
+    
 
     useEffect(() => {
         if(tablename) {
@@ -93,7 +94,7 @@ export default function Page() {
 
     return (
         <Layout>
-            <div className=" p-5 border border-collapse rounded shadow-2xl mx-5 relative mt-5">
+            <div className=" p-5 border border-collapse rounded shadow-2xl shadow-black mx-5 relative mt-5 bg-white">
                 <div className="grid grid-rows-1 self-end w-full">
                     <h1 className={`${lato.className} text-2xl`}> {name} Server Accounts</h1>
                     <div className="relative flex flex-col  w-28 top-2">

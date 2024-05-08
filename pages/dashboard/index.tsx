@@ -52,6 +52,7 @@ export default function Page() {
       setLoading(false)
     }
   }
+  console.log("Result for data: ")
   useEffect(() => {
     const delayTime = 1000;
     const delayTimer = setTimeout(() => {
@@ -66,11 +67,11 @@ export default function Page() {
   
   return (
     <Layout>
-      <div className=' p-5 border rounded shadow-2xl mx-2 relative my-5'>
+      <div className=' p-5 border rounded shadow-2xl mx-2 relative my-5 bg-white'>
         <div className="p-3 rounded-t-lg bg-black ">
           <h1 className={`${lato.className} text-xl md:text-xl custom-font   sm:text-left`}>Summary</h1>
         </div>
-        <div className="px-4 overflow-y-hidden rounded-lg shadow">
+        <div className="px-4 overflow-y-hidden rounded-lg shadow-md border">
             <div className='flex flex-col pb-2'>
                 <h3 className='text-2xl'>Inventory</h3>
                 <ToggleButton loading={loading} onChange={handleTrigger}/>
@@ -117,25 +118,22 @@ export default function Page() {
         {/* Trigger for Detail */}
         {triggerValue === 'detail' ? (
             <>
-        <div className="p-2 my-2 rounded-t-lg bg-black">
+        <div className="p-2 mt-2 rounded-t-lg bg-black">
           <h1 className={`${lusitana.className} text-white text-xl md:text-[15px] sm:text-[10px]`}>Desktop/Laptop Unit/s 5years old and Above</h1>
         </div>
-        <div className="p-1 bg-gray-200 rounded-lg shadow">
+        <div className="p-1  rounded-lg shadow-md border">
             <div className="grid">
               <Suspense fallback={<TableSkeleton />}>
               {(desktopToCount === null || laptopToCount === null) && <TableSkeleton />}
-              {desktopToCount === null && laptopToCount === null ?  (
-                <div className='flex justify-center items-center text-2xl'><span>***** There's no data  *****</span></div>
-                ) : ( <Oldunit />)} 
-              
+               <Oldunit />
               </Suspense>
             </div>
         </div>
          
-        <div className="p-2 my-2 rounded-t-lg bg-black">
+        <div className="p-2 mt-2 rounded-t-lg bg-black">
           <h1 className={`${lusitana.className} text-white text-xl md:text-[15px] sm:text-[10px]`}>Mobile Issued 5 years old and above </h1>
         </div>
-        <div className='p-1 bg-gray-200 rounded-t-lg shadow'>
+        <div className='p-1  rounded-t-lg shadow-md border'>
           <div className='grid'>
             <OldMobile />
           </div>
@@ -145,10 +143,10 @@ export default function Page() {
         {/* Trigger for Graph Chart */}
         {triggerValue === 'graph' ? (
               <>
-            <div className="p-2 my-2 rounded-t-lg bg-black">
+            <div className="p-2 mt-2 rounded-t-lg bg-black">
               <h1 className={`${lusitana.className} text-white text-xl md:text-[15px] sm:text-[10px]`}>Old Units with more then 5 years of age</h1>
             </div>
-            <div className="p-1 bg-white rounded-lg shadow">
+            <div className="p-1 bg-white rounded-lg shadow-md border">
               <div className='flex justify-center lg:h-[400px]'>
                 <BarChart />
               </div>

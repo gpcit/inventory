@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { HiOutlineSwitchHorizontal } from 'react-icons/hi';
 
 export default function ToggleButton({ loading, onChange} : {  loading: boolean, onChange: () => void}){
 

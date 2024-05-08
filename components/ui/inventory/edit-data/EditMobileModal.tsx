@@ -1,3 +1,4 @@
+import { status } from '@/lib/company';
 import React, { FormEvent, useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 
@@ -24,7 +25,8 @@ const EditMobileModal: React.FC<ModalProps> = ({onClose, onSubmit, tablename, id
     inclusion: '',
     comment: '',
     date_issued: '',
-    date_purchased: ''
+    date_purchased: '',
+    is_active_id: 1
   });
   // handle for changing the value in inputs
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -77,7 +79,8 @@ const EditMobileModal: React.FC<ModalProps> = ({onClose, onSubmit, tablename, id
           inclusion: formData.inclusion,
           comment: formData.comment,
           date_issued: formData.date_issued,
-          date_purchased: formData.date_purchased
+          date_purchased: formData.date_purchased,
+          is_active_id: formData.is_active_id
           // tableName: gettableName
         }),
       };
@@ -100,7 +103,8 @@ const EditMobileModal: React.FC<ModalProps> = ({onClose, onSubmit, tablename, id
             inclusion: '',
             comment: '',
             date_issued: '',
-            date_purchased: ''
+            date_purchased: '',
+            is_active_id: 0
           });
           onSubmit();
           toast.success('Data has been successfully updated.', {id: editMobileToast})
@@ -124,7 +128,13 @@ const EditMobileModal: React.FC<ModalProps> = ({onClose, onSubmit, tablename, id
     };
   }, [onClose])
 
-  
+  const handleChangeStatus = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedValue = Number(event.target.value)
+    setFormData(prevState => ({
+      ...prevState,
+      is_active_id: selectedValue
+    }));
+  }
   
   return (
     // <div className="fixed inset-0 bg-black bg-opacity-25 backdrop-blur-sm flex justify-center items-center">
@@ -147,7 +157,7 @@ const EditMobileModal: React.FC<ModalProps> = ({onClose, onSubmit, tablename, id
             <form onSubmit={updateInventory}>
               <div className="p-4 rounded-md grid grid-cols-6 border-2 border-x-gray-400 shadow-2xl mx-2 gap-1 bg-gray-200">
                 {/* Assigned To */}
-                <div className="mb-4 col-span-4">
+                <div className="mb-2 col-span-4">
                   <label htmlFor="assigned_to" className="block mb-2 text-sm font-medium">
                     Assiged To
                   </label>
@@ -162,7 +172,7 @@ const EditMobileModal: React.FC<ModalProps> = ({onClose, onSubmit, tablename, id
                   />
                 </div>
                 {/* Department */}
-                <div className="mb-4 col-span-2">
+                <div className="mb-2 col-span-2">
                   <label htmlFor="department" className="block mb-2 text-sm font-medium">
                     Department
                   </label>
@@ -177,7 +187,7 @@ const EditMobileModal: React.FC<ModalProps> = ({onClose, onSubmit, tablename, id
                   />
                 </div>
                 {/* Number */}
-                <div className="mb-4 col-span-2">
+                <div className="mb-2 col-span-2">
                   <label htmlFor="number" className="block mb-2 text-sm font-medium">
                     Number
                   </label>
@@ -192,7 +202,7 @@ const EditMobileModal: React.FC<ModalProps> = ({onClose, onSubmit, tablename, id
                   />
                 </div>
                 {/* Brand */}
-                <div className="mb-4 col-span-2">
+                <div className="mb-2 col-span-2">
                   <label htmlFor="brand" className="block mb-2 text-sm font-medium">
                     Brand
                   </label>
@@ -207,7 +217,7 @@ const EditMobileModal: React.FC<ModalProps> = ({onClose, onSubmit, tablename, id
                   />
                 </div>
                 {/* Serial Number */}
-                <div className="mb-4 col-span-2">
+                <div className="mb-2 col-span-2">
                   <label htmlFor="serial_number" className="block mb-2 text-sm font-medium">
                     Serial Number
                   </label>
@@ -222,7 +232,7 @@ const EditMobileModal: React.FC<ModalProps> = ({onClose, onSubmit, tablename, id
                   />
                 </div>
                 {/* Email and Password */}
-                <div className="mb-4 col-span-3">
+                <div className="mb-2 col-span-3">
                   <label htmlFor="email_password" className="block mb-2 text-sm font-medium">
                     Email and Password
                   </label>
@@ -236,7 +246,7 @@ const EditMobileModal: React.FC<ModalProps> = ({onClose, onSubmit, tablename, id
                   />
                 </div>
                 {/* IMEI */}
-                <div className="mb-4 col-span-3">
+                <div className="mb-2 col-span-3">
                   <label htmlFor="imei" className="block mb-2 text-sm font-medium">
                     IMEI
                   </label>
@@ -251,7 +261,7 @@ const EditMobileModal: React.FC<ModalProps> = ({onClose, onSubmit, tablename, id
                 </div>
                 
                 {/* Inclusion */}
-                <div className="mb-4 col-span-2">
+                <div className="mb-2 col-span-2">
                   <label htmlFor="inclusion" className="block mb-2 text-sm font-medium">
                     Inclusion
                   </label>
@@ -265,7 +275,7 @@ const EditMobileModal: React.FC<ModalProps> = ({onClose, onSubmit, tablename, id
                   />
                 </div>
                 {/* Model and Specs */}
-                <div className="mb-4 col-span-2">
+                <div className="mb-2 col-span-2">
                   <label htmlFor="model_specs" className="block mb-2 text-sm font-medium">
                     Model / Specs
                   </label>
@@ -279,7 +289,7 @@ const EditMobileModal: React.FC<ModalProps> = ({onClose, onSubmit, tablename, id
                   />
                 </div>
                 {/* Comment */}
-                <div className="mb-4 col-span-2">
+                <div className="mb-2 col-span-2">
                   <label htmlFor="comment" className="block mb-2 text-sm font-medium">
                     Comment
                   </label>
@@ -293,7 +303,7 @@ const EditMobileModal: React.FC<ModalProps> = ({onClose, onSubmit, tablename, id
                   />
                 </div>
                 {/* Date Issued */}
-                <div className="mb-4 col-span-3">
+                <div className="mb-2 col-span-3">
                   <label htmlFor="date_issued" className="block mb-2 text-sm font-medium">
                     Date Issued
                   </label>
@@ -307,7 +317,7 @@ const EditMobileModal: React.FC<ModalProps> = ({onClose, onSubmit, tablename, id
                   />
                 </div>
                 {/* Date Issued */}
-                <div className="mb-4 col-span-3">
+                <div className="mb-2 col-span-3">
                   <label htmlFor="date_purchased" className="block mb-2 text-sm font-medium">
                     Date Purchased
                   </label>
@@ -319,6 +329,23 @@ const EditMobileModal: React.FC<ModalProps> = ({onClose, onSubmit, tablename, id
                     onChange={handleChange}
                     className="block w-full px-3 py-2 text-sm border border-gray-200 rounded-md focus:outline-none focus:border-black shadow-md"
                   />
+                </div>
+                {/* Status */}
+                <div className=" col-span-3 flex flex-row sm:col-start-5 justify-center items-center">
+                  <label htmlFor="is_active_id" className="block mb-1 mx-2 text-sm font-semibold">
+                    Status:
+                  </label>
+                  <select 
+                    id='is_active_id'
+                    name='is_active_id'
+                    value={formData.is_active_id}
+                    onChange={handleChangeStatus}
+                    className="block w-full px-2 py-2 text-sm border border-gray-100 rounded-md focus:outline-none focus:border-black shadow-md"
+                    >
+                      {status.map((status) => (
+                      <option key={status.name} value={status.value}>{status.name}</option>
+                      ))}
+                  </select>
                 </div>
               </div>
               <div className="flex justify-end py-2 mt-2">
