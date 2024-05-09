@@ -37,7 +37,7 @@ export default function Sidebar() {
   return (
     <aside className="pr-2 h-full relative">
       <div
-        className={`bg-black rounded-lg fixed ${
+        className={`bg-gradient-to-r from-green-700 rounded-lg fixed ${
           isOpen ? "w-60 lg:w-60" : "w-20 md:w-20"
         } duration-300 relative`}
       >

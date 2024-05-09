@@ -83,6 +83,21 @@ export default async function handler(req, res) {
       console.error('Error updating inventory: ', error);
       res.status(500).json({ error: 'Internal Server Error'})
     }
+  } else if (req.method === 'DELETE') {
+    try {
+      if (!id) {
+        return res.status(400).json({ error: 'Unable to delete'})
+      }
+      const deleteResult = await query(`DELETE FROM ${tableName} WHERE id=?`, [id])
+      if(deleteResult.affectedRows > 0) {
+        res.status(200).json({ response: { message: 'success', deletedItem: id } })
+      } else {
+        res.status(404).json({ error: 'Item not found or not deleted' })
+      }
+    } catch (error) {
+      console.error('Error deleting Account: ',error)
+      res.status(500).json({ error: 'Internal server Error' })
+    }
   } else {
     res.status(405).json({ error: 'Method not allowed '})
   }

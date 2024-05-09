@@ -51,15 +51,16 @@ export default async function handler (req, res) {
         const date_issued = req.body.date_issued
         const is_active_id = 1
         const date_purchased = req.body.date_purchased
-        if (!assigned_to || !brand) {
-          return res.status(400).json({ error: 'Missing required fields' });
+        const date_returned = req.body.date_returned
+        if (!serial_number || serial_number === ' ') {
+          return res.status(400).json({ error: 'Type "N/A + Brand Name" if Serial number is not applicable' });
         }
         const duplicateCheck = await query(`SELECT * FROM ${tableName} WHERE serial_number = ?`, [serial_number])
         const seperate = duplicateCheck.map(data => data.department)
         if(duplicateCheck.length > 0){
-          return res.status(400).json({ error: `Serial Number belongs to ${seperate}`})
+          return res.status(400).json({ error: `Serial Number belongs to ${seperate} Department`})
         }
-        const addInventory = await query(`INSERT INTO ${tableName} (assigned_to, department, brand, model_specs, serial_number, imei, number, email_password, inclusion, comment, date_issued, date_purchased, is_active_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, [assigned_to, department, brand, model_specs, serial_number, imei, number, email_password, inclusion, comment, date_issued, date_purchased, is_active_id],);
+        const addInventory = await query(`INSERT INTO ${tableName} (assigned_to, department, brand, model_specs, serial_number, imei, number, email_password, inclusion, comment, date_issued, date_purchased, is_active_id, date_returned) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, [assigned_to, department, brand, model_specs, serial_number, imei, number, email_password, inclusion, comment, date_issued, date_purchased, is_active_id, date_returned],);
         let message;
         if (addInventory.insertId) {
           message = 'success';
@@ -81,7 +82,8 @@ export default async function handler (req, res) {
           comment: comment,
           date_issued: date_issued,
           is_active_id: is_active_id,
-          date_purchased: date_purchased
+          date_purchased: date_purchased,
+          date_returned: date_returned
         };
   
         res.status(200).json({ response: { message: message, results: inventory } });

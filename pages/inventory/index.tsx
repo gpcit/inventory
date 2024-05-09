@@ -117,7 +117,7 @@ export default function Page({searchParams,}:{searchParams?: {search?: string}})
                     </div>
                     
                 </div>
-                <div className="flex items-center justify-between gap-2 m-4 md:mt-8">
+                <div className="flex items-center justify-between gap-2 mt-4 md:mt-8">
                     {tblName !== "" && <><Search placeholder="Search..." /> <CreateInventory onClick={openModal}/></> }
                 </div>
                     {(tblName !== '' || company !=='') && (inventories?.length === 0 || inventories === undefined ) && <Upload tablename={tblName} onDataUploaded={dataUploaderHandler} />}

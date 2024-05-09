@@ -1,5 +1,6 @@
 import { query } from '@/lib/db';
 
+
 export default async function handler (req, res) {
     const tableName = req.query.tableName;
     const searchQuery = req.query.query;
@@ -12,18 +13,17 @@ export default async function handler (req, res) {
           let pageTotal;
           let values = []
             if(searchQuery) {
-              pageTotal = `SELECT COUNT(*) as total FROM ${tableName} WHERE is_active_id = 1`
-              data = `SELECT * FROM ${tableName}
-                      WHERE (name LIKE ? OR username LIKE ?)
-                      AND is_active_id = 1
-                      LIMIT ?
-                      OFFSET ?`;
-              values = [`%${searchQuery}%`, `%${searchQuery}%`, itemPerPage, (page - 1) * itemPerPage]
-            
+                pageTotal = `SELECT COUNT(*) as total FROM ${tableName} WHERE is_active_id = 2`
+                data = `SELECT * FROM ${tableName}
+                WHERE (name LIKE ? OR username LIKE ?)
+                AND is_active_id = 2
+                LIMIT ?
+                OFFSET ?`;
+                values = [`%${searchQuery}%`, `%${searchQuery}%`, itemPerPage, (page - 1) * itemPerPage]
             } else {
-              pageTotal = `SELECT COUNT(*) as total FROM ${tableName} WHERE is_active_id = 1`
-              data = `SELECT * FROM ${tableName} WHERE is_active_id = 1 ORDER BY date_created desc LIMIT ? OFFSET ?`;
-              values = [itemPerPage, (page - 1) * itemPerPage]
+                pageTotal = `SELECT COUNT(*) as total FROM ${tableName} WHERE is_active_id = 2`
+                data = `SELECT * FROM ${tableName} WHERE is_active_id = 2 ORDER BY date_created desc LIMIT ? OFFSET ?`;
+                values = [itemPerPage, (page - 1) * itemPerPage]
               }
             const [inventory, totalCountRows] = await Promise.all([
               query(data, values),
