@@ -2,13 +2,14 @@
 'use client'
 import { ChangeEvent, useEffect, useState } from "react";
 import { InventoryList } from "@/lib/definition";
-import { QRGeneratorButton, UpdateInventory, ViewInventory } from "../buttons";
+import { DeleteInventory, QRGeneratorButton, UpdateInventory, ViewInventory } from "../buttons";
 import  {tableName}  from "@/lib/company";
 import EditInventoryModal from "@/components/ui/inventory/edit-data/EditInventoryModal";
 import CustomPagination from "@/components/Pagination";
 import html2canvas from "html2canvas";
 import BarcodeModal from "@/components/QRCodeModal";
 import ViewModal from "@/components/ViewInventoryModal";
+import DeleteInventoryModal from "../inventory/delete-data/DeleteInventory";
 
 interface GPCInventoryTableProps {
   gettableName: string;
@@ -22,6 +23,7 @@ export default function GPCInventoryTable ({ gettableName, onDataSubmitted, quer
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const [selectedId, setSelectedId] = useState<number | null>(null)
   const [modalData, setModalData] = useState<any>(null)
@@ -106,6 +108,9 @@ export default function GPCInventoryTable ({ gettableName, onDataSubmitted, quer
       }
   
   }
+  const openDeleteModal = () => {
+    setIsDeleteModalOpen(true)
+  }
   const saveBarcodeModalAsImage = async () => {
     if (selectedId && isQRModalOpen) {
         // Wait for the modal to be fully rendered
@@ -129,13 +134,12 @@ export default function GPCInventoryTable ({ gettableName, onDataSubmitted, quer
 };
   const closeModal = () => {
       setIsModalOpen(false)
+      setIsDeleteModalOpen(false)
       setSelectedId(null)
+      setIsQRModalOpen(false);
       setIsViewModalOpen(false)
   }
-  const viewModal = (id: number) => {
-    setIsViewModalOpen(true)
-    setSelectedId(id);
-  }
+  
   const qrModal = async (id: number) => {
     setSelectedId(id);
     setIsQRModalOpen(true);
@@ -193,9 +197,9 @@ export default function GPCInventoryTable ({ gettableName, onDataSubmitted, quer
     return (  
     <div className="overflow-x-auto sm:p-2">
       <div className="inline-block min-w-full align-middle">
-        <div className="p-2 rounded  md:pt-0">
+        <div className="py-2 rounded  md:pt-0">
           <table className="min-w-full   md:table">
-            <thead className="text-sm text-left bg-black text-white border rounded-lg">
+            <thead className="text-sm text-left bg-gradient-to-r from-green-600 text-black border-black border rounded">
               <tr>
                 <th scope="col" className="px-4 py-1  font-extrabold">
                   PC Name
@@ -260,12 +264,12 @@ export default function GPCInventoryTable ({ gettableName, onDataSubmitted, quer
                   <td className="px-3 py-3 whitespace-nowrap">
                     <div className="flex items-center justify-center gap-3 edit-button">
                       <UpdateInventory id={inventory.id} onClick={openModal}/>
-                      <ViewInventory id={inventory.id} onClick={viewModal} />
                       <QRGeneratorButton 
                         id={inventory.id} 
                         onClick={qrModal}
                         onSave={handleSave}
                       />
+                      <DeleteInventory id={inventory.id} onClick={openDeleteModal}/>
                     </div>
                   </td>
                 </tr>
@@ -278,8 +282,8 @@ export default function GPCInventoryTable ({ gettableName, onDataSubmitted, quer
           {isModalOpen && (
                         <EditInventoryModal onClose={closeModal} onSubmit={handleFormSubmit} id={selectedId} tablename={gettableName}/>
                     )} 
-          {isViewModalOpen && (
-                        <ViewModal onClose={closeModal} id={selectedId} tablename={gettableName}/>
+          {isDeleteModalOpen && (
+                        <DeleteInventoryModal onSubmit={handleFormSubmit} onClose={closeModal} id={selectedId} tablename={gettableName}/>
           )} 
           {isQRModalOpen && (
                       <BarcodeModal modalData={modalData} tablename={gettableName} id={selectedId} onClose={closeQrModal} company={company}/>

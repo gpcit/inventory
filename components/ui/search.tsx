@@ -30,7 +30,7 @@ export default function Search({placeholder}: SearchProps ) {
         Search
       </label>
       <input
-        className=" block w-full rounded-md border border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
+        className=" block w-full rounded-md border shadow-md border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
         placeholder={placeholder}
         onChange={(e) => { 
           handleSearch(e.target.value);

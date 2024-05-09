@@ -5,10 +5,11 @@ import Status from '../../dropdowns/status';
 
 interface FormProps {
   gettableName: string;
+  triggerValue: string;
   onDataSubmitted: () => void; // Callback function to handle data submission
 }
 
-export default function Form({ gettableName, onDataSubmitted }: FormProps) {
+export default function Form({triggerValue, gettableName, onDataSubmitted }: FormProps) {
   const [isDuplicate, setIsDuplicate] = useState(false);
   const [getValue, setGetValue] = useState('');
   const [errorMessage, setErrorMessage] = useState("");
@@ -18,11 +19,23 @@ export default function Form({ gettableName, onDataSubmitted }: FormProps) {
     department: '',
     username: '',
     password: '',
-    is_active_id: 1,
+    is_active_id: 0,
     notes: ''
   });
   // const [create, setCreated] = useState(false);
-
+  useEffect(() => {
+    if(triggerValue === 'active') {
+      setFormData(prevState => ({
+        ...prevState,
+        is_active_id: 1
+      }))
+    } else {
+      setFormData(prevState => ({
+        ...prevState,
+        is_active_id: 2
+      }))
+    }
+  }, [triggerValue])
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prevState => ({
@@ -31,14 +44,6 @@ export default function Form({ gettableName, onDataSubmitted }: FormProps) {
     }));
    
   };
-  const statusChange = (value: string) => {
-    setGetValue(value)
-    if(value === '1') {
-      setStatus('1')
-    } else {
-      setStatus('2')
-    }
-  }
   
   async function addAccountInventory(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -178,7 +183,8 @@ export default function Form({ gettableName, onDataSubmitted }: FormProps) {
           <label htmlFor="status" className="block m-2 text-sm font-semibold">
             Status:
           </label>
-          <input
+          {triggerValue === 'active' ? (
+            <input
             type="text"
             id="status"
             name="status"
@@ -187,6 +193,18 @@ export default function Form({ gettableName, onDataSubmitted }: FormProps) {
             className="block w-full px-3 py-2 text-sm border bg-green-200 rounded-md focus:outline-none focus:border-black shadow-md"
             placeholder="Enter Password"
           />
+          ) : (
+            <input
+            type="text"
+            id="status"
+            name="status"
+            value={formData.is_active_id === 1 ? 'Active' : 'Inactive'}
+            disabled
+            className="block w-full px-3 py-2 text-sm border bg-red-200 rounded-md focus:outline-none focus:border-black shadow-md"
+            placeholder="Enter Password"
+          />
+          )}
+          
         </div>
       </div>
       <div className="flex justify-end py-2 mt-2">

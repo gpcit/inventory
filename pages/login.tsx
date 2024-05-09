@@ -84,7 +84,7 @@ export default function LoginPage() {
             </form>
         </div>
         <div className='absolute right-5 top-2'>
-          <span className='font-bold'>Greenstone</span>
+          <span className='font-bold text-slate-50'>Greenstone</span>
         </div>
         
     </div>

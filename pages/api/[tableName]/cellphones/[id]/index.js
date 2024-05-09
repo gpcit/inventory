@@ -35,11 +35,12 @@ export default async function handler(req, res) {
       const comment = req.body.comment
       const date_issued = req.body.date_issued
       const date_purchased = req.body.date_purchased
+      const date_returned = req.body.date_returned
       const is_active_id = req.body.is_active_id
       if (!assigned_to || !brand) {
         return res.status(400).json({ error: 'Missing required fields' });
       }
-      const addInventory = await query(`INSERT INTO ${tableName} (assigned_to, department, brand, model_specs, serial_number, imei, number, email_password, inclusion, comment, date_issued, date_purchased, is_active_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, [assigned_to, department, brand, model_specs, serial_number, imei, number, email_password, inclusion, date_issued, date_purchased, is_active_id],);
+      const addInventory = await query(`INSERT INTO ${tableName} (assigned_to, department, brand, model_specs, serial_number, imei, number, email_password, inclusion, comment, date_issued, date_purchased, is_active_id, date_returned) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, [assigned_to, department, brand, model_specs, serial_number, imei, number, email_password, inclusion, date_issued, date_purchased, is_active_id, date_returned],);
       let message;
       if (addInventory.insertId) {
         message = 'success';
@@ -62,6 +63,7 @@ export default async function handler(req, res) {
         date_issued: date_issued,
         date_purchased: date_purchased,
         is_active_id: is_active_id,
+        date_returned: date_returned
       };
 
       res.status(200).json({ response: { message: message, results: inventory } });
@@ -73,14 +75,14 @@ export default async function handler(req, res) {
 
     try {
       const {id} = req.query;
-      const {assigned_to, department, brand, model_specs, serial_number, imei, number, email_password, inclusion, comment, date_issued, date_purchased, is_active_id} = req.body
+      const {assigned_to, department, brand, model_specs, serial_number, imei, number, email_password, inclusion, comment, date_issued, date_purchased, is_active_id, date_returned} = req.body
 
       if(!id || !assigned_to || !brand){
         return res.status(400).json({ error: 'Missing required fields' })
       }
       const updateResult = await query
-      (`UPDATE ${tableName} SET assigned_to=?, department=?, brand=?, model_specs=?, serial_number=?, imei=?, number=?, email_password=?,  inclusion=?, comment=?, date_issued=?, date_purchased=?, is_active_id=? WHERE id=?`,
-      [assigned_to, department, brand, model_specs, serial_number, imei, number, email_password, inclusion, comment, date_issued, date_purchased, is_active_id, id]);
+      (`UPDATE ${tableName} SET assigned_to=?, department=?, brand=?, model_specs=?, serial_number=?, imei=?, number=?, email_password=?,  inclusion=?, comment=?, date_issued=?, date_purchased=?, is_active_id=?, date_returned=? WHERE id=?`,
+      [assigned_to, department, brand, model_specs, serial_number, imei, number, email_password, inclusion, comment, date_issued, date_purchased, is_active_id, date_returned, id]);
       
       if(updateResult.affectedRows > 0){
         res.status(200).json({response: { message: 'success', updatedItem: id }})

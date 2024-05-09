@@ -1,7 +1,7 @@
 "use client"
 import Search from "@/components/ui/search";
 import Layout from "../layout";
-import { lusitana } from "@/styles/font";
+import { lato, lusitana } from "@/styles/font";
 import {CreateInventory} from "@/components/ui/buttons";
 import { Fragment, use, useEffect, useState } from "react";
 import Dropdown from "@/components/ui/dropdowns/dropdown";
@@ -28,12 +28,15 @@ const [dataUploaderHandler, setDataUploaderHandler] = useState<() => void>(() =>
     let getTable = tableName.find(company => company.name === tablename)?.table || tablename
     let get_status = mobileInventory.map(status => status.is_active_id)
 
-
+    
     
     const handleDropdown = (value: string) => {
         const pageLoading = toast.loading(`Selecting company, Please wait...`, {duration: 2500})
         setTimeout(() => {
         toast.success(`Loading Successful`, {id: pageLoading})
+        if(name === '') {
+            setTriggerValue("active");
+        }
             setTableName(value)
             setValue(value)
         }, 2000)
@@ -47,7 +50,6 @@ const [dataUploaderHandler, setDataUploaderHandler] = useState<() => void>(() =>
     }
     const handleFormSubmit = async () =>{
         closeModal();
-        
     }
     
     useEffect(()=> {
@@ -71,14 +73,18 @@ const [dataUploaderHandler, setDataUploaderHandler] = useState<() => void>(() =>
     }, [tablename, getTable])
     
     const handleTrigger = () =>{
-        setTriggerValue(triggerValue === 'active' ? 'inactive' : 'active')
+        if(triggerValue === 'active') {
+            setTriggerValue(triggerValue === 'active' ? 'inactive' : 'active')
+        } else {
+            setTriggerValue(triggerValue === 'inactive' ? 'active' : 'inactive')
+        }
     }
     
     return (
         <Layout>
             <div className=" p-5 border border-collapse rounded shadow-2xl shadow-black mx-5 relative mt-5 bg-white">
                 <div className="flex items-center justify-between w-full">
-                    <h1 className={`${lusitana.className} text-2xl`}> {name} Mobile</h1>
+                    <h1 className={`${lato.className} text-2xl`}> {name} Mobile</h1>
                 </div>
                 <div className="flex items-center justify-between gap-2 mt-4 md:mt-8">
                     

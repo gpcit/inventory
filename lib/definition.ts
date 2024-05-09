@@ -28,6 +28,7 @@ export interface MobileInventoryList {
     serial_number: string;
     inclusion: string;
     date_issued: string;
+    date_returned: string;
     is_active_id: number;
 }
 

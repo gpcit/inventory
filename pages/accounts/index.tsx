@@ -13,6 +13,7 @@ import Modal from "@/components/modal";
 import Form from "@/components/ui/inventory/create-data/CreateAccount";
 import GetBranch from "@/components/ui/dropdowns/select-company";
 import toast from "react-hot-toast";
+import StatusToggle from "@/components/StatusToggle";
 
 export default function Page() {
     const [value, setValue] = useState<string>("")
@@ -21,6 +22,7 @@ export default function Page() {
     const [company, setCompany] = useState<string>("")
     const [tableAccounts, setTableAccounts] = useState<ServerAccountsInventory[]>([])
     const [isModalOpen, setIsModalOpen] = useState(false)
+    const [triggerValue, setTriggerValue] = useState("active")
     const [dataUploaderHandler, setDataUploaderHandler]  = useState<() => void>(() => () => {})
 
     const name = tableName.find(display => display.name === value)?.displayName || value
@@ -44,6 +46,9 @@ export default function Page() {
                 setTablename('gsrc_accounts')
             } else {
                 setBranch('')
+            }
+            if(name === '') {
+                setTriggerValue("active");
             }
             setCompany(value)
             setValue(value)
@@ -92,6 +97,14 @@ export default function Page() {
         }, 2000)
     }
 
+    const handleTrigger = () =>{
+        if(triggerValue === 'active') {
+            setTriggerValue(triggerValue === 'active' ? 'inactive' : 'active')
+        } else {
+            setTriggerValue(triggerValue === 'inactive' ? 'active' : 'inactive')
+        }
+    }
+
     return (
         <Layout>
             <div className=" p-5 border border-collapse rounded shadow-2xl shadow-black mx-5 relative mt-5 bg-white">
@@ -100,7 +113,7 @@ export default function Page() {
                     <div className="relative flex flex-col  w-28 top-2">
                     {(value === 'gpc_inventory' || value === 'lsi_inventory') && branchName.length > 1 && (
                         <>
-                        <span>Select Branch: </span>
+                        <span>Change Branch: </span>
                         <div className=" w-full border-gray-400">
                              <GetBranch onCompanyChange={handleBranchChange} getCompany={value} />
                         </div>
@@ -110,24 +123,29 @@ export default function Page() {
                 </div>
                 <div className="flex items-center justify-between gap-2 mt-4 md:mt-8">
                     
-                   {name !== '' && <> <Search placeholder="Search...." /><CreateInventory onClick={openModal}/> </>}
+                   {name !== '' && <> <Search placeholder="Search...." /><CreateInventory onClick={openModal} /> </>}
                 </div>
                     {gettable !== '' && (tableAccounts?.length === 0 || tableAccounts === null || tableAccounts === undefined) && <Upload tablename={gettable} onDataUploaded={dataUploaderHandler}/>}
-                <div className="flex flex-row items-center mt-1">
-                    <div className="relative flex flex-col items-center justify-between md:mt-2">
-                        <label className="">Select Company:</label>
-                        <Dropdown onCompanyChange={handleDropdown} />
+                    <div className="flex justify-between items-center">
+                    <div className="flex flex-row items-center mt-1">
+                        <div className="relative flex flex-col items-center justify-between md:mt-2">
+                            <label className="">{name === '' ? 'Select' : 'Change'} Company:</label>
+                            <Dropdown onCompanyChange={handleDropdown} />
+                        </div>
+                    </div>
+                    <div className="mx-2">
+                    {name !=='' &&  <StatusToggle loading={false} onChange={handleTrigger} /> }
                     </div>
                 </div>
-                {company === 'gpc_inventory' && branch === 'Balintawak' && <AccountInventoryTable getTableName={tablename} onDataSubmitted={handleFormSubmit}/>}
-                    {company === 'gpc_inventory' && branch === 'SQ'  && <AccountInventoryTable getTableName={tablename} onDataSubmitted={handleFormSubmit}/>}
+                {company === 'gpc_inventory' && branch === 'Balintawak' && <AccountInventoryTable triggerValue={triggerValue} getTableName={tablename} onDataSubmitted={handleFormSubmit}/>}
+                    {company === 'gpc_inventory' && branch === 'SQ'  && <AccountInventoryTable triggerValue={triggerValue} getTableName={tablename} onDataSubmitted={handleFormSubmit}/>}
                     
-                    {company === 'lsi_inventory' && branch === 'Valenzuela' && <AccountInventoryTable getTableName={tablename} onDataSubmitted={handleFormSubmit}/>}
-                    {company === 'lsi_inventory' && branch === 'Canlubang'  && <AccountInventoryTable getTableName={tablename} onDataSubmitted={handleFormSubmit}/>}
-                {(company !== 'gpc_inventory' && company !== 'lsi_inventory' ) && company !== '' && <AccountInventoryTable  getTableName={gettable} onDataSubmitted={handleFormSubmit}/>}
+                    {company === 'lsi_inventory' && branch === 'Valenzuela' && <AccountInventoryTable triggerValue={triggerValue} getTableName={tablename} onDataSubmitted={handleFormSubmit}/>}
+                    {company === 'lsi_inventory' && branch === 'Canlubang'  && <AccountInventoryTable triggerValue={triggerValue} getTableName={tablename} onDataSubmitted={handleFormSubmit}/>}
+                {(company !== 'gpc_inventory' && company !== 'lsi_inventory' ) && company !== '' && <AccountInventoryTable triggerValue={triggerValue} getTableName={gettable} onDataSubmitted={handleFormSubmit}/>}
                 {isModalOpen && (
                         <Modal onClose={closeModal} title={`${branch} Accounts`} companyName={name} onSubmit={handleFormSubmit} tablename={gettable}>
-                            <Form gettableName={gettable} onDataSubmitted={handleFormSubmit}/>
+                            <Form triggerValue={triggerValue} gettableName={gettable} onDataSubmitted={handleFormSubmit}/>
                         </Modal>
                     )}
             </div>

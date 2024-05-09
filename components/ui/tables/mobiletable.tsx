@@ -2,7 +2,7 @@
 import EditMobileModal from "@/components/ui/inventory/edit-data/EditMobileModal";
 import { MobileInventoryList } from "@/lib/definition"
 import { useEffect, useState } from "react"
-import { QRGeneratorButton, UpdateMobileInventory, DeleteInventory } from "../../../components/ui/buttons";
+import { QRGeneratorButton, UpdateInventory, DeleteInventory } from "../../../components/ui/buttons";
 import CustomPagination from "@/components/Pagination";
 import BarcodeModal from "@/components/QRCodeModal";
 import BarcodeMobileModal from "@/components/QRCodeMobileModal";
@@ -33,7 +33,7 @@ const getQuery = new URLSearchParams(window.location.search)
 const queryValue = getQuery.get('query')
 let company = tableName.find(company => company.name === getTableName)?.company || getTableName
 
-console.log("value for trigger: ", triggerValue)
+
 // function for fetching data for Mobile
 async function fetchMobile (trigger: string) {
   try {
@@ -112,7 +112,7 @@ useEffect(() => {
     }
   }
     fetchMobileInventory()
-}, [getTableName, queryValue, triggerValue, onDataSubmitted])
+}, [getTableName, onDataSubmitted, queryValue, triggerValue ])
 
 // action button for edit
 const handleEditSubmit = async () => {
@@ -280,9 +280,15 @@ const closeDeleteModal = () => {
                     <th scope="col" className="px-3 py-1 font-extrabold text-center">
                       Status
                     </th>
-                    <th scope="col" className="px-3 py-1 font-extrabold">
+                    {triggerValue === 'active' ? (
+                    <th scope="col" className="px-3 py-1 font-extrabold text-center">
                       Date Issued
                     </th>
+                    ) : (
+                    <th scope="col" className="px-3 py-1 font-extrabold text-center">
+                      Date Returned
+                    </th>
+                    )}
                     <th scope="col" className="py-3 pl-6 pr-3 text-center">
                       Action
                     </th>
@@ -327,12 +333,13 @@ const closeDeleteModal = () => {
                             {inventory.is_active_id === 1 ? <CheckCircleIcon className="rounded-full w-5 h-5  text-green-800"/> : <XCircleIcon className="rounded-full w-5 h-5  text-red-800"/>}
                           </div>
                         </td>
-                        <td className="px-3 py-3 whitespace-nowrap">
-                          {inventory.date_issued}
+                        <td className="px-3 py-3 whitespace-nowrap text-center">
+                          {triggerValue === 'active' && inventory.date_issued}
+                          {triggerValue === 'inactive' && inventory.date_returned}
                         </td>
                         <td className="py-3 pl-6 whitespace-nowrap ">
                           <div className="flex justify-center items-center gap-3">
-                            <UpdateMobileInventory id={inventory.id} onClick={openModal}/>
+                            <UpdateInventory id={inventory.id} onClick={openModal}/>
                             
                             <QRGeneratorButton 
                               id={inventory.id} 

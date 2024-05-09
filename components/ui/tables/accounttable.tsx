@@ -2,21 +2,24 @@
 import EditAccountModal from "../inventory/edit-data/EditAccountModal";
 import { ServerAccountsInventory } from "@/lib/definition"
 import { useEffect, useState } from "react"
-import { UpdateAccountInventory } from "../buttons";
+import { DeleteInventory, UpdateInventory } from "../buttons";
 import CustomPagination from "@/components/Pagination";
 import {tableName} from "@/lib/company";
 import { XCircleIcon, CheckCircleIcon } from "@heroicons/react/24/solid";
+import DeleteAccountModal from "../inventory/delete-data/DeleteAccountInventory";
 
 interface AccountInventoryProps {
     getTableName: string,
     onDataSubmitted: () => void;
+    triggerValue: string;
 }
 
-export default function AccountTableInventory ({getTableName, onDataSubmitted}: AccountInventoryProps) {
+export default function AccountTableInventory ({triggerValue, getTableName, onDataSubmitted}: AccountInventoryProps) {
 
 const [accountInventories, setAccountInventories] = useState<ServerAccountsInventory[]>([])
 const [selectedId, setSelectedId] = useState<number | null>(null)
-const [isModalOpen, setIsModalOpen] = useState(false);
+const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 const [totalPages, setTotalPages] = useState(1);
 const [currentPage, setCurrentPage] = useState(1);
 const [modalData, setModalData] = useState<any>(null)
@@ -25,40 +28,70 @@ const getQuery = new URLSearchParams(window.location.search)
 const queryValue = getQuery.get('query')
 let company = tableName.find(company => company.name === getTableName)?.company || getTableName
 
-// async function fetchMobile () {
-//   try {
-//     if(queryValue) {
-//       const apiUrlEndpoint = `/api/${getTableName}/accounts/?query=${queryValue}`
-//       const response = await fetch(apiUrlEndpoint);
-//       const data = await response.json();
-//       setAccountInventories(data.results)
-//       setTotalPages(data.totalPages);
-//     } else {
-//       const apiUrlEndpoint = `/api/${getTableName}/accounts/?page=${currentPage}`;
-//       const response = await fetch(apiUrlEndpoint);
-//       const data = await response.json()
-      
-//       setAccountInventories(data.results);
-//       setCurrentPage(1);
-//       setTotalPages(data.totalPages)
-//     }
-//   } catch (error) {
-//       console.error('Error fetching data', error)
-//   }
-// }
+async function fetchAccount(trigger: string) {
+  try {
+    let apiUrlEndpoint;
+    let response;
+    let data;
+    if(queryValue) {
+      if(trigger === 'active') {
+        apiUrlEndpoint = `/api/${getTableName}/accounts/?query=${queryValue}`
+        response = await fetch(apiUrlEndpoint);
+        data = await response.json();
+      } else {
+        apiUrlEndpoint = `/api/${getTableName}/accounts/inactive/?query=${queryValue}`
+        response = await fetch(apiUrlEndpoint);
+        data = await response.json();
+      }
+      setAccountInventories(data.results)
+      setCurrentPage(1);
+      setTotalPages(data.totalPages);
+    } else {
+      if(trigger === 'active') {
+        apiUrlEndpoint = `/api/${getTableName}/accounts/?page=${currentPage}`;
+        response = await fetch(apiUrlEndpoint);
+        data = await response.json()
+      } else {
+        apiUrlEndpoint = `/api/${getTableName}/accounts/inactive/?page=${currentPage}`
+        response = await fetch(apiUrlEndpoint);
+        data = await response.json();
+      }
+      setAccountInventories(data.results);
+      setCurrentPage(1);
+      setTotalPages(data.totalPages)
+    }
+  } catch (error) {
+      console.error('Error fetching data', error)
+  }
+}
 useEffect(() => {
   async function fetchAccountInventory () {
     try {
+      let apiUrlEndpoint;
+      let response;
+      let data;
       if(queryValue) {
-        const apiUrlEndpoint = `/api/${getTableName}/accounts/?query=${queryValue}`
-        const response = await fetch(apiUrlEndpoint);
-        const data = await response.json();
+        if(triggerValue === 'active') {
+          apiUrlEndpoint = `/api/${getTableName}/accounts/?query=${queryValue}`
+          response = await fetch(apiUrlEndpoint);
+          data = await response.json();
+        } else {
+          apiUrlEndpoint = `/api/${getTableName}/accounts/inactive/?query=${queryValue}`
+          response = await fetch(apiUrlEndpoint);
+          data = await response.json();
+        }
         setAccountInventories(data.results)
         setTotalPages(data.totalPages);
       } else {
-        const apiUrlEndpoint = `/api/${getTableName}/accounts`;
-        const response = await fetch(apiUrlEndpoint);
-        const data = await response.json()
+          if(triggerValue === 'active') {
+            apiUrlEndpoint = `/api/${getTableName}/accounts`;
+            response = await fetch(apiUrlEndpoint);
+            data = await response.json()
+          } else {
+            apiUrlEndpoint = `/api/${getTableName}/accounts/inactive`;
+            response = await fetch(apiUrlEndpoint);
+            data = await response.json()
+          }
         setAccountInventories(data.results);
         setCurrentPage(1);
         setTotalPages(data.totalPages)
@@ -68,11 +101,23 @@ useEffect(() => {
     }
   }
   fetchAccountInventory()
-}, [getTableName, onDataSubmitted, queryValue])
+}, [getTableName, onDataSubmitted, queryValue, triggerValue])
+
 const handleFormSubmit = async () => {
-  closeModal();
-  // fetchMobile();
+  if(triggerValue === 'active') {
+    fetchAccount('active');
+    closeModal();
+    onDataSubmitted()
+  } else {
+    fetchAccount('inactive')
+    onDataSubmitted()
+    closeModal();
+  }
+  console.log("Result after submiting update on edit: ", getTableName)
+  console.log("Result after submiting update on edit accountInventories: ", accountInventories)
 }
+
+
 
 const handlePageClick = async (selected: { selected: number }) => {
   try {
@@ -112,9 +157,9 @@ const handleSave = async () => {
 }
 
 
-const openModal = async (id: number) => {
+const openEditModal = async (id: number) => {
   setSelectedId(id)
-  setIsModalOpen(true)
+  setIsEditModalOpen(true)
   try {
     const res = await fetch (`/api/${getTableName}/accounts/${id}`)
     if(!res.ok){
@@ -123,7 +168,22 @@ const openModal = async (id: number) => {
     const data = await res.json()
     setModalData(data.results[0])
   } catch (error){
-    
+    console.error('Internal Error', error)
+  }
+}
+
+const openDeleteModal = async (id: number) => {
+  setSelectedId(id)
+  setIsDeleteModalOpen(true)
+  try {
+    const res = await fetch (`/api/${getTableName}/accounts/${id}`)
+    if(!res.ok){
+      throw new Error (`Failed to fetch seleted Data`)
+    }
+    const data = await res.json()
+    setModalData(data.results[0])
+  } catch (error){
+    console.error('Internal Error', error)
   }
 }
 
@@ -131,7 +191,8 @@ const closeQrModal = () => {
   setSelectedId(null)
 }
 const closeModal = () => {
-  setIsModalOpen(false);
+  setIsEditModalOpen(false);
+  setIsDeleteModalOpen(false)
   setSelectedId(null)
 }
     return (  
@@ -165,55 +226,58 @@ const closeModal = () => {
                 
               </tr>
             </thead>
-            {(accountInventories?.length === null || accountInventories?.length === 0) ? (
+            <tbody className="bg-white ">
+              {accountInventories?.length === 0 ? (
                 <div className=""><span className=""> No data found... </span></div>
               ) : (
                 <>
-            <tbody className="bg-white ">
-              
-              {accountInventories?.map((accounts) => (
-                <tr key={accounts.id}
-                  className="w-full shadow-md shadow-gray-700 rounded text-sm   hover:bg-gray-200 hover:border-t-0"
-                >
-                  <td className=" pl-6 pr-3 whitespace-nowrap relative cursor-pointer">
-                    <div className="flex items-center gap-3">
-                      <p>{accounts.name} </p>
-                      
-                    </div>
-                  </td>
-                  <td className="px-3  whitespace-nowrap">
-                    {accounts.department}
-                  </td>
-                  <td className="px-3 py-3 whitespace-nowrap">
-                    {accounts.username}
-                  </td>
-                  <td className="px-3 py-3 whitespace-nowrap">
-                    **********
-                  </td>
-                  <td className="px-3 py-3 whitespace-nowrap">
-                    <div className="flex items-center justify-center gap-3">
-                        {accounts.is_active_id === 1 ? <CheckCircleIcon className="rounded-full w-5 h-5 bg-white text-green-800"/> : <XCircleIcon className="rounded-full w-5 h-5 bg-white text-red-800"/>}
-                    </div>
-                  </td>
-                  <td className="px-3 py-3 whitespace-nowrap">
-                    <div className="flex items-center justify-center gap-3">{accounts.notes}</div>
-                  </td>
-                  <td className="px-3 py-3 whitespace-nowrap">
-                    <div className="flex items-center justify-center edit-button">
-                      <UpdateAccountInventory id={accounts.id} onClick={openModal}/>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-              </tbody>
-              </>
-            )}
+                {accountInventories?.map((accounts) => (
+                  <tr key={accounts.id}
+                    className="w-full shadow-md shadow-gray-700 rounded text-sm   hover:bg-gray-200 hover:border-t-0"
+                  >
+                    <td className=" pl-6 pr-3 whitespace-nowrap relative cursor-pointer">
+                      <div className="flex items-center gap-3">
+                        <p>{accounts.name} </p>
+                      </div>
+                    </td>
+                    <td className="px-3  whitespace-nowrap">
+                      {accounts.department}
+                    </td>
+                    <td className="px-3 py-3 whitespace-nowrap">
+                      {accounts.username}
+                    </td>
+                    <td className="px-3 py-3 whitespace-nowrap">
+                      **********
+                    </td>
+                    <td className="px-3 py-3 whitespace-nowrap">
+                      <div className="flex items-center justify-center gap-3">
+                          {accounts.is_active_id === 1 ? <CheckCircleIcon className="rounded-full w-5 h-5 bg-white text-green-800"/> : <XCircleIcon className="rounded-full w-5 h-5 bg-white text-red-800"/>}
+                      </div>
+                    </td>
+                    <td className="px-3 py-3 whitespace-nowrap">
+                      <div className="flex items-center justify-center gap-3">{accounts.notes}</div>
+                    </td>
+                    <td className="px-3 py-3 whitespace-nowrap">
+                      <div className="flex items-center justify-center gap-3">
+                        <UpdateInventory id={accounts.id} onClick={openEditModal}/>
+                        <DeleteInventory id={accounts.id} onClick={openDeleteModal}/>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+                </>
+              )}
+            </tbody>
+             
            
           </table>
          
-          {isModalOpen && (
-                        <EditAccountModal onClose={closeModal} onSubmit={handleFormSubmit} id={selectedId} tablename={getTableName}/>
-                    )} 
+            {isEditModalOpen && (
+              <EditAccountModal onClose={closeModal} onSubmit={handleFormSubmit} id={selectedId} tablename={getTableName}/>
+            )} 
+            {isDeleteModalOpen && (
+              <DeleteAccountModal onClose={closeModal} onSubmit={handleFormSubmit} id={selectedId} tablename={getTableName}/>
+            )} 
 
         </div>
         {!queryValue && totalPages > 0 &&

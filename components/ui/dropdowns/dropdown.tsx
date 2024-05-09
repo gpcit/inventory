@@ -18,11 +18,13 @@ export default function Dropdown({onCompanyChange}: DropdownProps){
     return (
     <select 
     onChange={handleCompanyChange}
-    className="block w-full px-2 py-2 text-sm border border-gray-100 rounded-md focus:outline-none focus:border-black shadow-md">
-        <option className="rounded" value="">Select</option>
-        {tableName.map(company => (
-        <option key={company.name} value={company.name}>{company.displayName}</option>
-        ))}
+    className="block w-full px-2 py-2 text-sm border border-gray-100 rounded-md  text-green-800 focus:outline-none font-extrabold shadow-black shadow-md">
+        
+            <option className="rounded border text-black" value="">Select</option>
+            {tableName.map(company => (
+            <option className="font-extrabold text-sm" key={company.name} value={company.name}>{company.displayName}</option>
+            ))}
+        
     </select>
              
             // <Select value={value} labelId="selet-company" id="select-company" label="Select Company" onChange?={handleCompanyChange}>

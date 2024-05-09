@@ -26,7 +26,8 @@ export default function Form({triggerValue, gettableName, onDataSubmitted }: For
     date_issued: '',
     comment: '',
     date_purchased: '',
-    is_active_id: 1
+    date_returned: '',
+    is_active_id: 0
   });
   // const [create, setCreated] = useState(false);
   
@@ -36,9 +37,21 @@ export default function Form({triggerValue, gettableName, onDataSubmitted }: For
       ...prevState,
       [name]: value,
     }));
-   
   };
-  console.log("Result for trigger: ", triggerValue)
+
+  useEffect(() => {
+    if(triggerValue === 'active'){
+      setFormData(prevState => ({
+        ...prevState,
+        is_active_id: 1
+      }))
+    } else {
+      setFormData(prevState => ({
+        ...prevState,
+        is_active_id: 2
+      }))
+    }
+  }, [triggerValue])
   async function addMobileInventory(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const addToastLoading = toast.loading('Adding new data. Please wait...', {duration: 3500, position: "top-center"})
@@ -62,6 +75,7 @@ export default function Form({triggerValue, gettableName, onDataSubmitted }: For
         comment: formData.comment,
         date_issued: formData.date_issued,
         date_purchased: formData.date_purchased,
+        date_returned: formData.date_returned,
         is_active_id: formData.is_active_id
           // tableName: gettableName
         }),
@@ -87,6 +101,7 @@ export default function Form({triggerValue, gettableName, onDataSubmitted }: For
           comment: '',
           date_issued: '',
           date_purchased: '',
+          date_returned: '',
           is_active_id: 0
           });
           onDataSubmitted();
@@ -96,7 +111,7 @@ export default function Form({triggerValue, gettableName, onDataSubmitted }: For
       } else {
         setIsDuplicate(true)
         setErrorMessage(response.error)
-        toast.error('Duplicate Serial Number', {id: addToastLoading})
+        toast.error(response.error, {id: addToastLoading})
       }
     } catch (error) {
       console.error('Error adding inventory:', error);
@@ -109,6 +124,7 @@ export default function Form({triggerValue, gettableName, onDataSubmitted }: For
       ...prevState,
       is_active_id: selectedValue
     }));
+    console.log(formData.is_active_id)
   }
  
 
@@ -192,7 +208,7 @@ export default function Form({triggerValue, gettableName, onDataSubmitted }: For
             placeholder="Enter Serial Number"
           />
            {isDuplicate && (
-            <span className='text-red-700 text-sm'>{errorMessage} Department</span>
+            <span className='text-red-700 text-sm'>{errorMessage}</span>
           )}
         </div>
 
@@ -271,7 +287,9 @@ export default function Form({triggerValue, gettableName, onDataSubmitted }: For
         </div>
         {/* Date Issued */}
         <div className="mb-2 col-span-3">
-          <label htmlFor="date_issued" className="block mb-2 text-sm font-semibold">
+          {triggerValue === 'active' ? (
+            <>
+            <label htmlFor="date_issued" className="block mb-2 text-sm font-semibold">
             Date Issued
           </label>
           <input
@@ -282,6 +300,22 @@ export default function Form({triggerValue, gettableName, onDataSubmitted }: For
             onChange={handleChange}
             className="block w-full px-3 py-2 text-sm border border-gray-200 rounded-md focus:outline-none focus:border-black shadow-md"
           />
+          </>
+          ): (
+            <>
+            <label htmlFor="date_returned" className="block mb-2 text-sm font-semibold">
+            Date Returned
+          </label>
+          <input
+            type="date"
+            id="date_returned"
+            name="date_returned"
+            value={formData.date_returned}
+            onChange={handleChange}
+            className="block w-full px-3 py-2 text-sm border border-gray-200 rounded-md focus:outline-none focus:border-black shadow-md"
+          />
+          </>
+          )}
         </div>
         {/* Date Purchased */}
         <div className="mb-2 col-span-3">
@@ -310,6 +344,7 @@ export default function Form({triggerValue, gettableName, onDataSubmitted }: For
                     className="block w-full px-2 py-2 text-sm border border-gray-100 rounded-md focus:outline-none focus:border-black shadow-md"
                     >
                       {status.map((status) => (
+                        
                       <option key={status.name} value={status.value}>{status.name}</option>
                       ))}
                   </select>
