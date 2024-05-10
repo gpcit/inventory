@@ -178,7 +178,6 @@ export default function Form({triggerValue, gettableName, onDataSubmitted }: For
         </div>
 
         {/* Status */}
-        
         <div className="mb-4 col-span-3 flex flex-row sm:col-start-5">
           <label htmlFor="status" className="block m-2 text-sm font-semibold">
             Status:
@@ -204,7 +203,6 @@ export default function Form({triggerValue, gettableName, onDataSubmitted }: For
             placeholder="Enter Password"
           />
           )}
-          
         </div>
       </div>
       <div className="flex justify-end py-2 mt-2">

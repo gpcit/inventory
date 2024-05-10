@@ -1,3 +1,4 @@
+import { status } from '@/lib/company';
 import React, { FormEvent, useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { useTimeout } from 'usehooks-ts';
@@ -7,15 +8,16 @@ interface ModalProps {
   onSubmit: () => void;
   id: number | null;
   tablename: string;
+  triggerValue: string
 }
 
 
 
-const EditInventoryModal: React.FC<ModalProps> = ({onClose, onSubmit, tablename, id}) => {
+const EditInventoryModal: React.FC<ModalProps> = ({triggerValue, onClose, onSubmit, tablename, id}) => {
   const [formData, setFormData] = useState({
     pc_name: '',
     name: '',
-    mac_address: '',
+    mac_address: '' ,
     ip_address: '',
     computer_type: '',
     monitor: '',
@@ -24,6 +26,7 @@ const EditInventoryModal: React.FC<ModalProps> = ({onClose, onSubmit, tablename,
     anydesk: '',
     comment: '',
     supplier: '',
+    is_active_id: '',
     date_purchased: '',
     date_installed: ''
   });
@@ -32,11 +35,18 @@ const EditInventoryModal: React.FC<ModalProps> = ({onClose, onSubmit, tablename,
     const { name, value } = e.target
     setFormData((prevState) => ({
       ...prevState,
-      [name]: value,
+      [name]: value || '',
     }));
   };
+  const handleChangeStatus = (event: React.ChangeEvent<HTMLSelectElement | HTMLTextAreaElement>) => {
+    const selectedValue = event.target.value
+    setFormData(prevState => ({
+      ...prevState,
+      is_active_id: selectedValue
+    }));
+  }
+
   // handle for getting the specific data in database using the unique id
-  
   useEffect(() => {
     async function fetchInventoryItem() {
       try {
@@ -45,8 +55,7 @@ const EditInventoryModal: React.FC<ModalProps> = ({onClose, onSubmit, tablename,
           throw new Error('Failed to fetch inventory item')
         }
         const data = await res.json();
-        
-        setFormData(data.results[0])
+        setFormData(data.results[0] )
       } catch(error) {
         console.error('Error fetching inventory item:', error)
       }
@@ -78,6 +87,7 @@ const EditInventoryModal: React.FC<ModalProps> = ({onClose, onSubmit, tablename,
           anydesk: formData.anydesk,
           comment: formData.comment,
           supplier: formData.supplier,
+          is_active_id: formData.is_active_id,
           date_purchased: formattedDate,
           date_installed: formData.date_installed,
           // tableName: gettableName
@@ -102,6 +112,7 @@ const EditInventoryModal: React.FC<ModalProps> = ({onClose, onSubmit, tablename,
             anydesk: '',
             comment: '',
             supplier: '',
+            is_active_id: '',
             date_purchased: '',
             date_installed: '',
           });
@@ -328,7 +339,7 @@ const EditInventoryModal: React.FC<ModalProps> = ({onClose, onSubmit, tablename,
                   className="block w-full px-3 py-2 text-sm border border-gray-200 rounded-md focus:outline-none focus:border-black shadow-md"
                 />
               </div>
-              {/* Date Purchased */}
+              {triggerValue === 'active' ? (
               <div className="mb-4 col-span-3">
                 <label htmlFor="date_installed" className="block mb-2 text-sm font-medium">
                   Date Installed
@@ -341,6 +352,39 @@ const EditInventoryModal: React.FC<ModalProps> = ({onClose, onSubmit, tablename,
                   onChange={handleChange}
                   className="block w-full px-3 py-2 text-sm border border-gray-200 rounded-md focus:outline-none focus:border-black shadow-md"
                 />
+              </div>
+              ): (
+              <div className="mb-4 col-span-3">
+                <label htmlFor="date_installed" className="block mb-2 text-sm font-medium">
+                  Date Pullout
+                </label>
+                <input
+                  type="date"
+                  id="date_installed"
+                  name="date_installed"
+                  value={formData.date_installed}
+                  onChange={handleChange}
+                  className="block w-full px-3 py-2 text-sm border border-gray-200 rounded-md focus:outline-none focus:border-black shadow-md"
+                />
+              </div>
+              )}
+              
+              {/* Status */}
+              <div className="mb-4 col-span-3 flex flex-row sm:col-start-5 justify-center items-center">
+                <label htmlFor="is_active_id" className="block mb-1 mx-2 text-sm font-semibold">
+                  Status:
+                </label>
+                <select 
+                id='is_active_id'
+                name='is_active_id'
+                value={formData.is_active_id}
+                onChange={handleChangeStatus}
+                className="block w-full px-2 py-2 text-sm border border-gray-100 rounded-md focus:outline-none focus:border-black shadow-md"
+                >
+                  {status.map((status) => (
+                  <option key={status.name} value={status.value}>{status.name}</option>
+                  ))}
+                </select>
               </div>
             </div>
             <div className="flex justify-end py-2 mt-2">

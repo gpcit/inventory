@@ -1,13 +1,5 @@
 import { query } from '../../../lib/db';
-import Cors from 'cors'
-import initMiddleware from '../../../lib/init-middleware'
 
-const cors = initMiddleware(
-  Cors({
-    origin: '*',
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  })
-);
 
 export default async function handler(req, res) {
   // await cors(req, res)
@@ -19,18 +11,24 @@ export default async function handler(req, res) {
   if (req.method === 'GET') {
     try {
       let data;
+      let pageTotal;
       let values = [];
         if(searchQuery){
+          pageTotal = `SELECT COUNT(*) AS total FROM ${tableName} WHERE is_active_id = 1`
           data = `SELECT * FROM ${tableName} 
-          WHERE pc_name LIKE ? OR name LIKE ? OR mac_address LIKE ? OR computer_type LIKE ? LIMIT 5`;
+                  WHERE (pc_name LIKE ? OR name LIKE ? OR mac_address LIKE ?  OR computer_type LIKE ?) 
+                  AND is_active_id = 1
+                  LIMIT ?
+                  OFFSET ?`;
           values = [`%${searchQuery}%`, `%${searchQuery}%`, `%${searchQuery}%`, `%${searchQuery}%`, itemPerPage, (page - 1) * itemPerPage]
         } else {
-          data = `SELECT * FROM ${tableName} ORDER BY date_created desc LIMIT ? OFFSET ?`
+          pageTotal = `SELECT COUNT(*) as total FROM ${tableName} WHERE is_active_id = 1`
+          data = `SELECT * FROM ${tableName} WHERE is_active_id = 1 ORDER BY date_created desc LIMIT ? OFFSET ?`
           values = [itemPerPage, (page - 1) * itemPerPage]
           }
       const [inventory, totalCountRows] = await Promise.all([
         query(data, values),
-        query(`SELECT COUNT(*) AS total FROM ${tableName}`)
+        query(pageTotal)
       ]);
       const totalCount = totalCountRows[0].total;
       const totalPages = Math.ceil(totalCount / itemPerPage);
@@ -54,12 +52,14 @@ export default async function handler(req, res) {
       const supplier = req.body.supplier
       const comment = req.body.comment
       const anydesk = req.body.anydesk
+      const is_active_id = req.body.is_active_id
       const date_purchased = req.body.date_purchased
+      const date_pullout = req.body.date_pullout
       const date_installed = req.body.date_installed
       // if (!pc_name || !mac_address) {
       //   return res.status(400).json({ error: 'Missing required fields' });
       // }
-      const addInventory = await query(`INSERT INTO ${tableName} (pc_name, name, ip_address, mac_address, computer_type, monitor, specs, department, anydesk, supplier, comment, date_purchased, date_installed) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, [pc_name, name, ip_address, mac_address, computer_type, monitor, specs, department, anydesk, supplier, comment, date_purchased, date_installed]);
+      const addInventory = await query(`INSERT INTO ${tableName} (pc_name, name, ip_address, mac_address, computer_type, monitor, specs, department, anydesk, supplier, comment, date_purchased, date_installed, date_pullout, is_active_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, [pc_name, name, ip_address, mac_address, computer_type, monitor, specs, department, anydesk, supplier, comment, date_purchased, date_installed, date_pullout, is_active_id]);
       console.log("this will be shown if success: ",addInventory.insertId)
       let message;
       if (addInventory.insertId) {
@@ -82,7 +82,9 @@ export default async function handler(req, res) {
         anydesk: anydesk,
         supplier: supplier,
         comment: comment,
+        is_active_id: is_active_id,
         date_purchased: date_purchased,
+        date_pullout: date_pullout,
         date_installed: date_installed
       };
 
@@ -95,14 +97,14 @@ export default async function handler(req, res) {
 
     try {
       const {id} = req.query;
-      const {pc_name, name, ip_address, mac_address, computer_type, monitor, specs, department, anydesk, supplier, comment, date_purchased, date_installed} = req.body
+      const {pc_name, name, ip_address, mac_address, computer_type, monitor, specs, department, anydesk, supplier, comment, date_purchased, date_installed, date_pullout, is_active_id} = req.body
 
       if(!id || !pc_name || !mac_address){
         return res.status(400).json({ error: 'Missing required fields' })
       }
       const updateResult = await query
-      (`UPDATE ${tableName} SET pc_name=?, name=?, ip_address=?, mac_address=?, computer_type=?, monitor=?, specs=?, department=?, anydesk=?, supplier=?, comment=?, date_purchased=?, date_installed=? WHERE id=?`,
-      [pc_name, name, ip_address, mac_address, computer_type, monitor, specs, department, anydesk, supplier, comment, date_purchased, date_installed, id]);
+      (`UPDATE ${tableName} SET pc_name=?, name=?, ip_address=?, mac_address=?, computer_type=?, monitor=?, specs=?, department=?, anydesk=?, supplier=?, comment=?, date_purchased=?, date_installed=?, date_pullout=?, is_active_id WHERE id=?`,
+      [pc_name, name, ip_address, mac_address, computer_type, monitor, specs, department, anydesk, supplier, comment, date_purchased, date_installed, date_pullout, is_active_id, id]);
 
       if(updateResult.affectedRows > 0){
         res.status(200).json({ message: 'success', updatedItem: id })

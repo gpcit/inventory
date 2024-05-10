@@ -16,6 +16,7 @@ import Card, { CardBody, CardHeader } from "@/components/CardLayout";
 import GetBranch from "@/components/ui/dropdowns/select-company";
 import toast from "react-hot-toast";
 import { duration } from "html2canvas/dist/types/css/property-descriptors/duration";
+import StatusToggle from "@/components/StatusToggle";
 
 
 export default function Page({searchParams,}:{searchParams?: {search?: string}}) {
@@ -26,7 +27,7 @@ export default function Page({searchParams,}:{searchParams?: {search?: string}})
     const [company, setCompany] = useState<string>("");
     const [branch, setBranch] = useState<string>("");
     const [tblName, setTblName] = useState<string>("");
-    const [branchTable, setBranchTable] = useState<string>("");
+    const [triggerValue, setTriggerValue] = useState<string>("active")
     const [dataUploaderHandler, setDataUploaderHandler] = useState<() => void>(() => () => {})
 
     let name = tableName.find(companyName => companyName.name === company)?.displayName || company
@@ -48,7 +49,6 @@ export default function Page({searchParams,}:{searchParams?: {search?: string}})
 
     // Handle selecting company
     const handleCompanyChange = (value: string) => {
-        
         if(value === 'gpc_inventory'){
             setBranch('Balintawak')
         } else if (value === 'lsi_inventory') {
@@ -57,21 +57,19 @@ export default function Page({searchParams,}:{searchParams?: {search?: string}})
             setBranch('')
         }
     //    search === " "
-        
             setCompany(value)
             setTblName(value)
-
     }
     
-    // modal for add
+    // this function is trigger after successfully add or edit a data
     const handleFormSubmit = async () =>{
         closeModal();
         // await getPageData();
         dataUploaderHandler()
     }
+    // this will be effect after successfully upload excel file
     useEffect(() => {
         if(tblName){
-        
         const handleDataUploaded = async () =>{
             try {
                 const apiUrlEndpoint = `/api/${tblName}`
@@ -86,11 +84,10 @@ export default function Page({searchParams,}:{searchParams?: {search?: string}})
         handleDataUploaded()
         }
     }, [tblName])
-
+    // this function handle changing branch
     const handleBranchChange = (value: string) => {
         const branchTableName = branchTableMap[value as keyof typeof branchTableMap] || company;
         const companyChange = toast.loading('Please wait...', {duration: 3000})
-        
         setTimeout(() => {
             toast.success('Loading successful!', {id: companyChange})
             setBranch(value)
@@ -98,6 +95,16 @@ export default function Page({searchParams,}:{searchParams?: {search?: string}})
             dataUploaderHandler()
         }, 2000)
     }
+    // This function for StatusToggle and handling triggerValue 
+    const handleTrigger = () =>{
+        if(triggerValue === 'active') {
+            setTriggerValue(triggerValue === 'active' ? 'inactive' : 'active')
+        } else {
+            setTriggerValue(triggerValue === 'inactive' ? 'active' : 'inactive')
+        }
+        
+    }
+    
      return (
         
         <Layout>
@@ -121,26 +128,31 @@ export default function Page({searchParams,}:{searchParams?: {search?: string}})
                     {tblName !== "" && <><Search placeholder="Search..." /> <CreateInventory onClick={openModal}/></> }
                 </div>
                     {(tblName !== '' || company !=='') && (inventories?.length === 0 || inventories === undefined ) && <Upload tablename={tblName} onDataUploaded={dataUploaderHandler} />}
-                <div className="flex flex-row items-center mt-1">
-                    <div className="relative flex flex-col items-center justify-between md:mt-2">
-                        <label className="">{company === '' ? 'Select' : 'Change' } Company:</label>
-                        <Dropdown onCompanyChange={handleCompanyChange} />
+                <div className="flex justify-between items-center">
+                    <div className="flex flex-row items-center mt-1">
+                        <div className="relative flex flex-col items-center justify-between md:mt-2">
+                            <label className="">{company === '' ? 'Select' : 'Change' } Company:</label>
+                            <Dropdown onCompanyChange={handleCompanyChange} />
+                        </div>
+                    </div>
+                    <div className="mx-2">
+                        {name !=='' &&  <StatusToggle loading={false} onChange={handleTrigger} /> }
                     </div>
                 </div>
                     
-                    {company === 'gpc_inventory' && branch === 'Balintawak' && <GPCInventoryTable query={search} gettableName={company} onDataSubmitted={handleFormSubmit}/>}
-                    {company === 'gpc_inventory' && branch === 'SQ'  && <GPCInventoryTable query={search} gettableName={tblName} onDataSubmitted={handleFormSubmit}/>}
+                    {company === 'gpc_inventory' && branch === 'Balintawak' && <GPCInventoryTable triggerValue={triggerValue} query={search} gettableName={company} onDataSubmitted={handleFormSubmit}/>}
+                    {company === 'gpc_inventory' && branch === 'SQ'  && <GPCInventoryTable triggerValue={triggerValue} query={search} gettableName={tblName} onDataSubmitted={handleFormSubmit}/>}
                     
-                    {company === 'lsi_inventory' && branch === 'Valenzuela' && <GPCInventoryTable query={search} gettableName={company} onDataSubmitted={handleFormSubmit}/>}
-                    {company === 'lsi_inventory' && branch === 'Canlubang'  && <GPCInventoryTable query={search} gettableName={tblName} onDataSubmitted={handleFormSubmit}/>}
+                    {company === 'lsi_inventory' && branch === 'Valenzuela' && <GPCInventoryTable triggerValue={triggerValue} query={search} gettableName={company} onDataSubmitted={handleFormSubmit}/>}
+                    {company === 'lsi_inventory' && branch === 'Canlubang'  && <GPCInventoryTable triggerValue={triggerValue} query={search} gettableName={tblName} onDataSubmitted={handleFormSubmit}/>}
                     
-                    {(company !== 'gpc_inventory' && company !== 'lsi_inventory' ) && company !== '' && <GPCInventoryTable query={search} gettableName={company} onDataSubmitted={handleFormSubmit}/>}
+                    {(company !== 'gpc_inventory' && company !== 'lsi_inventory' ) && company !== '' && <GPCInventoryTable triggerValue={triggerValue} query={search} gettableName={company} onDataSubmitted={handleFormSubmit}/>}
                     
                     
                     
                     {isModalOpen && (
                         <Modal onClose={closeModal} title={branch} companyName={name} onSubmit={handleFormSubmit} tablename={tblName}>
-                            <Form gettableName={tblName} onDataSubmitted={handleFormSubmit}/>
+                            <Form triggerValue={triggerValue} gettableName={tblName} onDataSubmitted={handleFormSubmit}/>
                         </Modal>
                     )}
                      
