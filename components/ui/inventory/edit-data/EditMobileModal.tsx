@@ -7,12 +7,12 @@ interface ModalProps {
   onSubmit: () => void;
   id: number | null;
   tablename: string;
-  
+  triggerValue: string;
 }
 
 
 
-const EditMobileModal: React.FC<ModalProps> = ({onClose, onSubmit, tablename, id}) => {
+const EditMobileModal: React.FC<ModalProps> = ({triggerValue, onClose, onSubmit, tablename, id}) => {
   const [formData, setFormData] = useState({
     assigned_to: '',
     department: '',
@@ -26,6 +26,7 @@ const EditMobileModal: React.FC<ModalProps> = ({onClose, onSubmit, tablename, id
     comment: '',
     date_issued: '',
     date_purchased: '',
+    date_returned: '',
     is_active_id: 1
   });
   // handle for changing the value in inputs
@@ -80,6 +81,7 @@ const EditMobileModal: React.FC<ModalProps> = ({onClose, onSubmit, tablename, id
           comment: formData.comment,
           date_issued: formData.date_issued,
           date_purchased: formData.date_purchased,
+          date_returned: formData.date_returned,
           is_active_id: formData.is_active_id
           // tableName: gettableName
         }),
@@ -104,6 +106,7 @@ const EditMobileModal: React.FC<ModalProps> = ({onClose, onSubmit, tablename, id
             comment: '',
             date_issued: '',
             date_purchased: '',
+            date_returned: '',
             is_active_id: 0
           });
           onSubmit();
@@ -303,7 +306,8 @@ const EditMobileModal: React.FC<ModalProps> = ({onClose, onSubmit, tablename, id
                   />
                 </div>
                 {/* Date Issued */}
-                <div className="mb-2 col-span-3">
+                {triggerValue === 'active' ? ( 
+                  <div className="mb-2 col-span-3">
                   <label htmlFor="date_issued" className="block mb-2 text-sm font-medium">
                     Date Issued
                   </label>
@@ -316,6 +320,22 @@ const EditMobileModal: React.FC<ModalProps> = ({onClose, onSubmit, tablename, id
                     className="block w-full px-3 py-2 text-sm border border-gray-200 rounded-md focus:outline-none focus:border-black shadow-md"
                   />
                 </div>
+                ) : (
+                <div className="mb-2 col-span-3">
+                  <label htmlFor="date_returned" className="block mb-2 text-sm font-medium">
+                    Date Returned
+                  </label>
+                  <input
+                    type="date"
+                    id="date_returned"
+                    name="date_returned"
+                    value={formData.date_returned}
+                    onChange={handleChange}
+                    className="block w-full px-3 py-2 text-sm border border-gray-200 rounded-md focus:outline-none focus:border-black shadow-md"
+                  />
+                </div>
+                )}
+                
                 {/* Date Issued */}
                 <div className="mb-2 col-span-3">
                   <label htmlFor="date_purchased" className="block mb-2 text-sm font-medium">

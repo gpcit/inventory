@@ -297,12 +297,14 @@ const closeDeleteModal = () => {
                 
                 <tbody className="bg-white cursor-pointer">
                   {mobileInventory?.length === null || mobileInventory?.length === 0 ? (
-                    <span> No data found... </span>
+                    <tr>
+                       <td colSpan={9} className="text-center">No data found...</td> 
+                    </tr>
                   ): (
                     <>
                     {mobileInventory?.map((inventory) => (
                       <tr key={inventory.id}
-                        className="w-full shadow-md shadow-gray-700 rounded border-green-500 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg hover:bg-gray-200 hover:border-t-0"
+                        className="w-full shadow-md shadow-gray-700 rounded border-green-500 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg hover:bg-green-200 hover:border-t-0"
                       >
                         <td className="py-3 pl-6 pr-3 whitespace-nowrap" onClick={() => viewDetails(inventory.id)}>
                             <p>{inventory.assigned_to}</p>
@@ -360,7 +362,7 @@ const closeDeleteModal = () => {
                     )}
                     {isModalOpen && (
                       
-                      <EditMobileModal onClose={closeEditModal} onSubmit={handleEditSubmit} id={selectedId} tablename={getTableName}/>  
+                      <EditMobileModal triggerValue={triggerValue} onClose={closeEditModal} onSubmit={handleEditSubmit} id={selectedId} tablename={getTableName}/>  
                     )}
                     {isDeleteModalOpen && (
                       <DeleteMobileModal onClose={closeDeleteModal} onSubmit={handleDeleteSubmit} id={selectedId} tablename={getTableName} />

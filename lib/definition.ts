@@ -6,6 +6,8 @@ export interface InventoryList {
     computer_type: string;
     specs: string;
     supplier: string;
+    is_active_id: number;
+    date_pullout: string;
     date_purchased: string;
     date_installed: string;
 }

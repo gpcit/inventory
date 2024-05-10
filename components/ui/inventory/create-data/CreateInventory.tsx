@@ -6,9 +6,10 @@ import toast from 'react-hot-toast';
 interface FormProps {
   gettableName: string;
   onDataSubmitted: () => void; // Callback function to handle data submission
+  triggerValue: string
 }
 
-export default function Form({ gettableName, onDataSubmitted }: FormProps) {
+export default function Form({triggerValue, gettableName, onDataSubmitted }: FormProps) {
   // console.log("This is from create-form", gettableName)
   const [formData, setFormData] = useState({
     pcname: '',
@@ -22,7 +23,9 @@ export default function Form({ gettableName, onDataSubmitted }: FormProps) {
     anydesk: '',
     supplier: '',
     comment: '',
+    is_active_id: 0,
     date_purchased: '',
+    date_pullout: '',
     date_installed: '',
   });
   // const [create, setCreated] = useState(false);
@@ -56,7 +59,9 @@ export default function Form({ gettableName, onDataSubmitted }: FormProps) {
           anydesk: formData.anydesk,
           supplier: formData.supplier,
           comment: formData.comment,
+          is_active_id: formData.is_active_id,
           date_purchased: formData.date_purchased,
+          date_pullout: formData.date_pullout,
           date_installed: formData.date_installed
           
           // tableName: gettableName
@@ -78,7 +83,9 @@ export default function Form({ gettableName, onDataSubmitted }: FormProps) {
             anydesk: '',
             supplier: '',
             comment: '',
+            is_active_id: 0,
             date_purchased: '',
+            date_pullout: '',
             date_installed: '',
           });
           onDataSubmitted();
@@ -91,6 +98,19 @@ export default function Form({ gettableName, onDataSubmitted }: FormProps) {
       toast.error('Unable to add a new data!')
     }
   }
+  useEffect(() => {
+    if(triggerValue === 'active') {
+      setFormData(prevState => ({
+        ...prevState,
+        is_active_id: 1
+      }))
+    } else {
+      setFormData(prevState => ({
+        ...prevState,
+        is_active_id: 2
+      }))
+    }
+  }, [triggerValue])
 
   return (
     <form onSubmit={addInventory}>
@@ -277,7 +297,8 @@ export default function Form({ gettableName, onDataSubmitted }: FormProps) {
           />
         </div>
         {/* Date Installed */}
-        <div className="mb-4 col-span-3">
+        {triggerValue === 'active' ? (
+          <div className="mb-4 col-span-3">
           <label htmlFor="date_installed" className="block mb-2 text-sm font-medium">
             Date Installed:
           </label>
@@ -289,6 +310,48 @@ export default function Form({ gettableName, onDataSubmitted }: FormProps) {
             onChange={handleChange}
             className="block w-full px-3 py-2 text-sm border border-gray-600/35 rounded-md focus:outline-none focus:border-gray-400 shadow-md"
           />
+        </div>
+        ) : (
+          <div className="mb-4 col-span-3">
+          <label htmlFor="date_pullout" className="block mb-2 text-sm font-medium">
+            Date Pullout:
+          </label>
+          <input
+            type="date"
+            id="date_pullout"
+            name="date_pullout"
+            value={formData.date_pullout}
+            onChange={handleChange}
+            className="block w-full px-3 py-2 text-sm border border-gray-600/35 rounded-md focus:outline-none focus:border-gray-400 shadow-md"
+          />
+        </div>
+        )}
+        {/* Status */}
+        <div className="mb-4 col-span-3 flex flex-row sm:col-start-5">
+          <label htmlFor="status" className="block m-2 text-sm font-semibold">
+            Status:
+          </label>
+          {triggerValue === 'active' ? (
+            <input
+            type="text"
+            id="status"
+            name="status"
+            value={formData.is_active_id === 1 ? 'Active' : 'Inactive'}
+            disabled
+            className="block w-full px-3 py-2 text-sm border bg-green-200 rounded-md focus:outline-none focus:border-black shadow-md"
+            placeholder="Enter Password"
+          />
+          ) : (
+            <input
+            type="text"
+            id="status"
+            name="status"
+            value={formData.is_active_id === 1 ? 'Active' : 'Inactive'}
+            disabled
+            className="block w-full px-3 py-2 text-sm border bg-red-200 rounded-md focus:outline-none focus:border-black shadow-md"
+            placeholder="Enter Password"
+          />
+          )}
         </div>
       </div>
           <div className="flex justify-end py-2 mt-2">

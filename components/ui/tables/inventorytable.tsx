@@ -9,16 +9,17 @@ import CustomPagination from "@/components/Pagination";
 import html2canvas from "html2canvas";
 import BarcodeModal from "@/components/QRCodeModal";
 import ViewModal from "@/components/ViewInventoryModal";
+import { XCircleIcon, CheckCircleIcon } from "@heroicons/react/24/solid";
 import DeleteInventoryModal from "../inventory/delete-data/DeleteInventory";
 
 interface GPCInventoryTableProps {
   gettableName: string;
   onDataSubmitted: () => void;
   query: string;
-
+  triggerValue: string
 }
 
-export default function GPCInventoryTable ({ gettableName, onDataSubmitted, query}:GPCInventoryTableProps){
+export default function GPCInventoryTable ({triggerValue, gettableName, onDataSubmitted, query}:GPCInventoryTableProps){
   const [inventories, setInventories] = useState<InventoryList[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -32,34 +33,72 @@ export default function GPCInventoryTable ({ gettableName, onDataSubmitted, quer
   const getquery = new URLSearchParams(window.location.search)
   const queryvalue = getquery.get('query')
  
+  async function fetchInventory(trigger: string){
+    try 
+    {
+      let apiUrlEndpoint;
+      let response;
+      let data;
+        if(trigger === 'active') {
+          apiUrlEndpoint = `/api/${gettableName}`;
+          response = await fetch(apiUrlEndpoint);
+          data = await response.json();
+        } else {
+          apiUrlEndpoint = `/api/${gettableName}/inactive`;
+         response = await fetch(apiUrlEndpoint);
+         data = await response.json();
+        }
+        setInventories(data.results);
+        
+        console.log(currentPage)
+    } catch (error) {
+        console.error('Error fetching inventory data:', error);
+    }
+  }
+
   // Fetching the data from database
-  
   useEffect(() => {
     async function fetchInventoryData() {
       try {
+        let apiUrlEndpoint;
+        let response;
+        let data;
         if(queryvalue) {
-          const apiUrlEndpoint = `/api/${gettableName}?query=${queryvalue}`;
-          const response = await fetch(apiUrlEndpoint);
-          const data = await response.json();
+          if(triggerValue === 'active') {
+            apiUrlEndpoint = `/api/${gettableName}?query=${queryvalue}`;
+            response = await fetch(apiUrlEndpoint);
+            data = await response.json();
+          } else {
+            apiUrlEndpoint = `/api/${gettableName}/inactive/?query=${queryvalue}`;
+            response = await fetch(apiUrlEndpoint);
+            data = await response.json();
+          }
+          
           setTotalPages(data.totalPages)
           setInventories(data.results);
-          
+          setCurrentPage(1)
         } else {
-          const apiUrlEndpoint = `/api/${gettableName}`;
-          const response = await fetch(apiUrlEndpoint);
-          const data = await response.json();
-          
+          if(triggerValue === 'active') {
+            apiUrlEndpoint = `/api/${gettableName}`;
+            response = await fetch(apiUrlEndpoint);
+            data = await response.json();
+          } else {
+            apiUrlEndpoint = `/api/${gettableName}/inactive`;
+            response = await fetch(apiUrlEndpoint);
+            data = await response.json();
+          }     
           setInventories(data.results);
           setTotalPages(data.totalPages)
           setCurrentPage(1)
         }
+        console.log("The current query: ", apiUrlEndpoint)
       } catch (error) {
         console.error('Error fetching inventory data:', error);
       }
     }
     
     fetchInventoryData();
-  }, [gettableName, onDataSubmitted, queryvalue, totalPages]);
+  }, [gettableName, onDataSubmitted, queryvalue, totalPages, triggerValue]);
   
   const handlePageClick = async (selected: { selected: number }) => {
     try {
@@ -162,8 +201,17 @@ export default function GPCInventoryTable ({ gettableName, onDataSubmitted, quer
   }
   
   const handleFormSubmit = async () =>{
-    closeModal();
-    getPageData()
+    if(triggerValue === 'active') {
+      fetchInventory('active')
+      onDataSubmitted()
+      closeModal();
+    } else {
+      fetchInventory('inactive')
+      onDataSubmitted()
+      closeModal();
+    }
+      
+
   }
   const handleSave = async () => {
     try {
@@ -175,31 +223,12 @@ export default function GPCInventoryTable ({ gettableName, onDataSubmitted, quer
         console.error('Error saving data:', error);
     }
 }
-  const getPageData = async () => {
-    try {
-        const pageData = {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json"
-            }
-        }
-        const apiUrlEndpoint = `/api/${gettableName}`;
-        const response = await fetch(apiUrlEndpoint, pageData);
-        const res = await response.json();
-        
-        setInventories(res.results);
-        
-        console.log(currentPage)
-    } catch (error) {
-        console.error('Error fetching inventory data:', error);
-    }
-  }
     return (  
     <div className="overflow-x-auto sm:p-2">
       <div className="inline-block min-w-full align-middle">
         <div className="py-2 rounded  md:pt-0">
           <table className="min-w-full   md:table">
-            <thead className="text-sm text-left bg-gradient-to-r from-green-600 text-black border-black border rounded">
+            <thead className={`text-sm text-left bg-gradient-to-r  from-green-600 text-black border-black border rounded`}>
               <tr>
                 <th scope="col" className="px-4 py-1  font-extrabold">
                   PC Name
@@ -216,8 +245,17 @@ export default function GPCInventoryTable ({ gettableName, onDataSubmitted, quer
                 <th scope="col" className="px-3 py-1 font-extrabold">
                   Supplier
                 </th>
+                {triggerValue === 'active' ? (
                 <th scope="col" className="px-3 py-1 font-extrabold">
                   Date Installed
+                </th>
+                ) : (
+                <th scope="col" className="px-3 py-1 font-extrabold">
+                  Date Pull-out
+                </th>
+                )}
+                <th scope="col" className="px-3 py-1 font-extrabold">
+                  Status
                 </th>
                 <th scope="col" className="py-3 pl-6 pr-3 text-center">
                   Action
@@ -227,7 +265,9 @@ export default function GPCInventoryTable ({ gettableName, onDataSubmitted, quer
             </thead>
             <tbody className="bg-white ">
               {inventories.length === null || inventories.length === 0? (
-                <span> No data found... </span>
+                <tr>
+                  <td colSpan={8} className="text-center">No data found...</td>  
+                </tr>
               ) : (
                 <>
               {inventories?.map((inventory) => (
@@ -258,8 +298,18 @@ export default function GPCInventoryTable ({ gettableName, onDataSubmitted, quer
                   <td className="px-3 py-3 whitespace-nowrap">
                     {inventory.supplier}
                   </td>
+                  
                   <td className="px-3 py-3 whitespace-nowrap">
-                    {inventory.date_installed}
+                    {triggerValue === 'active' ? inventory.date_installed : inventory.date_pullout}
+                  </td>
+                  <td className="px-3 py-3 whitespace-nowrap">
+                    <div className="flex items-center justify-center">
+                      {inventory.is_active_id === 1 ?
+                      <CheckCircleIcon className="rounded-full w-5 h-5 bg-white text-green-800"/>
+                      :
+                      <XCircleIcon className="rounded-full w-5 h-5 bg-white text-red-800"/>
+                      }
+                    </div>
                   </td>
                   <td className="px-3 py-3 whitespace-nowrap">
                     <div className="flex items-center justify-center gap-3 edit-button">
@@ -280,7 +330,7 @@ export default function GPCInventoryTable ({ gettableName, onDataSubmitted, quer
           </table>
          
           {isModalOpen && (
-                        <EditInventoryModal onClose={closeModal} onSubmit={handleFormSubmit} id={selectedId} tablename={gettableName}/>
+                        <EditInventoryModal triggerValue={triggerValue} onClose={closeModal} onSubmit={handleFormSubmit} id={selectedId} tablename={gettableName}/>
                     )} 
           {isDeleteModalOpen && (
                         <DeleteInventoryModal onSubmit={handleFormSubmit} onClose={closeModal} id={selectedId} tablename={gettableName}/>

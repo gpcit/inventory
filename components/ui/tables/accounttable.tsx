@@ -228,7 +228,9 @@ const closeModal = () => {
             </thead>
             <tbody className="bg-white ">
               {accountInventories?.length === 0 ? (
-                <div className=""><span className=""> No data found... </span></div>
+                <tr className="">
+                  <td colSpan={7} className="text-center"> No data found... </td>
+                </tr>
               ) : (
                 <>
                 {accountInventories?.map((accounts) => (
