@@ -228,7 +228,7 @@ export default function GPCInventoryTable ({triggerValue, gettableName, onDataSu
       <div className="inline-block min-w-full align-middle">
         <div className="py-2 rounded  md:pt-0">
           <table className="min-w-full   md:table">
-            <thead className={`text-sm text-left bg-gradient-to-r  from-green-600 text-black border-black border rounded`}>
+            <thead className={`text-sm text-left bg-gradient-to-r from-green-600 text-black border-black border rounded`}>
               <tr>
                 <th scope="col" className="px-4 py-1  font-extrabold">
                   PC Name

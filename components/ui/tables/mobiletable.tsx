@@ -257,7 +257,7 @@ const closeDeleteModal = () => {
           <div className="inline-block min-w-full align-middle">
             <div className="p-2 rounded-lg md:pt-0">
               <table className="min-w-full md:table">
-                <thead className="text-sm text-left bg-black text-white rounded-lg">
+                <thead className="text-sm text-left bg-gradient-to-r from-green-600 text-black border-black border rounded">
                   <tr className="">
                     <th scope="col" className="px-4 py-1 font-extrabold">
                       Assigned To

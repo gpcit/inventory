@@ -84,7 +84,7 @@ const [dataUploaderHandler, setDataUploaderHandler] = useState<() => void>(() =>
     
     return (
         <Layout>
-            <div className=" p-5 border border-collapse rounded shadow-2xl shadow-black mx-5 relative mt-5 bg-white">
+            <div className=" p-3 border rounded shadow-2xl shadow-black mx-2 relative mt-6 sm:mt-1 bg-white">
                 <div className="flex items-center justify-between w-full">
                     <h1 className={`${lato.className} text-2xl`}> {name} Mobile</h1>
                 </div>

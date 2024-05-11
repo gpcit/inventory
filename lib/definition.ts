@@ -34,6 +34,23 @@ export interface MobileInventoryList {
     is_active_id: number;
 }
 
+export interface PrinterInventoryList {
+    id: number;
+    printer_name: string;
+    assigned_to: string;
+    department: string;
+    manufacturer: string;
+    model: string;
+    ink_type: string;
+    serial_number: string;
+    description: string;
+    comment: string;
+    date_purchased: string;
+    date_installed: string;
+    date_pullout: string;
+    is_active_id: number;
+}
+
 export interface fetchMobileInventoryList {
     id: number;
     assigned_to: string;
