@@ -52,7 +52,7 @@ export default async function handler(req, res) {
     getSheet = 'Greenstone'
   } else if (sheetNameTable === 'lsi_mobile_inventory' || sheetNameTable === 'lsi_inventory' || sheetNameTable === 'lsi_can_inventory' || sheetNameTable === 'lsi_accounts' || sheetNameTable === 'lsi_can_accounts' || sheetNameTable === 'lsi_printer' || sheetNameTable === 'lsi_can_printer') {
     getSheet = 'Lamitek'
-  } else if (sheetNameTable === 'gsrc_mobile_inventory' || sheetNameTable === 'gsrc_inventory' || sheetNameTable === 'gsrc_accounts' || sheetNameTable === 'gkc_printer') {
+  } else if (sheetNameTable === 'gsrc_mobile_inventory' || sheetNameTable === 'gsrc_inventory' || sheetNameTable === 'gsrc_accounts' || sheetNameTable === 'gsrc_printer') {
     getSheet = 'GreenSiam'
   } else {
     getSheet = '';
