@@ -289,17 +289,17 @@ const EditPrinterModal: React.FC<ModalProps> = ({triggerValue, onClose, onSubmit
                       />
                     </div>
                     <div className="">
-                      <label htmlFor="comment" className="block mb-2 text-sm font-semibold">
-                        Comment
+                      <label htmlFor="description" className="block mb-2 text-sm font-semibold">
+                        Description
                       </label>
                       <textarea
                         rows={2}
-                        id="comment"
-                        name="comment"
-                        value={formData.comment}
+                        id="description"
+                        name="description"
+                        value={formData.description}
                         onChange={handleChange}
                         className="block w-full px-3 py-2 text-sm border border-gray-600/35 rounded-md focus:outline-none focus:border-gray-400 shadow-md"
-                        placeholder='Enter Comment'
+                        placeholder='Enter description'
                       />
                     </div>
                   </div>
