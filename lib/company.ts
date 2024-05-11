@@ -38,6 +38,13 @@ export const accountTableMap: { [key: string]: string } = {
     Canlubang: 'lsi_can_accounts'
 };
 
+export const printerTableMap: { [key: string]: string } = {
+    Balintawak: 'gpc_printer',
+    SQ: 'gpc_sq_printer',
+    Valenzuela: 'lsi_printer',
+    Canlubang: 'lsi_can_printer'
+};
+
 export const status = [
     {name: "Active", value: 1},
     {name: "Inactive", value: 2}

@@ -5,6 +5,7 @@ import {
   Smartphone,
   Home,
   Server,
+  Printer,
 } from 'lucide-react';
 import { SidebarDesktop } from './sidebar-desktop';
 import { SidebarItems } from '@/types';
@@ -15,7 +16,8 @@ import { SidebarMobile } from './sidebar-mobile';
 const sidebarItems: SidebarItems = {
   links: [
     { label: 'Home', href: '/dashboard', icon: Home },
-    { label: 'Inventory', href: '/inventory', icon: Laptop },
+    { label: 'CPU / Laptop', href: '/inventory', icon: Laptop },
+    { label: 'Printer', href: '/printer', icon: Printer },
     { label: 'Cellphone', href: '/cellphone', icon: Smartphone },
     { label: 'Server Accounts', href: '/accounts', icon: Server },
     // {

@@ -1,16 +1,16 @@
 "use client"
 import Layout from "../layout";
 import { lato } from "@/styles/font";
-import { tableName, branchName, accountTableMap } from "@/lib/company";
+import { tableName, branchName, printerTableMap } from "@/lib/company";
 import { useEffect, useState } from "react";
 import Dropdown from "@/components/ui/dropdowns/dropdown";
 import Search from "@/components/ui/search";
 import { CreateInventory } from "@/components/ui/buttons";
 import { ServerAccountsInventory } from "@/lib/definition";
 import Upload from "@/components/Upload";
-import AccountInventoryTable from "@/components/ui/tables/accounttable";
+import PrinterTableInventory from "@/components/ui/tables/printertable";
 import Modal from "@/components/modal";
-import Form from "@/components/ui/inventory/create-data/CreateAccount";
+import Form from "@/components/ui/inventory/create-data/CreatePrinter";
 import GetBranch from "@/components/ui/dropdowns/select-company";
 import toast from "react-hot-toast";
 import StatusToggle from "@/components/StatusToggle";
@@ -20,7 +20,7 @@ export default function Page() {
     const [branch, setBranch] = useState<string>("")
     const [tablename, setTablename] = useState<string>("")
     const [company, setCompany] = useState<string>("")
-    const [tableAccounts, setTableAccounts] = useState<ServerAccountsInventory[]>([])
+    const [tablePrinter, setTablePrinter] = useState<ServerAccountsInventory[]>([])
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [triggerValue, setTriggerValue] = useState("active")
     const [dataUploaderHandler, setDataUploaderHandler]  = useState<() => void>(() => () => {})
@@ -28,7 +28,6 @@ export default function Page() {
     const name = tableName.find(display => display.name === value)?.displayName || value
     const companyName = tableName.find(company => company.name === value)?.company || value
     const gettable = tableName.find(table => table.name === tablename)?.accounts || tablename
-    const title = "Accounts"
 
     const handleDropdown = (value: string) => {
         const pageLoading = toast.loading(`Selecting company, Please wait...`, {duration: 3000})
@@ -36,14 +35,14 @@ export default function Page() {
             toast.success(`Loading Successful`, {id: pageLoading})
             if(value === 'gpc_inventory') {
                 setBranch('Balintawak')
-                setTablename('gpc_accounts')
+                setTablename('gpc_printer')
             } else if (value === 'lsi_inventory') {
                 setBranch('Valenzuela')
-                setTablename('lsi_accounts')
+                setTablename('lsi_printer')
             } else if (value === 'gkc_inventory') {
-                setTablename('gkc_accounts')
+                setTablename('gkc_printer')
             } else if (value === 'gsrc_inventory') {
-                setTablename('gsrc_accounts')
+                setTablename('gsrc_printer')
             } else {
                 setBranch('')
             }
@@ -74,7 +73,7 @@ export default function Page() {
                     const url = `/api/${gettable}/accounts`;
                     const response = await fetch(url);
                     const data = await response.json();
-                    setTableAccounts(data.results);
+                    setTablePrinter(data.results);
                 } catch (error) {
                     console.error('Unable to fetch data: ', error);
                 }
@@ -85,7 +84,7 @@ export default function Page() {
     }, [gettable, tablename])
 
     const handleBranchChange = (value: string) => {
-        const branchTableName = accountTableMap[value as keyof typeof accountTableMap] || value;
+        const branchTableName = printerTableMap[value as keyof typeof printerTableMap] || value;
         const companyChange = toast.loading(`Changing branch...`, {duration: 3000})
         console.log("current table: ", branchTableName)
         
@@ -94,9 +93,11 @@ export default function Page() {
             setTablename(branchTableName)
             setBranch(value)
             dataUploaderHandler()
+            
         }, 2000)
+        console.log("Seleted printer table: ", tableName)
     }
-
+    
     const handleTrigger = () =>{
         if(triggerValue === 'active') {
             setTriggerValue(triggerValue === 'active' ? 'inactive' : 'active')
@@ -109,7 +110,7 @@ export default function Page() {
         <Layout>
             <div className=" p-3 border rounded shadow-2xl shadow-black mx-2 relative mt-6 sm:mt-1 bg-white">
                 <div className="grid grid-rows-1 self-end w-full">
-                    <h1 className={`${lato.className} text-2xl`}> {name} Server Accounts</h1>
+                    <h1 className={`${lato.className} text-2xl`}> {name} Printer</h1>
                     <div className="relative flex flex-col  w-28 top-2">
                     {(value === 'gpc_inventory' || value === 'lsi_inventory') && branchName.length > 1 && (
                         <>
@@ -125,7 +126,7 @@ export default function Page() {
                     
                    {name !== '' && <> <Search placeholder="Search...." /><CreateInventory onClick={openModal} /> </>}
                 </div>
-                    {gettable !== '' && (tableAccounts?.length === 0 || tableAccounts === null || tableAccounts === undefined) && <Upload tablename={gettable} onDataUploaded={dataUploaderHandler}/>}
+                    {gettable !== '' && (tablePrinter?.length === 0 || tablePrinter === null || tablePrinter === undefined) && <Upload tablename={gettable} onDataUploaded={dataUploaderHandler}/>}
                 <div className="flex justify-between items-center">
                     <div className="flex flex-row items-center mt-1">
                         <div className="relative flex flex-col items-center justify-between md:mt-2">
@@ -137,14 +138,14 @@ export default function Page() {
                     {name !=='' &&  <StatusToggle loading={false} onChange={handleTrigger} /> }
                     </div>
                 </div>
-                {company === 'gpc_inventory' && branch === 'Balintawak' && <AccountInventoryTable triggerValue={triggerValue} getTableName={tablename} onDataSubmitted={handleFormSubmit}/>}
-                    {company === 'gpc_inventory' && branch === 'SQ'  && <AccountInventoryTable triggerValue={triggerValue} getTableName={tablename} onDataSubmitted={handleFormSubmit}/>}
+                {company === 'gpc_inventory' && branch === 'Balintawak' && <PrinterTableInventory triggerValue={triggerValue} getTableName={tablename} onDataSubmitted={handleFormSubmit}/>}
+                    {company === 'gpc_inventory' && branch === 'SQ'  && <PrinterTableInventory triggerValue={triggerValue} getTableName={tablename} onDataSubmitted={handleFormSubmit}/>}
                     
-                    {company === 'lsi_inventory' && branch === 'Valenzuela' && <AccountInventoryTable triggerValue={triggerValue} getTableName={tablename} onDataSubmitted={handleFormSubmit}/>}
-                    {company === 'lsi_inventory' && branch === 'Canlubang'  && <AccountInventoryTable triggerValue={triggerValue} getTableName={tablename} onDataSubmitted={handleFormSubmit}/>}
-                {(company !== 'gpc_inventory' && company !== 'lsi_inventory' ) && company !== '' && <AccountInventoryTable triggerValue={triggerValue} getTableName={gettable} onDataSubmitted={handleFormSubmit}/>}
+                    {company === 'lsi_inventory' && branch === 'Valenzuela' && <PrinterTableInventory triggerValue={triggerValue} getTableName={tablename} onDataSubmitted={handleFormSubmit}/>}
+                    {company === 'lsi_inventory' && branch === 'Canlubang'  && <PrinterTableInventory triggerValue={triggerValue} getTableName={tablename} onDataSubmitted={handleFormSubmit}/>}
+                {(company !== 'gpc_inventory' && company !== 'lsi_inventory' ) && company !== '' && <PrinterTableInventory triggerValue={triggerValue} getTableName={gettable} onDataSubmitted={handleFormSubmit}/>}
                 {isModalOpen && (
-                        <Modal onClose={closeModal} title={`${branch} Accounts`} companyName={name} onSubmit={handleFormSubmit} tablename={gettable}>
+                        <Modal onClose={closeModal} title={`${branch} Printer`} companyName={name} onSubmit={handleFormSubmit} tablename={gettable}>
                             <Form triggerValue={triggerValue} gettableName={gettable} onDataSubmitted={handleFormSubmit}/>
                         </Modal>
                     )}

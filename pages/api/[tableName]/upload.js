@@ -46,13 +46,13 @@ export default async function handler(req, res) {
   const tablename = req.query.tableName;
   const sheetNameTable = tablename;
   let getSheet;
-  if(sheetNameTable === 'gkc_mobile_inventory' || sheetNameTable === 'gkc_inventory' || sheetNameTable === 'gkc_accounts') {
+  if(sheetNameTable === 'gkc_mobile_inventory' || sheetNameTable === 'gkc_inventory' || sheetNameTable === 'gkc_accounts' || sheetNameTable === 'gkc_printer') {
     getSheet = 'Greenkraft'
-  } else if (sheetNameTable === 'gpc_mobile_inventory' || sheetNameTable === 'gpc_inventory' || sheetNameTable === 'gpc_sq_inventory' || sheetNameTable === 'gpc_accounts' | sheetNameTable === 'gpc_sq_accounts') {
+  } else if (sheetNameTable === 'gpc_mobile_inventory' || sheetNameTable === 'gpc_inventory' || sheetNameTable === 'gpc_sq_inventory' || sheetNameTable === 'gpc_accounts' || sheetNameTable === 'gpc_sq_accounts' || sheetNameTable === 'gpc_printer' || sheetNameTable === 'gpc_sq_printer' ) {
     getSheet = 'Greenstone'
-  } else if (sheetNameTable === 'lsi_mobile_inventory' || sheetNameTable === 'lsi_inventory' || sheetNameTable === 'lsi_can_inventory' || sheetNameTable === 'lsi_accounts' || sheetNameTable === 'lsi_can_accounts') {
+  } else if (sheetNameTable === 'lsi_mobile_inventory' || sheetNameTable === 'lsi_inventory' || sheetNameTable === 'lsi_can_inventory' || sheetNameTable === 'lsi_accounts' || sheetNameTable === 'lsi_can_accounts' || sheetNameTable === 'lsi_printer' || sheetNameTable === 'lsi_can_printer') {
     getSheet = 'Lamitek'
-  } else if (sheetNameTable === 'gsrc_mobile_inventory' || sheetNameTable === 'gsrc_inventory' || sheetNameTable === 'gsrc_accounts') {
+  } else if (sheetNameTable === 'gsrc_mobile_inventory' || sheetNameTable === 'gsrc_inventory' || sheetNameTable === 'gsrc_accounts' || sheetNameTable === 'gkc_printer') {
     getSheet = 'GreenSiam'
   } else {
     getSheet = '';
@@ -69,23 +69,23 @@ export default async function handler(req, res) {
           const {headers, rows} = await parseExcel(fileBuffer, getSheet)
           let insertQuery;
           let values;
-        if(sheetNameTable === 'gkc_accounts' || sheetNameTable === 'gpc_accounts' || sheetNameTable === 'gpc_sq_accounts' || sheetNameTable === 'lsi_accounts' || sheetNameTable === 'lsi_can_accounts' || sheetNameTable === 'gsrc_accounts') {
+        if(sheetNameTable === 'gkc_accounts' || sheetNameTable === 'gpc_accounts' || sheetNameTable === 'gpc_sq_accounts' || sheetNameTable === 'lsi_accounts' || sheetNameTable === 'lsi_can_accounts' || sheetNameTable === 'gsrc_accounts' || sheetNameTable === 'gpc_printer' || sheetNameTable === 'gpc_sq_printer' || sheetNameTable === 'lsi_printer' || sheetNameTable === 'lsi_can_printer' || sheetNameTable === 'gkc_printer' || sheetNameTable === 'gsrc_printer') {
           
           const is_active_id = 1
-          headers.push('is_active_id')
+          
           const valuePlaceholders = rows.map(() => '(?)').join(',')
 
           console.log("result for header:", headers)
           console.log("result for rows: ", rows)
-          insertQuery = `INSERT INTO ${tablename} (${headers.join(', ')}) VALUES ${valuePlaceholders}`;
-          values = rows.map((row) => [...row, is_active_id])
+          insertQuery = `INSERT INTO ${tablename} (${[...headers, 'is_active_id'].join(', ')}) VALUES ?`;
+          values = rows.map((row) => [...row, 1])
           console.log("result for insert query: ", insertQuery)
         } else {
           console.log(headers)
           insertQuery = `INSERT INTO ${tablename} (${headers.join(', ')}) VALUES ?`;
           values = [rows];
         }
-        const result = await query(insertQuery, values);
+        const result = await query(insertQuery, [values]);
         return res.status(200).send('File uploaded successfully');
       } catch (error) {
       console.error('Error uploading file:', error);

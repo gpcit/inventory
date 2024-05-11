@@ -22,7 +22,7 @@ export default function Layout({ children }: {children: React.ReactNode}){
                     <SidebarToggle />
                 </div>
                 
-                <div className={` sm:ml-[240px] p-2 ${lato.className} `}>
+                <div className={` sm:ml-[255px] ${lato.className} `}>
                    <Toaster position="top-center" reverseOrder={false} />
                     {children}
                 </div>
