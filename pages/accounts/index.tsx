@@ -125,7 +125,7 @@ export default function Page() {
                     
                    {name !== '' && <> <Search placeholder="Search...." /><CreateInventory onClick={openModal} /> </>}
                 </div>
-                    {gettable !== '' && (tableAccounts?.length === 0 || tableAccounts === null || tableAccounts === undefined) && <Upload tablename={gettable} onDataUploaded={dataUploaderHandler}/>}
+                    {name && gettable !== '' && (tableAccounts?.length === 0 || tableAccounts === null || tableAccounts === undefined) && <Upload tablename={gettable} onDataUploaded={dataUploaderHandler}/>}
                 <div className="flex justify-between items-center">
                     <div className="flex flex-row items-center mt-1">
                         <div className="relative flex flex-col items-center justify-between md:mt-2">

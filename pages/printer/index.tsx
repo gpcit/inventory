@@ -29,10 +29,12 @@ export default function Page() {
     const companyName = tableName.find(company => company.name === value)?.company || value
     const gettable = tableName.find(table => table.name === tablename)?.accounts || tablename
 
+        
     const handleDropdown = (value: string) => {
         const pageLoading = toast.loading(`Selecting company, Please wait...`, {duration: 3000})
-        setTimeout(() => {
-            toast.success(`Loading Successful`, {id: pageLoading})
+            setTimeout(() => {
+                toast.success(`Loading Successful`, {id: pageLoading})
+     
             if(value === 'gpc_inventory') {
                 setBranch('Balintawak')
                 setTablename('gpc_printer')
@@ -45,6 +47,8 @@ export default function Page() {
                 setTablename('gsrc_printer')
             } else {
                 setBranch('')
+                setCompany('')
+                setValue('')
             }
             if(name === '') {
                 setTriggerValue("active");
@@ -52,7 +56,6 @@ export default function Page() {
             setCompany(value)
             setValue(value)
         }, 2000)
-        
     }
     const openModal = () => {
         setIsModalOpen(true)
@@ -126,7 +129,7 @@ export default function Page() {
                     
                    {name !== '' && <> <Search placeholder="Search...." /><CreateInventory onClick={openModal} /> </>}
                 </div>
-                    {gettable !== '' && (tablePrinter?.length === 0 || tablePrinter === null || tablePrinter === undefined) && <Upload tablename={gettable} onDataUploaded={dataUploaderHandler}/>}
+                    {(name && gettable !== '') && (tablePrinter?.length === 0 || tablePrinter === undefined) && <Upload tablename={gettable} onDataUploaded={dataUploaderHandler}/>}
                 <div className="flex justify-between items-center">
                     <div className="flex flex-row items-center mt-1">
                         <div className="relative flex flex-col items-center justify-between md:mt-2">
