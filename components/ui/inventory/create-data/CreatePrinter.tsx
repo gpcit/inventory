@@ -228,19 +228,35 @@ export default function Form({triggerValue, gettableName, onDataSubmitted }: For
             </div>
         </div>
         {/* Comment */}
-        <div className="mb-4 col-span-4">
-          <label htmlFor="comment" className="block mb-2 text-sm font-semibold">
-            Comment
-          </label>
-          <textarea
-            rows={5}
-            id="comment"
-            name="comment"
-            value={formData.comment}
-            onChange={handleChange}
-            className="block w-full px-3 py-2 text-sm border border-gray-600/35 rounded-md focus:outline-none focus:border-gray-400 shadow-md"
-            placeholder='Enter Comment'
-          />
+        <div className='col-span-4'>
+          <div className="">
+            <label htmlFor="comment" className="block mb-2 text-sm font-semibold">
+              Comment
+            </label>
+            <textarea
+              rows={1}
+              id="comment"
+              name="comment"
+              value={formData.comment}
+              onChange={handleChange}
+              className="block w-full px-3 py-2 text-sm border border-gray-600/35 rounded-md focus:outline-none focus:border-gray-400 shadow-md"
+              placeholder='Enter Comment'
+            />
+          </div>
+          <div className="">
+            <label htmlFor="description" className="block mb-2 text-sm font-semibold">
+              Description
+            </label>
+            <textarea
+              rows={2}
+              id="description"
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+              className="block w-full px-3 py-2 text-sm border border-gray-600/35 rounded-md focus:outline-none focus:border-gray-400 shadow-md"
+              placeholder='Enter description'
+            />
+          </div>
         </div>
         {/* Date Purchased */}
         <div className="mb-4 col-span-3">
