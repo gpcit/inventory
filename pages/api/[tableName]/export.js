@@ -8,6 +8,10 @@ export default async function handler(req, res) {
     try {
       // Fetch data from the database table
       const queryResult = await query(`SELECT * FROM ${tablename}`);
+
+      if(queryResult.lenght === 0) {
+        return res.status(404).send(`No records found in ${tablename}`)
+      }
       const transformedData = queryResult.map((row) => {
         // Determine the status based on the is_active_id value
         const status = row.is_active_id === 1 ? 'active' : 'inactive';

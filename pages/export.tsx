@@ -11,23 +11,40 @@ import { ArrowPathIcon } from "@heroicons/react/24/outline";
 export default function Page() {
     const [getTable, setGetTable] = useState<string>("")
     const [selectedBranch, setSelectedBranch] = useState("Balintawak")
+    const [selectedLSIBranch, setSelectedLSIBranch] = useState("Valenzuela")
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleradioChange = (tableName: string) => {
             setGetTable(tableName)
     }
-
-    const handleBranchChange = (branch: string) => {
-        setSelectedBranch(branch)
-        console.log("Getting branch", selectedBranch)
+    const handleBranchChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        const values = event.target.value
+        setSelectedBranch(values)
+        // window.location.href = `/dashboard/inventory/${values}`;
     }
-
+    const handleLsiBranchChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        const values = event.target.value
+        setSelectedLSIBranch(values)
+        // window.location.href = `/dashboard/inventory/${values}`;
+    }
+    const resetBrach = () => {
+        setSelectedBranch("Balintawak")
+        setSelectedLSIBranch("Valenzuela")
+    }
     const isCellphoneDisabled = () => {
         const disabledBranches = ["SQ", "Canlubang"]
         return selectedBranch ? disabledBranches.includes(selectedBranch) : false
     }
 
     const clearSelection = () => {
-        setGetTable("")
+        
+        setIsLoading(true)
+        setTimeout(() => {
+            resetBrach()
+            setGetTable("")
+            setIsLoading(false)
+        }, 2000)
+        
     }
     const handleExport = async () => {
         const exportLoading = toast.loading(`Exporting data`, {duration: 3000})
@@ -59,7 +76,10 @@ export default function Page() {
                     toast.success('File exported successfully!', { id: exportLoading });
                     }, 2500)
                 } else {
-                    throw new Error('Failed to export data');
+                    setTimeout(() => {
+                        toast.error(`Failed to export data or No existing data`, {id: exportLoading})
+                    }, 2500)
+                    
                 }
                 
             } catch (error) {
@@ -81,29 +101,35 @@ export default function Page() {
                     <div className="border border-black mt-5"></div>
                     <div className="py-2 items-end justify-end flex">
                         <span>Refresh</span>
-                        <ArrowPathIcon onClick={() => clearSelection()} className="w-5 h-5 ml-2" />
+                        <ArrowPathIcon onClick={() => clearSelection()} className={`w-5 h-5 ml-2 ${isLoading ? "animate-spin" : ""}`} />
                     </div>
-                    <div className="grid grid-cols-8 sm:p-10">
+                    <div className="grid sm:grid-cols-8 grid-cols-6 sm:p-10">
                         <div className="col-span-1 md:block hidden"></div>
-                        <div className="p-5 mt-2 md:col-span-3 col-span-4">
+                        <div className="p-5 mt-2 md:col-span-3 sm:col-span-2 col-span-3">
                             <div className="flex sm:justify-between flex-col sm:flex-row justify-around sm:items-center items-start">
                                 <div>
                                     <h3 className="text-2xl">GPC</h3>
                                 </div>
                                 <div className="flex items-center flex-row sm:flex-col py-2">
                                     <span className="text-sm me-1">Select Branch</span>
-                                    <GetBranch onCompanyChange={handleBranchChange} getCompany="gpc_inventory"/>
+                                    <select
+                                    value={selectedBranch}
+                                    onChange={handleBranchChange}
+                                    className="block w-full px-2 py-2 text-sm border border-gray-100 rounded-md text-green-800 focus:outline-none font-extrabold focus:border-black ">
+                                        <option value="Balintawak">Balintawak</option>
+                                        <option value="SQ">SQ</option>
+                                    </select>
                                 </div>
                             </div> 
-                            {selectedBranch === "Balintawak" && 
-                            <div className="border rounded-md border-gray-200 p-5 grid sm:grid-cols-4 gap-1">
+                            {selectedBranch === "Balintawak" || selectedBranch === "Canlubang" || selectedBranch === "Valenzuela" ? ( 
+                            <div className="border rounded-md border-gray-200 p-2 sm:p-5 grid sm:grid-cols-4 gap-1">
                                 <div className="col-span-2 flex flex-row items-center">
                                     <input 
                                         type="radio" 
                                         className="me-2" 
                                         name="gpc"
                                         checked={getTable === "gpc_inventory"}
-                                        onChange={() => handleradioChange("gpc_inventory")}
+                                        onChange={() => setGetTable("gpc_inventory")}
                                         id="gpcCpuLaptop" 
                                     />
                                     <label htmlFor="gpcCpuLaptop"> CPU / Laptop</label>
@@ -115,7 +141,7 @@ export default function Page() {
                                         className="me-2" 
                                         name="gpc"
                                         checked={getTable === "gpc_mobile_inventory"}
-                                        onChange={() => handleradioChange("gpc_mobile_inventory")}
+                                        onChange={() => setGetTable("gpc_mobile_inventory")}
                                         id="gpcMobile" 
                                         disabled={isCellphoneDisabled()}
                                     />
@@ -128,7 +154,7 @@ export default function Page() {
                                         className="me-2" 
                                         name="gpc"
                                         checked={getTable === "gpc_printer"}
-                                        onChange={() => handleradioChange("gpc_printer")}
+                                        onChange={() => setGetTable("gpc_printer")}
                                         id="gpcPrinter" 
                                     />
                                     <label htmlFor="gpcPrinter"> Printer</label>
@@ -139,22 +165,21 @@ export default function Page() {
                                         className="me-2" 
                                         name="gpc"
                                         checked={getTable === "gpc_accounts"}
-                                        onChange={() => handleradioChange("gpc_accounts")}
+                                        onChange={() => setGetTable("gpc_accounts")}
                                         id="gpcAccounts" 
                                     />
                                     <label htmlFor="gpcAccounts"> Server Accounts</label>
                                 </div>
                             </div>
-                            }
-                            {selectedBranch === "SQ" && 
-                            <div className="border rounded-md border-gray-200 p-5 grid sm:grid-cols-4 gap-1">
+                            ) : (      
+                            <div className="border rounded-md border-gray-200 p-2 sm:p-5 grid sm:grid-cols-4 gap-1">
                                 <div className="col-span-2 flex flex-row items-center">
                                     <input 
                                         type="radio" 
                                         className="me-2" 
                                         name="gpc"
                                         checked={getTable === "gpc_sq_inventory"}
-                                        onChange={() => handleradioChange("gpc_sq_inventory")}
+                                        onChange={() => setGetTable("gpc_sq_inventory")}
                                         id="gpcCpuLaptop" 
                                     />
                                     <label htmlFor="gpcCpuLaptop"> CPU / Laptop</label>
@@ -166,12 +191,11 @@ export default function Page() {
                                         className="me-2" 
                                         name="gpc"
                                         checked={getTable === "gpc_sq_mobile_inventory"}
-                                        onChange={() => handleradioChange("gpc_sq_mobile_inventory")}
+                                        onChange={() => setGetTable("gpc_sq_mobile_inventory")}
                                         id="gpcMobile" 
-                                        disabled={isCellphoneDisabled()}
+                                        disabled
                                     />
-                                    <label htmlFor="gpcMobile"> Cellphone</label>
-                                    
+                                    <label htmlFor="gpcMobile"> Cellphone</label>   
                                 </div>
                                 <div className="col-span-2 flex flex-row items-center">
                                     <input 
@@ -179,7 +203,7 @@ export default function Page() {
                                         className="me-2" 
                                         name="gpc"
                                         checked={getTable === "gpc_sq_printer"}
-                                        onChange={() => handleradioChange("gpc_sq_printer")}
+                                        onChange={() => setGetTable("gpc_sq_printer")}
                                         id="gpcPrinter" 
                                     />
                                     <label htmlFor="gpcPrinter"> Printer</label>
@@ -190,32 +214,39 @@ export default function Page() {
                                         className="me-2" 
                                         name="gpc"
                                         checked={getTable === "gpc_sq_accounts"}
-                                        onChange={() => handleradioChange("gpc_sq_accounts")}
+                                        onChange={() => setGetTable("gpc_sq_accounts")}
                                         id="gpcAccounts" 
                                     />
                                     <label htmlFor="gpcAccounts"> Server Accounts</label>
                                 </div>
                             </div>
-                            }
+                            )}
                         </div>
-                        <div className="p-5 mt-2 md:col-span-3 col-span-4">
+                        <div className="p-5 mt-2 md:col-span-3 sm:col-span-2 col-span-3">
                             <div className="flex sm:justify-between flex-col sm:flex-row justify-around sm:items-center items-start">
                                 <div>
                                     <h3 className="text-2xl">LSI</h3>
                                 </div>
                                 <div className="flex items-center flex-row sm:flex-col py-2">
                                     <span className="text-sm me-1">Select Branch</span>
-                                    <GetBranch onCompanyChange={() => {}} getCompany="gpc_inventory"/>
+                                    <select
+                                    value={selectedLSIBranch}
+                                    onChange={handleLsiBranchChange}
+                                    className="block w-full px-2 py-2 text-sm border border-gray-100 rounded-md text-green-800 focus:outline-none font-extrabold focus:border-black ">
+                                        <option value="Valenzuela">Valenzuela</option>
+                                        <option value="Canlubang">Canlubang</option>
+                                    </select>
                                 </div>
                             </div>
-                            <div className="border rounded-md border-gray-200 p-5  grid sm:grid-cols-4 gap-1">
+                            {selectedLSIBranch === 'Valenzuela' ? (
+                            <div className="border rounded-md border-gray-200 p-2 sm:p-5 grid sm:grid-cols-4 gap-1">
                                 <div className="col-span-2 flex flex-row items-center">
                                     <input 
                                         type="radio" 
                                         className="me-2" 
                                         name="lsi"
                                         checked={getTable === "lsi_inventory"}
-                                        onChange={() => handleradioChange("lsi_inventory")}
+                                        onChange={() => setGetTable("lsi_inventory")}
                                         id="lsiCpuLaptop" 
                                     />
                                     <label htmlFor="lsiCpuLaptop"> CPU / Laptop</label>   
@@ -226,7 +257,7 @@ export default function Page() {
                                         className="me-2" 
                                         name="lsi"
                                         checked={getTable === "lsi_mobile_inventory"}
-                                        onChange={() => handleradioChange("lsi_mobile_inventory")}
+                                        onChange={() => setGetTable("lsi_mobile_inventory")}
                                         id="lsiMobile" 
                                     />
                                     <label htmlFor="lsiMobile"> Cellphone</label>
@@ -238,7 +269,7 @@ export default function Page() {
                                         className="me-2" 
                                         name="lsi"
                                         checked={getTable === "lsi_printer"}
-                                        onChange={() => handleradioChange("lsi_printer")}
+                                        onChange={() => setGetTable("lsi_printer")}
                                         id="lsiPrinter" 
                                     />
                                     <label htmlFor="lsiPrinter"> Printer</label>
@@ -250,20 +281,71 @@ export default function Page() {
                                         className="me-2" 
                                         name="lsi"
                                         checked={getTable === "lsi_accounts"}
-                                        onChange={() => handleradioChange("lsi_accounts")}
+                                        onChange={() => setGetTable("lsi_accounts")}
                                         id="lsiAccounts" 
                                     />
                                     <label htmlFor="lsiAccounts"> Server Accounts</label>
                                     
                                 </div>
                             </div>
+                            ): (
+                            <div className="border rounded-md border-gray-200 p-2 sm:p-5 grid sm:grid-cols-4 gap-1">
+                                <div className="col-span-2 flex flex-row items-center">
+                                    <input 
+                                        type="radio" 
+                                        className="me-2" 
+                                        name="lsi"
+                                        checked={getTable === "lsi_inventory"}
+                                        onChange={() => setGetTable("lsi_can_inventory")}
+                                        id="lsiCpuLaptop" 
+                                    />
+                                    <label htmlFor="lsiCpuLaptop"> CPU / Laptop</label>   
+                                </div>
+                                <div className="col-span-2 flex flex-row items-center">
+                                    <input 
+                                        type="radio" 
+                                        className="me-2" 
+                                        name="lsi"
+                                        checked={getTable === "lsi_mobile_inventory"}
+                                        onChange={() => setGetTable("lsi_mobile_inventory")}
+                                        id="lsiMobile" 
+                                        disabled
+                                    />
+                                    <label htmlFor="lsiMobile"> Cellphone</label>
+                                    
+                                </div>
+                                <div className="col-span-2 flex flex-row items-center">
+                                    <input 
+                                        type="radio" 
+                                        className="me-2" 
+                                        name="lsi"
+                                        checked={getTable === "lsi_printer"}
+                                        onChange={() => setGetTable("lsi_can_printer")}
+                                        id="lsiPrinter" 
+                                    />
+                                    <label htmlFor="lsiPrinter"> Printer</label>
+                                   
+                                </div>
+                                <div className="col-span-2 flex flex-row items-center">
+                                    <input 
+                                        type="radio" 
+                                        className="me-2" 
+                                        name="lsi"
+                                        checked={getTable === "lsi_accounts"}
+                                        onChange={() => setGetTable("lsi_can_accounts")}
+                                        id="lsiAccounts" 
+                                    />
+                                    <label htmlFor="lsiAccounts"> Server Accounts</label>
+                                    
+                                </div>
+                            </div>
+                            )}     
                         </div>
-                        
                         <div className="col-span-1 md:block hidden"></div>
                         <div className="col-span-1 md:block hidden"></div>
-                        <div className="p-5 mt-2 md:col-span-3 col-span-4">
+                        <div className="p-5 mt-2 md:col-span-3 sm:col-span-2 col-span-3">
                             <h3 className="text-2xl">GKC</h3>
-                            <div className="border rounded-md border-gray-200 p-5  grid sm:grid-cols-4 gap-1">
+                            <div className="border rounded-md border-gray-200 p-2 sm:p-5 grid sm:grid-cols-4 gap-1">
                                 <div className="col-span-2 flex flex-row items-center">
                                     <input 
                                         type="radio" 
@@ -312,10 +394,9 @@ export default function Page() {
                                 </div>
                             </div>
                         </div>
-                        
-                        <div className="p-5 mt-2 md:col-span-3 col-span-4">
+                        <div className="p-5 mt-2 md:col-span-3 sm:col-span-2 col-span-3">
                             <h3 className="text-2xl">GSRC</h3>
-                            <div className="border rounded-md border-gray-200 p-5  grid sm:grid-cols-4 gap-1">
+                            <div className="border rounded-md border-gray-200 p-2 sm:p-5 grid sm:grid-cols-4 gap-1">
                                 <div className="col-span-2 flex flex-row items-center">
                                     <input 
                                         type="radio" 
