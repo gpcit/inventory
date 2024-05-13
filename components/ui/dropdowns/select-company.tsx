@@ -24,7 +24,7 @@ export default function GetBranch({onCompanyChange, getCompany}: DropdownProps){
        
         <select 
             onChange={handleCompanyChange} 
-            className="block w-full px-2 py-2 text-sm border border-gray-100 rounded-md text-green-800 focus:outline-none font-extrabold focus:border-black shadow-black shadow-md">
+            className="block w-full px-2 py-2 text-sm border border-gray-100 rounded-md text-green-800 focus:outline-none font-extrabold focus:border-black ">
             {/* {companyBranch.map(branch => (
             <option key={branch.name} value={branch.name}>{branch.name}</option>
             ))}        */}

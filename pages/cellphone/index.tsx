@@ -1,8 +1,9 @@
 "use client"
 import Search from "@/components/ui/search";
 import Layout from "../layout";
+import { FC } from "react";
 import { lato, lusitana } from "@/styles/font";
-import {CreateInventory} from "@/components/ui/buttons";
+import {CreateInventory, ExportInventory} from "@/components/ui/buttons";
 import { Fragment, use, useEffect, useState } from "react";
 import Dropdown from "@/components/ui/dropdowns/dropdown";
 import MobileTableInventory from "@/components/ui/tables/mobiletable";
@@ -13,6 +14,7 @@ import { MobileInventoryList } from "@/lib/definition";
 import Upload from "@/components/Upload";
 import toast from "react-hot-toast";
 import StatusToggle from "@/components/StatusToggle";
+import { duration } from "html2canvas/dist/types/css/property-descriptors/duration";
 
 export default function Page(){
 const [isModalOpen, setIsModalOpen] = useState(false);
@@ -81,6 +83,42 @@ const [dataUploaderHandler, setDataUploaderHandler] = useState<() => void>(() =>
             setTriggerValue(triggerValue === 'inactive' ? 'active' : 'inactive')
         }
     }
+
+    const handleExport = async () => {
+        try {
+            const exportLoading = toast.loading(`Exporting data from ${getTable}`, {duration: 3000})
+            const response = await fetch(`/api/${getTable}/export`)
+            console.log("Result for Response: ", response)
+            
+            if (response.ok) {
+
+                const blob = await response.blob();
+                setTimeout(() => {
+                // Create a temporary object URL for the blob
+                const url = window.URL.createObjectURL(blob);
+          
+                // Create a temporary anchor element to trigger download
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `${name} Mobile Inventory.xlsx`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+          
+                // Revoke the object URL to release browser resources
+                window.URL.revokeObjectURL(url);
+          
+                // Remove loading toast and show success message
+                toast.success('File exported successfully!', { id: exportLoading });
+                }, 2500)
+              } else {
+                throw new Error('Failed to export data');
+              }
+            
+        } catch (error) {
+            console.error("ERror exporting Data: ", error)
+        }
+    }
     
     return (
         <Layout>
@@ -88,7 +126,7 @@ const [dataUploaderHandler, setDataUploaderHandler] = useState<() => void>(() =>
                 <div className="flex items-center justify-between w-full">
                     <h1 className={`${lato.className} text-2xl`}> {name} Mobile</h1>
                 </div>
-                <div className="flex items-center justify-between gap-2 mt-4 md:mt-8">
+                <div className="flex items-center justify-between gap-2 mt-12">
                     
                    {name !== '' && <> <Search placeholder="Search...." /><CreateInventory onClick={openModal}/> </>}
                 </div>

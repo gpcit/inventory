@@ -112,7 +112,7 @@ export default function Page({searchParams,}:{searchParams?: {search?: string}})
                 <div className="grid grid-rows-1 self-end w-full">
                     <h1 className={`${lusitana.className} text-2xl`}> {name} Inventory</h1>
                     
-                    <div className="relative flex flex-col  w-28 top-2">
+                    <div className="relative flex flex-col  w-28 top-2 sm:top-7">
                     {(company === 'gpc_inventory' || company === 'lsi_inventory') && branchName.length > 1 && (
                         <>
                         <span>Change Branch: </span>

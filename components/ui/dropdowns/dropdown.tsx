@@ -18,7 +18,7 @@ export default function Dropdown({onCompanyChange}: DropdownProps){
     return (
     <select 
     onChange={handleCompanyChange}
-    className="block w-full px-2 py-2 text-sm border border-gray-100 rounded-md  text-green-800 focus:outline-none font-extrabold shadow-black shadow-md">
+    className="block w-full px-2 py-2 text-sm border border-gray-100 rounded-md  text-green-800 focus:outline-none font-extrabold ">
         
             <option className="rounded border text-black" value="">Select</option>
             {tableName.map(company => (

@@ -1,5 +1,6 @@
 import { PencilIcon, PlusIcon, TrashIcon, QrCodeIcon, EyeIcon,  } from '@heroicons/react/24/outline';
 import { useState } from 'react';
+import { FaFileExport } from 'react-icons/fa';
 import Link from 'next/link';
 
 interface CreateInventoryProps {
@@ -8,7 +9,10 @@ interface CreateInventoryProps {
 interface PropsForID {
   id: number;
   onClick: (id: number) => void;
-  
+}
+interface ExportInventoryProps {
+  onClick: () => void;
+  table: string;
 }
 
 export function CreateInventory({ onClick}: CreateInventoryProps) {
@@ -90,25 +94,18 @@ export function DeleteInventory({ id, onClick }: PropsForID) {
   );
 }
 
-// export function UpdateAccountInventory ({id, onClick} : PropsForID) {
-//   return (
-//     <button 
-//     onClick={() => onClick(id)}
-//     className='p-2 border rounded-md hover:bg-gray-100'
-//     >
-//       <PencilIcon className='w-5' />
-//     </button>
-//   )
-// }
 
-// export function DeleteInventory({ id }: { id: string }) {
-//   const deleteInvoiceWithId = deleteInvoice.bind(null,id);
-//   return (
-//     <form action={deleteInvoiceWithId}>
-//       <button className="p-2 border rounded-md hover:bg-gray-100">
-//         <span className="sr-only">Delete</span>
-//         <TrashIcon className="w-5" />
-//       </button>
-//     </form>
-//   );
-// }
+export function ExportInventory({onClick, table}: ExportInventoryProps) {
+  return (
+    <>
+    <button
+      onClick={onClick}
+      className="flex items-center h-8 px-3 mb-2 sm:mb-2 text-sm font-semibold relative transition-colors rounded-lg bg-yellow-600 shadow-sm shadow-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+    >
+      
+      <FaFileExport className="h-5 mx-2 text-white" />
+      <span className="hidden md:block text-sm text-white">Export</span>
+    </button>
+    </>
+  );
+}

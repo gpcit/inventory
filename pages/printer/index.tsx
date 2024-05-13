@@ -114,7 +114,7 @@ export default function Page() {
             <div className=" p-3 border rounded shadow-2xl shadow-black mx-2 relative mt-6 sm:mt-1 bg-white">
                 <div className="grid grid-rows-1 self-end w-full">
                     <h1 className={`${lato.className} text-2xl`}> {name} Printer</h1>
-                    <div className="relative flex flex-col  w-28 top-2">
+                    <div className="relative flex flex-col  w-28 top-2 sm:top-7">
                     {(value === 'gpc_inventory' || value === 'lsi_inventory') && branchName.length > 1 && (
                         <>
                         <span>Change Branch: </span>

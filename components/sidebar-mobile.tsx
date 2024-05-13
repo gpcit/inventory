@@ -36,7 +36,7 @@ export function SidebarMobile(props: SidebarMobileProps) {
         <SheetHeader className='flex flex-row justify-between items-center space-y-0'>
         <div className='flex flex-col justify-center items-center'>
           <h3 className={`mx-3 text-3xl font-extrabold  text-green-400 tracking-[.3rem] drop-shadow-md ${lato.className}`}>Greenstone</h3>
-          <span className='text-white text-sm font-bold'>I.T EQUIPEMENT INVENTORY</span>
+          <span className='text-white text-sm font-bold'>IT EQUIPMENT INVENTORY</span>
         </div>
           <SheetClose asChild>
             <Button className='h-7 w-7 p-0' variant='ghost'>

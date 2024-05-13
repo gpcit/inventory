@@ -44,7 +44,7 @@ const AnimatedTitle = () => {
     }, [])
 
     return (
-        <span ref={titleRef} className={`text-black font-extrabold md:text-xl ${lato.className}` } />
+        <span ref={titleRef} className={`text-black font-extrabold md:text-xl ${lato.className} animated-text` } />
     )
 }
 

@@ -16,7 +16,7 @@ import toast from "react-hot-toast";
 import StatusToggle from "@/components/StatusToggle";
 
 export default function Page() {
-    const [value, setValue] = useState<string>("")
+    const [valueX, setValueX] = useState<string>("")
     const [branch, setBranch] = useState<string>("")
     const [tablename, setTablename] = useState<string>("")
     const [company, setCompany] = useState<string>("")
@@ -25,8 +25,8 @@ export default function Page() {
     const [triggerValue, setTriggerValue] = useState("active")
     const [dataUploaderHandler, setDataUploaderHandler]  = useState<() => void>(() => () => {})
 
-    const name = tableName.find(display => display.name === value)?.displayName || value
-    const companyName = tableName.find(company => company.name === value)?.company || value
+    const name = tableName.find(display => display.name === valueX)?.displayName || valueX
+    const companyName = tableName.find(company => company.name === valueX)?.company || valueX
     const gettable = tableName.find(table => table.name === tablename)?.accounts || tablename
     const title = "Accounts"
 
@@ -51,7 +51,7 @@ export default function Page() {
                 setTriggerValue("active");
             }
             setCompany(value)
-            setValue(value)
+            setValueX(value)
         }, 2000)
         
     }
@@ -87,7 +87,6 @@ export default function Page() {
     const handleBranchChange = (value: string) => {
         const branchTableName = accountTableMap[value as keyof typeof accountTableMap] || value;
         const companyChange = toast.loading(`Changing branch...`, {duration: 3000})
-        console.log("current table: ", branchTableName)
         
         setTimeout(() => {
             toast.success('Changed successful!', {id: companyChange})
@@ -110,12 +109,12 @@ export default function Page() {
             <div className=" p-3 border rounded shadow-2xl shadow-black mx-2 relative mt-6 sm:mt-1 bg-white">
                 <div className="grid grid-rows-1 self-end w-full">
                     <h1 className={`${lato.className} text-2xl`}> {name} Server Accounts</h1>
-                    <div className="relative flex flex-col  w-28 top-2">
-                    {(value === 'gpc_inventory' || value === 'lsi_inventory') && branchName.length > 1 && (
+                    <div className="relative flex flex-col  w-28 top-7">
+                    {(valueX === 'gpc_inventory' || valueX === 'lsi_inventory') && branchName.length > 1 && (
                         <>
                         <span>Change Branch: </span>
                         <div className=" w-full border-gray-400">
-                             <GetBranch onCompanyChange={handleBranchChange} getCompany={value} />
+                             <GetBranch onCompanyChange={handleBranchChange} getCompany={valueX} />
                         </div>
                         </>
                     )}
