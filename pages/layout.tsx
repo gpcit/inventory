@@ -1,3 +1,4 @@
+import ProtectedRoute from "@/components/ProtectedRoute";
 import {SidebarToggle} from "@/components/SidebarComponent";
 import SidebarMotion from "@/components/SidebarMotion";
 import Sidebar from "@/components/SidebarToggle";
@@ -5,11 +6,12 @@ import SideBar from "@/components/sidebar";
 import ThemeToggle from "@/components/ui/theme-toggle";
 import { lato } from "@/styles/font";
 import { Toaster } from 'react-hot-toast'
+import AnimatedTitle from "@/components/AnimatedTitle";
 
 export default function Layout({ children }: {children: React.ReactNode}){
     return (
         <>
-        
+        <ProtectedRoute>
             {/* <ThemeToggle /> */}
         
         {/* <div className="flex flex-row h-full md:flex-row md:overflow-hidden p-1"> */}
@@ -18,6 +20,9 @@ export default function Layout({ children }: {children: React.ReactNode}){
             
                 {/* <SidebarMotion /> */}
                 {/* <Sidebar  /> */}
+                <div className='absolute top-0 right-5 z-50'>
+                    <AnimatedTitle />
+                </div>
                 <div className={` ${lato.className}`}>
                     <SidebarToggle />
                 </div>
@@ -28,6 +33,7 @@ export default function Layout({ children }: {children: React.ReactNode}){
                 </div>
             
         {/* </div> */}
+        </ProtectedRoute>
         </>
     )
 }

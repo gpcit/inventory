@@ -15,11 +15,11 @@ export default async function handler (req, res) {
             if(searchQuery) {
               pageTotal = `SELECT COUNT(*) as total FROM ${tableName} WHERE is_active_id = 1`
               data = `SELECT * FROM ${tableName}
-                      WHERE (assigned_to LIKE ? OR department LIKE ? OR number LIKE ? OR serial_number LIKE ?) 
+                      WHERE (assigned_to LIKE ? OR department LIKE ? OR imei LIKE ? OR number LIKE ? OR serial_number LIKE ?) 
                       AND is_active_id = 1 
                       LIMIT ? 
                       OFFSET ?`;
-              values = [`%${searchQuery}%`, `%${searchQuery}%`, `%${searchQuery}%`, `%${searchQuery}%`, itemPerPage, (page - 1) * itemPerPage]
+              values = [`%${searchQuery}%`, `%${searchQuery}%`, `%${searchQuery}%`, `%${searchQuery}%`, `%${searchQuery}%`, itemPerPage, (page - 1) * itemPerPage]
             
             } else {
               pageTotal = `SELECT COUNT(*) as total FROM ${tableName} WHERE is_active_id = 1`

@@ -32,7 +32,7 @@ export default function OldMobile() {
         }
         fetchOldUnit()
         // console.log("this is current page inside useEffect: ", currentPage)
-    },)
+    }, [])
     
     const handlePageClick = async (selected: { selected: number }) => {
         try {

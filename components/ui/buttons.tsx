@@ -65,7 +65,7 @@ export function QRGeneratorButton ({ id, onClick, onSave }:  {id: number, onClic
   return (
     <button 
       onClick={() => onClick(id, handleSave)}
-      className="p-2 border rounded-md hover:bg-gray-100 shadow-md shadow-black/70"
+      className="p-2 border rounded-md hover:bg-gray-100"
     >
       <QrCodeIcon className='w-5' />  
     </button>
@@ -76,7 +76,7 @@ export function UpdateInventory({ id, onClick }: PropsForID) {
   return (
     <button
       onClick={() => onClick(id)}
-      className="p-2 border rounded-md hover:bg-gray-100 shadow-md shadow-black/70"
+      className="p-2 border rounded-md hover:bg-gray-100"
     >
       <PencilIcon className="w-5" />
     </button>
@@ -87,7 +87,7 @@ export function DeleteInventory({ id, onClick }: PropsForID) {
   return (
     <button
       onClick={() => onClick(id)}
-      className="p-2 border rounded-md hover:bg-gray-100 shadow-md shadow-black/70"
+      className="p-2 border rounded-md hover:bg-gray-100"
     >
       <TrashIcon className="w-5" />
     </button>

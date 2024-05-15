@@ -18,9 +18,9 @@ export default function Home() {
 }
 function guest() {
   return (
-    <main className='self-center'>
+    <main className='flex flex-col justify-start items-center bg-white h-screen'>
       <h3>Guest Homepage</h3>
-      <div className='flex justify-center'>
+      <div className=''>
         <Link href={'/login'}>Login</Link>
       </div>
     </main>

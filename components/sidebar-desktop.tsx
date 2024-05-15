@@ -5,8 +5,13 @@ import { SidebarItems } from '@/types';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { lato } from '@/styles/font';
-import { FaFileExport } from 'react-icons/fa';
+import {CiLogout} from 'react-icons/ci'
 import { TbFileExport } from 'react-icons/tb'
+import { useSession, signOut } from 'next-auth/react';
+import { useRouter } from 'next/router';
+import toast from 'react-hot-toast';
+
+
 
 interface SidebarDesktopProps {
   sidebarItems: SidebarItems;
@@ -14,7 +19,20 @@ interface SidebarDesktopProps {
 
 export function SidebarDesktop(props: SidebarDesktopProps) {
   const pathname = usePathname();
+  const {data: session, status} = useSession();
+  const router = useRouter()
+  const user  = session?.user;
 
+  
+
+  const handleSubmit = async () => {
+    const toastLogout = toast.loading(`Logging Out`, {duration: 5000})
+    setTimeout(() => {
+      toast.success('Logged Out Successfully', {id: toastLogout})
+    }, 300)
+    
+    await signOut()
+  }
   return (
     <aside className='w-[250px] rounded max-w-xs h-screen fixed left-0 top-0 z-40 bg-black/80'>
       <div className='h-full py-3'>
@@ -25,7 +43,7 @@ export function SidebarDesktop(props: SidebarDesktopProps) {
         </div>
         <div className='mt-2'>
           <div className='border border-white/50'>
-            
+
           </div>
           <div className=' flex flex-col gap-1 w-full mt-5 text-white'>
             {props.sidebarItems.links.map((link, index) => (
@@ -47,6 +65,13 @@ export function SidebarDesktop(props: SidebarDesktopProps) {
                   <span className='text-sm'>Export Data</span>
                 </div>
               </Link>
+            </div>
+
+            <div className=''>
+              <div onClick={handleSubmit}
+              className='absolute bottom-4 flex flex-row ml-3 cursor-pointer w-full'>
+                <CiLogout className='h-6 w-7 rotate-180'/> Logout
+              </div>
             </div>
           </div>
          

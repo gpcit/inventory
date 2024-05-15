@@ -1,23 +1,36 @@
-import { NextResponse } from 'next/server';
-import util from "util"
-import db from "../../../../util/db"
+import { hash } from 'bcryptjs';
+import { query } from '@/lib/db';
 
+const registerUser = async (req, res) => {
+  if (req.method !== 'POST') {
+    return res.status(405).json({ message: 'Method not allowed' });
+  }
 
-const query = util.promisify(db.query).bind(db)
+  const { username, email, password, confirmPassword } = req.body;
 
-export const POST = async (req, res) => {
-    const user = await req.body
-    console.log(user)
-    try {
-        const results = await query(`INSERT INTO users (uid, email, username, password, type_account) VALUES (UUID(), '${user.email}', '${user.username}', '${user.password}', 'user-personal')`)
-        if(results.affectedRows > 0) {
-            res.status(201).json({result: user})
-        } else {
-            throw new Error('Failed to insert user')
-        }
-    } catch (error) {
-        console.error('Error: ', error)
-        res.status(400).json({ error: 'Failed to insert'})
+  if (password !== confirmPassword) {
+    return res.status(400).json({ message: 'Passwords do not match' });
+  }
+
+  try {
+    // Check if the user already exists
+    const existingUser = await query('SELECT * FROM users WHERE email = ? OR username = ?', [email, username]);
+
+    if (existingUser.length > 0) {
+      return res.status(409).json({ message: 'User already exists' });
     }
-}
 
+    // Hash the password
+    const hashedPassword = await hash(password, 10);
+
+    // Insert the new user into the database
+    await query('INSERT INTO users (username, email, password) VALUES (?, ?, ?)', [username, email, hashedPassword]);
+
+    return res.status(201).json({ message: 'User registered successfully' });
+  } catch (error) {
+    console.error('Registration error:', error);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+export default registerUser;

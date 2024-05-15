@@ -5,12 +5,14 @@ import toast from 'react-hot-toast'
 import { Toaster } from 'react-hot-toast'
 import Link from 'next/link'
 import { Preahvihear } from 'next/font/google'
+import AnimatedName from '@/components/AnimatedName'
  
 export default function RegisterPage() {
     const[user, setUser] = useState({
         email: '',
         username: '',
         password: '',
+        confirmPassword: ''
     })
  const handlechange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
@@ -19,17 +21,38 @@ export default function RegisterPage() {
         [name]: value,
     }))
  }
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault()
-    if(user) {
-        const response = await fetch(`/api/auth/register`, {
-            method: "POST",
-            body: JSON.stringify(user)
-        });
-        return response;
+  const router = useRouter();
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const { username, email, password, confirmPassword } = user;
+
+    if (password !== confirmPassword) {
+      toast.error('Passwords do not match');
+      return;
     }
-    return null;
-  }
+
+    try {
+      const response = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, email, password, confirmPassword }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        toast.success('Successfully registered');
+        setTimeout(() => router.push('/login'), 2000);
+      } else {
+        toast.error(result.message || 'Registration failed');
+      }
+    } catch (error) {
+      console.error('Registration error:', error);
+      toast.error('Registration failed');
+    }
+  };
  
   return (
     
@@ -52,6 +75,10 @@ export default function RegisterPage() {
                 <label htmlFor="password">Enter Password:</label>
                 <input type="password" name="password" placeholder="Password" value={user.password} onChange={handlechange} required  className='p-2 border rounded-md shadow-sm border-gray-700'/>
             </div>
+            <div className='p-2 flex flex-col'>
+                <label htmlFor="confirmPassword">Confirm Password:</label>
+                <input type="password" name="confirmPassword" placeholder="confirmPassword" value={user.confirmPassword} onChange={handlechange} required  className='p-2 border rounded-md shadow-sm border-gray-700'/>
+            </div>
             
             <div className='flex items-end justify-between '>
                 <div>
@@ -68,10 +95,7 @@ export default function RegisterPage() {
                 
             </form>
         </div>
-        <div className='absolute right-5 top-2'>
-          <span className='font-bold'>Greenstone</span>
-        </div>
-        
+        <AnimatedName />
     </div>
   )
 }

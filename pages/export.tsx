@@ -4,8 +4,6 @@ import Layout from "./layout";
 import { lato } from "@/styles/font";
 import { useState } from "react";
 import toast from "react-hot-toast";
-import StatusToggle from "@/components/StatusToggle";
-import GetBranch from "@/components/ui/dropdowns/select-company";
 import { ArrowPathIcon } from "@heroicons/react/24/outline";
 
 export default function Page() {
@@ -95,7 +93,7 @@ export default function Page() {
     }
     return (
         <Layout>
-            <div className=" p-3 border rounded shadow-2xl shadow-black mx-2 relative mt-6 sm:mt-1 h-screen bg-gray-100">
+            <div className=" p-3 border rounded shadow-2xl shadow-black relative mt-6 sm:mt-1 h-screen bg-gray-100">
                 <div className="p-5 border bg-white rounded">
                     <h1 className={`${lato.className} text-2xl`}> Export Data</h1>
                     <div className="border border-black mt-5"></div>
@@ -132,7 +130,7 @@ export default function Page() {
                                         onChange={() => setGetTable("gpc_inventory")}
                                         id="gpcCpuLaptop" 
                                     />
-                                    <label htmlFor="gpcCpuLaptop"> CPU / Laptop</label>
+                                    <label className="text-sm" htmlFor="gpcCpuLaptop"> CPU / Laptop</label>
                                     
                                 </div>
                                 <div className="col-span-2 flex flex-row items-center">
@@ -145,7 +143,7 @@ export default function Page() {
                                         id="gpcMobile" 
                                         disabled={isCellphoneDisabled()}
                                     />
-                                    <label htmlFor="gpcMobile"> Cellphone</label>
+                                    <label className="text-sm" htmlFor="gpcMobile"> Cellphone</label>
                                     
                                 </div>
                                 <div className="col-span-2 flex flex-row items-center">
@@ -157,7 +155,7 @@ export default function Page() {
                                         onChange={() => setGetTable("gpc_printer")}
                                         id="gpcPrinter" 
                                     />
-                                    <label htmlFor="gpcPrinter"> Printer</label>
+                                    <label className="text-sm" htmlFor="gpcPrinter"> Printer</label>
                                 </div>
                                 <div className="col-span-2 flex flex-row items-center">
                                     <input 
@@ -168,7 +166,7 @@ export default function Page() {
                                         onChange={() => setGetTable("gpc_accounts")}
                                         id="gpcAccounts" 
                                     />
-                                    <label htmlFor="gpcAccounts"> Server Accounts</label>
+                                    <label className="text-sm" htmlFor="gpcAccounts"> Server Accounts</label>
                                 </div>
                             </div>
                             ) : (      
@@ -182,7 +180,7 @@ export default function Page() {
                                         onChange={() => setGetTable("gpc_sq_inventory")}
                                         id="gpcCpuLaptop" 
                                     />
-                                    <label htmlFor="gpcCpuLaptop"> CPU / Laptop</label>
+                                    <label className="text-sm" htmlFor="gpcCpuLaptop"> CPU / Laptop</label>
                                     
                                 </div>
                                 <div className="col-span-2 flex flex-row items-center">
@@ -195,7 +193,7 @@ export default function Page() {
                                         id="gpcMobile" 
                                         disabled
                                     />
-                                    <label htmlFor="gpcMobile"> Cellphone</label>   
+                                    <label className="text-sm" htmlFor="gpcMobile"> Cellphone</label>   
                                 </div>
                                 <div className="col-span-2 flex flex-row items-center">
                                     <input 
@@ -206,7 +204,7 @@ export default function Page() {
                                         onChange={() => setGetTable("gpc_sq_printer")}
                                         id="gpcPrinter" 
                                     />
-                                    <label htmlFor="gpcPrinter"> Printer</label>
+                                    <label className="text-sm" htmlFor="gpcPrinter"> Printer</label>
                                 </div>
                                 <div className="col-span-2 flex flex-row items-center">
                                     <input 
@@ -217,7 +215,7 @@ export default function Page() {
                                         onChange={() => setGetTable("gpc_sq_accounts")}
                                         id="gpcAccounts" 
                                     />
-                                    <label htmlFor="gpcAccounts"> Server Accounts</label>
+                                    <label className="text-sm" htmlFor="gpcAccounts"> Server Accounts</label>
                                 </div>
                             </div>
                             )}
@@ -249,7 +247,7 @@ export default function Page() {
                                         onChange={() => setGetTable("lsi_inventory")}
                                         id="lsiCpuLaptop" 
                                     />
-                                    <label htmlFor="lsiCpuLaptop"> CPU / Laptop</label>   
+                                    <label className="text-sm" htmlFor="lsiCpuLaptop"> CPU / Laptop</label>   
                                 </div>
                                 <div className="col-span-2 flex flex-row items-center">
                                     <input 
@@ -260,7 +258,7 @@ export default function Page() {
                                         onChange={() => setGetTable("lsi_mobile_inventory")}
                                         id="lsiMobile" 
                                     />
-                                    <label htmlFor="lsiMobile"> Cellphone</label>
+                                    <label className="text-sm" htmlFor="lsiMobile"> Cellphone</label>
                                     
                                 </div>
                                 <div className="col-span-2 flex flex-row items-center">
@@ -272,7 +270,7 @@ export default function Page() {
                                         onChange={() => setGetTable("lsi_printer")}
                                         id="lsiPrinter" 
                                     />
-                                    <label htmlFor="lsiPrinter"> Printer</label>
+                                    <label className="text-sm" htmlFor="lsiPrinter"> Printer</label>
                                    
                                 </div>
                                 <div className="col-span-2 flex flex-row items-center">
@@ -284,7 +282,7 @@ export default function Page() {
                                         onChange={() => setGetTable("lsi_accounts")}
                                         id="lsiAccounts" 
                                     />
-                                    <label htmlFor="lsiAccounts"> Server Accounts</label>
+                                    <label className="text-sm" htmlFor="lsiAccounts"> Server Accounts</label>
                                     
                                 </div>
                             </div>
@@ -299,7 +297,7 @@ export default function Page() {
                                         onChange={() => setGetTable("lsi_can_inventory")}
                                         id="lsiCpuLaptop" 
                                     />
-                                    <label htmlFor="lsiCpuLaptop"> CPU / Laptop</label>   
+                                    <label className="text-sm" htmlFor="lsiCpuLaptop"> CPU / Laptop</label>   
                                 </div>
                                 <div className="col-span-2 flex flex-row items-center">
                                     <input 
@@ -311,7 +309,7 @@ export default function Page() {
                                         id="lsiMobile" 
                                         disabled
                                     />
-                                    <label htmlFor="lsiMobile"> Cellphone</label>
+                                    <label className="text-sm" htmlFor="lsiMobile"> Cellphone</label>
                                     
                                 </div>
                                 <div className="col-span-2 flex flex-row items-center">
@@ -323,7 +321,7 @@ export default function Page() {
                                         onChange={() => setGetTable("lsi_can_printer")}
                                         id="lsiPrinter" 
                                     />
-                                    <label htmlFor="lsiPrinter"> Printer</label>
+                                    <label className="text-sm" htmlFor="lsiPrinter"> Printer</label>
                                    
                                 </div>
                                 <div className="col-span-2 flex flex-row items-center">
@@ -335,7 +333,7 @@ export default function Page() {
                                         onChange={() => setGetTable("lsi_can_accounts")}
                                         id="lsiAccounts" 
                                     />
-                                    <label htmlFor="lsiAccounts"> Server Accounts</label>
+                                    <label className="text-sm" htmlFor="lsiAccounts"> Server Accounts</label>
                                     
                                 </div>
                             </div>
@@ -355,7 +353,7 @@ export default function Page() {
                                         onChange={() => handleradioChange("gkc_inventory")}
                                         id="gkcCpuLaptop" 
                                     />
-                                    <label htmlFor="gkcCpuLaptop"> CPU / Laptop</label> 
+                                    <label className="text-sm" htmlFor="gkcCpuLaptop"> CPU / Laptop</label> 
                                 </div>
                                 <div className="col-span-2 flex flex-row items-center">
                                     <input 
@@ -366,7 +364,7 @@ export default function Page() {
                                         onChange={() => handleradioChange("gkc_mobile_inventory")}
                                         id="gkcMobile" 
                                     />
-                                    <label htmlFor="gkcMobile"> Cellphone</label>  
+                                    <label className="text-sm" htmlFor="gkcMobile"> Cellphone</label>  
                                 </div>
                                 <div className="col-span-2 flex flex-row items-center">
                                     <input 
@@ -377,7 +375,7 @@ export default function Page() {
                                         onChange={() => handleradioChange("gkc_printer")}
                                         id="gkcPrinter" 
                                     />
-                                    <label htmlFor="gkcPrinter"> Printer</label>
+                                    <label className="text-sm" htmlFor="gkcPrinter"> Printer</label>
                                     
                                 </div>
                                 <div className="col-span-2 flex flex-row items-center">
@@ -389,7 +387,7 @@ export default function Page() {
                                         onChange={() => handleradioChange("gkc_accounts")}
                                         id="gkcAccounts" 
                                     />
-                                    <label htmlFor="gkcAccounts"> Server Accounts</label>
+                                    <label className="text-sm" htmlFor="gkcAccounts"> Server Accounts</label>
                                     
                                 </div>
                             </div>
@@ -406,7 +404,7 @@ export default function Page() {
                                         onChange={() => handleradioChange("gsrc_inventory")}
                                         id="gsrcCpuLaptop" 
                                     />
-                                    <label htmlFor="gsrcCpuLaptop"> CPU / Laptop</label>
+                                    <label className="text-sm" htmlFor="gsrcCpuLaptop"> CPU / Laptop</label>
                                     
                                 </div>
                                 <div className="col-span-2 flex flex-row items-center">
@@ -418,7 +416,7 @@ export default function Page() {
                                         onChange={() => handleradioChange("gsrc_mobile_inventory")}
                                         id="gsrcMobile" 
                                     />
-                                    <label htmlFor="gsrcMobile"> Cellphone</label>
+                                    <label className="text-sm" htmlFor="gsrcMobile"> Cellphone</label>
                                     
                                 </div>
                                 <div className="col-span-2 flex flex-row items-center">
@@ -430,7 +428,7 @@ export default function Page() {
                                         onChange={() => handleradioChange("gsrc_printer")}
                                         id="gsrcPrinter" 
                                     />
-                                    <label htmlFor="gsrcPrinter"> Printer</label>
+                                    <label className="text-sm" htmlFor="gsrcPrinter"> Printer</label>
                                     
                                 </div>
                                 <div className="col-span-2 flex flex-row items-center">
@@ -442,7 +440,7 @@ export default function Page() {
                                         onChange={() => handleradioChange("gsrc_accounts")}
                                         id="gsrcAccounts" 
                                     />
-                                    <label htmlFor="gsrcAccounts"> Server Accounts</label>
+                                    <label className="text-sm" htmlFor="gsrcAccounts"> Server Accounts</label>
                                     
                                 </div>
                             </div>

@@ -22,16 +22,17 @@ export default async function handler(req, res) {
           status: status // Add a new property 'status' with the transformed value
         };
       });
+      
       // Extract column headers from the query result
       const headers = Object.keys(transformedData[0]).filter((header) => header !== 'date_created');
 
       // Extract rows from the query result
       const rows = transformedData.map((row) => Object.values(row));
-
+      
       // Create a new workbook and add a worksheet
       const workbook = xlsx.utils.book_new();
       const worksheet = xlsx.utils.aoa_to_sheet([headers, ...rows]);
-
+      console.log("Result for worksheet: ", worksheet)
       // Add the worksheet to the workbook
       xlsx.utils.book_append_sheet(workbook, worksheet, tablename);
 

@@ -106,47 +106,49 @@ export default function Page() {
 
     return (
         <Layout>
-            <div className=" p-3 border rounded shadow-2xl shadow-black mx-2 relative mt-6 sm:mt-1 bg-white">
-                <div className="grid grid-rows-1 self-end w-full">
-                    <h1 className={`${lato.className} text-2xl`}> {name} Server Accounts</h1>
-                    <div className="relative flex flex-col  w-28 top-7">
-                    {(valueX === 'gpc_inventory' || valueX === 'lsi_inventory') && branchName.length > 1 && (
-                        <>
-                        <span>Change Branch: </span>
-                        <div className=" w-full border-gray-400">
-                             <GetBranch onCompanyChange={handleBranchChange} getCompany={valueX} />
-                        </div>
-                        </>
-                    )}
-                    </div>
-                </div>
-                <div className="flex items-center justify-between gap-2 mt-4 md:mt-8">
-                    
-                   {name !== '' && <> <Search placeholder="Search...." /><CreateInventory onClick={openModal} /> </>}
-                </div>
-                    {name && gettable !== '' && (tableAccounts?.length === 0 || tableAccounts === null || tableAccounts === undefined) && <Upload tablename={gettable} onDataUploaded={dataUploaderHandler}/>}
-                <div className="flex justify-between items-center">
-                    <div className="flex flex-row items-center mt-1">
-                        <div className="relative flex flex-col items-center justify-between md:mt-2">
-                            <label className="">{name === '' ? 'Select' : 'Change'} Company:</label>
-                            <Dropdown onCompanyChange={handleDropdown} />
+            <div className="p-2 border rounded shadow-2xl shadow-black relative h-screen bg-gray-100">
+                <div className="border rounded p-5 bg-white">
+                    <div className="grid grid-rows-1 self-end w-full">
+                        <h1 className={`${lato.className} text-2xl`}> {name} Server Accounts</h1>
+                        <div className="relative flex flex-col  w-28 top-2 sm:top-7">
+                        {(valueX === 'gpc_inventory' || valueX === 'lsi_inventory') && branchName.length > 1 && (
+                            <>
+                            <span>Change Branch: </span>
+                            <div className=" w-full border-gray-400">
+                                 <GetBranch onCompanyChange={handleBranchChange} getCompany={valueX} />
+                            </div>
+                            </>
+                        )}
                         </div>
                     </div>
-                    <div className="mx-2">
-                    {name !=='' &&  <StatusToggle loading={false} onChange={handleTrigger} /> }
+                    <div className="flex items-center justify-between gap-2 mt-4 md:mt-8">
+                
+                       {name !== '' && <> <Search placeholder="Search...." /><CreateInventory onClick={openModal} /> </>}
                     </div>
+                        {name && gettable !== '' && (tableAccounts?.length === 0 || tableAccounts === null || tableAccounts === undefined) && <Upload tablename={gettable} onDataUploaded={dataUploaderHandler}/>}
+                    <div className="flex justify-between items-center">
+                        <div className="flex flex-row items-center mt-1">
+                            <div className="relative flex flex-col items-center justify-between md:mt-2">
+                                <label className="">{name === '' ? 'Select' : 'Change'} Company:</label>
+                                <Dropdown onCompanyChange={handleDropdown} />
+                            </div>
+                        </div>
+                        <div className="mx-2">
+                        {name !=='' &&  <StatusToggle loading={false} onChange={handleTrigger} /> }
+                        </div>
+                    </div>
+                    {company === 'gpc_inventory' && branch === 'Balintawak' && <AccountInventoryTable triggerValue={triggerValue} getTableName={tablename} onDataSubmitted={handleFormSubmit}/>}
+                        {company === 'gpc_inventory' && branch === 'SQ'  && <AccountInventoryTable triggerValue={triggerValue} getTableName={tablename} onDataSubmitted={handleFormSubmit}/>}
+                
+                        {company === 'lsi_inventory' && branch === 'Valenzuela' && <AccountInventoryTable triggerValue={triggerValue} getTableName={tablename} onDataSubmitted={handleFormSubmit}/>}
+                        {company === 'lsi_inventory' && branch === 'Canlubang'  && <AccountInventoryTable triggerValue={triggerValue} getTableName={tablename} onDataSubmitted={handleFormSubmit}/>}
+                    {(company !== 'gpc_inventory' && company !== 'lsi_inventory' ) && company !== '' && <AccountInventoryTable triggerValue={triggerValue} getTableName={gettable} onDataSubmitted={handleFormSubmit}/>}
+                    {isModalOpen && (
+                            <Modal onClose={closeModal} title={`${branch} Accounts`} companyName={name} onSubmit={handleFormSubmit} tablename={gettable}>
+                                <Form triggerValue={triggerValue} gettableName={gettable} onDataSubmitted={handleFormSubmit}/>
+                            </Modal>
+                        )}
                 </div>
-                {company === 'gpc_inventory' && branch === 'Balintawak' && <AccountInventoryTable triggerValue={triggerValue} getTableName={tablename} onDataSubmitted={handleFormSubmit}/>}
-                    {company === 'gpc_inventory' && branch === 'SQ'  && <AccountInventoryTable triggerValue={triggerValue} getTableName={tablename} onDataSubmitted={handleFormSubmit}/>}
-                    
-                    {company === 'lsi_inventory' && branch === 'Valenzuela' && <AccountInventoryTable triggerValue={triggerValue} getTableName={tablename} onDataSubmitted={handleFormSubmit}/>}
-                    {company === 'lsi_inventory' && branch === 'Canlubang'  && <AccountInventoryTable triggerValue={triggerValue} getTableName={tablename} onDataSubmitted={handleFormSubmit}/>}
-                {(company !== 'gpc_inventory' && company !== 'lsi_inventory' ) && company !== '' && <AccountInventoryTable triggerValue={triggerValue} getTableName={gettable} onDataSubmitted={handleFormSubmit}/>}
-                {isModalOpen && (
-                        <Modal onClose={closeModal} title={`${branch} Accounts`} companyName={name} onSubmit={handleFormSubmit} tablename={gettable}>
-                            <Form triggerValue={triggerValue} gettableName={gettable} onDataSubmitted={handleFormSubmit}/>
-                        </Modal>
-                    )}
             </div>
         </Layout>
     )

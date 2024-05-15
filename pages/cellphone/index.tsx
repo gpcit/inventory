@@ -83,71 +83,37 @@ const [dataUploaderHandler, setDataUploaderHandler] = useState<() => void>(() =>
             setTriggerValue(triggerValue === 'inactive' ? 'active' : 'inactive')
         }
     }
-
-    const handleExport = async () => {
-        try {
-            const exportLoading = toast.loading(`Exporting data from ${getTable}`, {duration: 3000})
-            const response = await fetch(`/api/${getTable}/export`)
-            console.log("Result for Response: ", response)
-            
-            if (response.ok) {
-
-                const blob = await response.blob();
-                setTimeout(() => {
-                // Create a temporary object URL for the blob
-                const url = window.URL.createObjectURL(blob);
-          
-                // Create a temporary anchor element to trigger download
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `${name} Mobile Inventory.xlsx`;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-          
-                // Revoke the object URL to release browser resources
-                window.URL.revokeObjectURL(url);
-          
-                // Remove loading toast and show success message
-                toast.success('File exported successfully!', { id: exportLoading });
-                }, 2500)
-              } else {
-                throw new Error('Failed to export data');
-              }
-            
-        } catch (error) {
-            console.error("ERror exporting Data: ", error)
-        }
-    }
     
     return (
         <Layout>
-            <div className=" p-3 border rounded shadow-2xl shadow-black mx-2 relative mt-6 sm:mt-1 bg-white">
-                <div className="flex items-center justify-between w-full">
-                    <h1 className={`${lato.className} text-2xl`}> {name} Mobile</h1>
-                </div>
-                <div className="flex items-center justify-between gap-2 mt-12">
-                    
-                   {name !== '' && <> <Search placeholder="Search...." /><CreateInventory onClick={openModal}/> </>}
-                </div>
-                    {getTable !== '' && (mobileInventory?.length === 0 || mobileInventory === undefined) && <Upload tablename={getTable} onDataUploaded={dataUploaderHandler}/>}
-                <div className="flex justify-between items-center">
-                    <div className="flex flex-row items-center mt-1">
-                        <div className="relative flex flex-col items-center justify-between md:mt-2">
-                            <label className="">Select Company:</label>
-                            <Dropdown onCompanyChange={handleDropdown} />
+            <div className=" p-2 border rounded shadow-2xl shadow-black relative h-screen bg-gray-100">
+                <div className="p-5 border bg-white rounded">
+                    <div className="flex items-center justify-between w-full">
+                        <h1 className={`${lato.className} text-2xl`}> {name} Mobile</h1>
+                    </div>
+                    <div className="flex items-center justify-between gap-2 mt-12">
+                
+                       {name !== '' && <> <Search placeholder="Search...." /><CreateInventory onClick={openModal}/> </>}
+                    </div>
+                        {getTable !== '' && (mobileInventory?.length === 0 || mobileInventory === undefined) && <Upload tablename={getTable} onDataUploaded={dataUploaderHandler}/>}
+                    <div className="flex justify-between items-center">
+                        <div className="flex flex-row items-center mt-1">
+                            <div className="relative flex flex-col items-center justify-between md:mt-2">
+                                <label className="">Select Company:</label>
+                                <Dropdown onCompanyChange={handleDropdown} />
+                            </div>
+                        </div>
+                        <div className="mx-2">
+                        {name !=='' &&  <StatusToggle loading={loading} onChange={handleTrigger}/> }
                         </div>
                     </div>
-                    <div className="mx-2">
-                    {name !=='' &&  <StatusToggle loading={loading} onChange={handleTrigger}/> }
-                    </div>
+                    {name !=='' && <MobileTableInventory triggerValue={triggerValue} getTableName={getTable} onDataSubmitted={handleFormSubmit}/>}
+                    {isModalOpen && (
+                            <Modal onClose={closeModal} title="Mobile" companyName={name} onSubmit={handleFormSubmit} tablename={getTable}>
+                                <Form gettableName={getTable} onDataSubmitted={handleFormSubmit} triggerValue={triggerValue}/>
+                            </Modal>
+                        )}
                 </div>
-                {name !=='' && <MobileTableInventory triggerValue={triggerValue} getTableName={getTable} onDataSubmitted={handleFormSubmit}/>}
-                {isModalOpen && (
-                        <Modal onClose={closeModal} title="Mobile" companyName={name} onSubmit={handleFormSubmit} tablename={getTable}>
-                            <Form gettableName={getTable} onDataSubmitted={handleFormSubmit} triggerValue={triggerValue}/>
-                        </Modal>
-                    )}
             </div>
         </Layout>
     )
