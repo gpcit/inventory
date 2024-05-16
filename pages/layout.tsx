@@ -31,9 +31,7 @@ export default function Layout({ children }: {children: React.ReactNode}){
                 
                 <div className={` sm:ml-[255px] ${lato.className} `}>
                    <Toaster position="top-center" reverseOrder={false} />
-                    <div className="absolute top-0 ml-3 z-50">
-                        <LoggedUser />
-                    </div>
+                    
                     {children}
                 </div>
             

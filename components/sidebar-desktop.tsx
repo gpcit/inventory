@@ -11,7 +11,8 @@ import { CiLogout } from 'react-icons/ci';
 import { TbFileExport } from 'react-icons/tb';
 import { SidebarItems } from '@/types';
 import { roles } from '@/lib/company';
-import { UserIcon } from '@heroicons/react/24/solid';
+import LoggedUser from './LoggedUser';
+
 interface SidebarDesktopProps {
   sidebarItems: SidebarItems;
 }
@@ -49,6 +50,7 @@ export function SidebarDesktop(props: SidebarDesktopProps) {
         </div>
         <div className='mt-2'>
           <div className='border border-white/50'></div>
+          <div className='flex flex-row justify-center items-center'><LoggedUser /></div>
           <div className='flex flex-col gap-1 w-full mt-5 text-white'>
             {props.sidebarItems.links.map((link, index) => (
               <Link key={index} href={link.href}>

@@ -30,7 +30,7 @@
     "pages/middleware/uploadMiddleware.js", 
     "pages/components/CardLineChart.js", 
     "lib/init-middleware.ts", 
-    "pages/api/auth/login.ts", 
+    "pages/api/auth/__login.ts", 
     "lib/dbuser.js", 
     "pages/api/auth/[...nextauth].ts"
   ],

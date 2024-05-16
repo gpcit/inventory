@@ -33,6 +33,7 @@ export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
   session: {
     strategy: 'jwt',
+    maxAge: 60 * 60
   },
   callbacks: {
     async session({ session, token }) {
@@ -58,6 +59,7 @@ export const authOptions: NextAuthOptions = {
         token.role_id = user.role_id;
       }
       console.log("Result for token: ", token.uid);
+      token.exp = Math.floor(Date.now() / 1000) + (60 * 60)
       return token;
     },
   },
