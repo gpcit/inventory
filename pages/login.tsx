@@ -2,7 +2,7 @@ import { useState, FormEvent, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import toast, { Toaster } from 'react-hot-toast';
 import Link from 'next/link';
-import { signIn, useSession } from 'next-auth/react';
+import { signIn, signOut, useSession } from 'next-auth/react';
 import { lato } from '@/styles/font';
 import { duration } from 'html2canvas/dist/types/css/property-descriptors/duration';
 import anime from 'animejs';
@@ -17,6 +17,7 @@ export default function LoginPage() {
       if(session) {
         router.replace('/dashboard')
       }
+      console.log(`Next_AUTH_URL: ${process.env.NEXT_URL}, ${process.env.NEXT_PUBLIC_URL}`)
     }, [session, router])
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -51,6 +52,8 @@ export default function LoginPage() {
                 setTimeout(() => {
                   toast.success('Successfully logged in', {id: toastLogin});
                   router.push('/dashboard')
+                  console.log(`Value signOut after login: ${signOut}`)
+                  console.log(`Value of next auth url after login: ${process.env.NEXT_AUTH_URL}`)
                 }, 2000)
             }
         } catch (error) {

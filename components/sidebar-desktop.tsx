@@ -30,9 +30,8 @@ export function SidebarDesktop(props: SidebarDesktopProps) {
     setTimeout(() => {
       toast.success('Logged Out Successfully', {id: toastLogout})
     }, 300)
-    
-    await signOut()
-    router.push(`${process.env.NEXTAUTH_URL}/login`)
+    console.log("result for signtout: ", signOut)
+    await signOut({callbackUrl: `${process.env.NEXT_PUBLIC_URL}/login`});
   }
   return (
     <aside className='w-[250px] rounded max-w-xs h-screen fixed left-0 top-0 z-40 bg-black/80'>
