@@ -1,9 +1,6 @@
 import Chart from 'chart.js';
 import React from 'react';
 import Link from "next/link";
-import { CardSkeleton } from '@/components/ui/skeleton';
-
-import QRCodeGenerator from '@/components/QRCodeGenerator';
 import { useSession } from 'next-auth/react';
 
 export default function Home() {
@@ -23,6 +20,19 @@ function guest() {
       <div className=''>
         <Link href={'/login'}>Login</Link>
       </div>
+      <div>
+        <div>
+          <button className='border bg-blue-700 text-white rounded px-4 py-2'>
+          Update Session
+          </button>
+        </div>
+        <div>
+          <button className='border bg-green-700 text-white rounded px-4 py-2'
+          onClick={() => console.log}>
+          Log Session
+          </button>
+        </div>
+      </div>
     </main>
   )
 }
@@ -35,6 +45,7 @@ function user({session}: any) {
         <h5>{session.user.username}</h5>
         <h5>{session.user.email}</h5>
       </div>
+      
     </main>
   )
 }

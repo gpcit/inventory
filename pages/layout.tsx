@@ -7,6 +7,7 @@ import ThemeToggle from "@/components/ui/theme-toggle";
 import { lato } from "@/styles/font";
 import { Toaster } from 'react-hot-toast'
 import AnimatedTitle from "@/components/AnimatedTitle";
+import LoggedUser from "@/components/LoggedUser";
 
 export default function Layout({ children }: {children: React.ReactNode}){
     return (
@@ -20,6 +21,7 @@ export default function Layout({ children }: {children: React.ReactNode}){
             
                 {/* <SidebarMotion /> */}
                 {/* <Sidebar  /> */}
+                
                 <div className='absolute top-0 right-5 z-50'>
                     <AnimatedTitle />
                 </div>
@@ -29,6 +31,9 @@ export default function Layout({ children }: {children: React.ReactNode}){
                 
                 <div className={` sm:ml-[255px] ${lato.className} `}>
                    <Toaster position="top-center" reverseOrder={false} />
+                    <div className="absolute top-0 ml-3 z-50">
+                        <LoggedUser />
+                    </div>
                     {children}
                 </div>
             

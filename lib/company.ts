@@ -49,3 +49,10 @@ export const status = [
     {name: "Active", value: 1},
     {name: "Inactive", value: 2}
 ]
+
+
+export const roles: { [key: number] : string} = {
+    1: 'Admin',
+    2: 'Regular',
+    3: 'Guest'
+}
