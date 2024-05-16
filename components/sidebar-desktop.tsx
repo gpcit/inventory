@@ -30,13 +30,17 @@ export function SidebarDesktop(props: SidebarDesktopProps) {
   const username = displayName?.toUpperCase()
 
   const handleSubmit = async () => {
-    const toastLogout = toast.loading(`Logging Out`, { duration: 5000 });
-    setTimeout(() => {
+    try {
+
+      
+      const toastLogout = toast.loading(`Logging Out`, { duration: 5000 });
+      setTimeout(() => {
       toast.success('Logged Out Successfully', { id: toastLogout });
     }, 300);
-
-    await signOut();
-    router.push(`${process.env.NEXT_PUBLIC_URL}/login`)
+    await signOut({ callbackUrl: `/`, redirect: true});
+    } catch(error: any) {
+      console.error(`Signout Error: `, error)
+    }
   };
 
   const role_name = roles[role_id as keyof typeof roles] || role_id;

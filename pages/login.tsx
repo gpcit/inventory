@@ -14,7 +14,7 @@ export default function LoginPage() {
 
     useEffect(() => {
       if(session) {
-        router.replace('/dashboard')
+        router.push(`${process.env.NEXT_PUBLIC_URL}/dashboard`)
       }
     }, [session, router])
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
