@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { lato } from '@/styles/font';
 import { useSession } from 'next-auth/react';
 import {formatDistanceToNowStrict} from 'date-fns'
+import Cookies from 'js-cookie';
 
 export default function LoggedUser () {
     const [expiresIn, setExpiresIn] = useState('')
@@ -13,10 +14,13 @@ export default function LoggedUser () {
     useEffect(() => {
         let intervalId: NodeJS.Timeout | null = null;
 
-        if (session?.expires) {
+        // Retrieve expiration time from cookies
+        const storedExpiration = Cookies.get('sessionExpiration');
+        const expirationTime = storedExpiration ? new Date(storedExpiration).getTime() : null;
+
+        if (expirationTime) {
             const calculateTimeLeft = () => {
                 const currentTime = new Date().getTime();
-                const expirationTime = new Date(session.expires).getTime();
                 const timeDifference = expirationTime - currentTime;
 
                 if (timeDifference > 0) {
@@ -41,7 +45,7 @@ export default function LoggedUser () {
                 clearInterval(intervalId);
             }
         };
-    }, [session]);
+    }, []);
     return (
         <>
         

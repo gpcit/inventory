@@ -4,9 +4,8 @@ import toast, { Toaster } from 'react-hot-toast';
 import Link from 'next/link';
 import { signIn, useSession } from 'next-auth/react';
 import { lato } from '@/styles/font';
-import { duration } from 'html2canvas/dist/types/css/property-descriptors/duration';
-import anime from 'animejs';
 import AnimatedName from '@/components/AnimatedName';
+
 
 export default function LoginPage() {
     const [credentials, setCredentials] = useState({ username: '', password: '' });
