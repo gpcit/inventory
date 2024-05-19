@@ -37,7 +37,7 @@ export function SidebarDesktop(props: SidebarDesktopProps) {
       setTimeout(() => {
       toast.success('Logged Out Successfully', { id: toastLogout });
     }, 300);
-    await signOut({ callbackUrl: `/`, redirect: true});
+    await signOut({ callbackUrl: `http://10.20.10.108/login`, redirect: true});
     } catch(error: any) {
       console.error(`Signout Error: `, error)
     }
