@@ -10,6 +10,7 @@ import {tableName} from "@/lib/company";
 import MobileEditModal from "@/components/ModalEditInventory";
 import DeleteMobileModal from "../inventory/delete-data/DeleteMobileInventory";
 import { XCircleIcon, CheckCircleIcon } from "@heroicons/react/24/solid";
+import ActivityLog from "./activity_log";
 
 interface MobileInventoryProps {
     getTableName: string,
@@ -119,23 +120,38 @@ const handleEditSubmit = async () => {
  
   if(triggerValue === 'active') {
     fetchMobile('active')
-    closeEditModal();
-    onDataSubmitted()
   } else {
     fetchMobile('inactive')
-    closeEditModal();
-    onDataSubmitted()
   }
-  ;
+    closeModal();
+    onDataSubmitted()
 }
 // action button for delete
 const handleDeleteSubmit = async () => {
-  closeDeleteModal();
+  
   if(triggerValue === 'active') {
     fetchMobile('active')
   } else {
     fetchMobile('inactive')
   }
+  closeModal();
+}
+
+const closeQrModal = () => {
+  setIsQRModalOpen(false);
+  setSelectedId(null)
+}
+const closeEditModal = () => {
+  setIsModalOpen(false);
+  setSelectedId(null)
+}
+
+
+const closeModal = () => {
+  setIsModalOpen(false)
+  setIsDeleteModalOpen(false)
+  setSelectedId(null)
+  setIsQRModalOpen(false)
 }
 
 // function for pagination
@@ -185,6 +201,10 @@ const handleSave = async () => {
   } catch (error) {
       console.error('Error saving data:', error);
   }
+}
+
+const handleFormSubmit = () => {
+  closeModal();
 }
 // function for opening QR Modal
 const qrModal = async (id: number) => {
@@ -239,142 +259,140 @@ const openDeleteModal = async (id: number) => {
   }
 }
 
-const closeQrModal = () => {
-  setIsQRModalOpen(false);
-  setSelectedId(null)
-}
-const closeEditModal = () => {
-  setIsModalOpen(false);
-  setSelectedId(null)
-}
-const closeDeleteModal = () => {
-  setIsDeleteModalOpen(false);
-  setSelectedId(null)
-}
-
-       return (  
-        <div className="overflow-x-auto sm:p-2">
-          <div className="inline-block min-w-full align-middle">
-            <div className="p-2 rounded-lg md:pt-0">
-              <table className="min-w-full md:table">
-                <thead className="text-sm text-left bg-gradient-to-r from-green-600 text-black border-black border rounded">
-                  <tr className="">
-                    <th scope="col" className="px-4 py-1 font-extrabold">
-                      Assigned To
-                    </th>
-                    <th scope="col" className="px-3 py-1 font-extrabold">
-                      Department
-                    </th>
-                    <th scope="col" className="px-3 py-1 font-extrabold">
-                      Brand
-                    </th>
-                    <th scope="col" className="px-3 py-1 font-extrabold">
-                      IMEI
-                    </th>
-                    <th scope="col" className="px-3 py-1 font-extrabold">
-                      Serial Number
-                    </th>
-                    <th scope="col" className="px-3 py-1 font-extrabold">
-                      Number
-                    </th>
-                    <th scope="col" className="px-3 py-1 font-extrabold text-center">
-                      Status
-                    </th>
-                    {triggerValue === 'active' ? (
-                    <th scope="col" className="px-3 py-1 font-extrabold text-center">
-                      Date Issued
-                    </th>
-                    ) : (
-                    <th scope="col" className="px-3 py-1 font-extrabold text-center">
-                      Date Returned
-                    </th>
-                    )}
-                    <th scope="col" className="py-3 pl-6 pr-3 text-center">
-                      Action
-                    </th>
-                  </tr>
-                </thead>
-                
-                <tbody className="bg-white cursor-pointer">
-                  {mobileInventory?.length === null || mobileInventory?.length === 0 ? (
-                    <tr>
-                       <td colSpan={9} className="text-center">No data found...</td> 
-                    </tr>
-                  ): (
-                    <>
-                    {mobileInventory?.map((inventory) => (
-                      <tr key={inventory.id}
-                        className="w-full shadow-md shadow-gray-700 rounded border-green-500 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg hover:bg-green-200 hover:border-t-0"
-                      >
-                        <td className="py-3 pl-6 pr-3 whitespace-nowrap" onClick={() => viewDetails(inventory.id)}>
-                            <p>{inventory.assigned_to}</p>
-                        </td>
-                        <td className="px-3 py-3 whitespace-nowrap">
-                          {inventory.department}
-                        </td>
-                        <td className="px-3 py-3 whitespace-nowrap">
-                          {inventory.brand}
-                        </td>
-                        <td className="px-3 py-3 whitespace-nowrap">
-                        {inventory.imei?.split("IMEI").map((imei, index) => (
-                            index > 0 && (
-                                <div key={index}>
-                                    IMEI{imei.trim()}
-                                </div>
-                            )
-                        ))}
-                        </td>
-                        <td className="px-3 py-3 whitespace-nowrap">
-                          {inventory.serial_number}
-                        </td>
-                        <td className="px-3 py-3 whitespace-nowrap">
-                        {inventory.number}
-                        </td>
-                        <td className="px-3 py-3 whitespace-nowrap ">
-                          <div className="flex justify-center items-center">
-                            {inventory.is_active_id === 1 ? <CheckCircleIcon className="rounded-full w-5 h-5  text-green-800"/> : <XCircleIcon className="rounded-full w-5 h-5  text-red-800"/>}
-                          </div>
-                        </td>
-                        <td className="px-3 py-3 whitespace-nowrap text-center">
-                          {triggerValue === 'active' && inventory.date_issued}
-                          {triggerValue === 'inactive' && inventory.date_returned}
-                        </td>
-                        <td className="py-3 pl-6 whitespace-nowrap ">
-                          <div className="flex justify-center items-center gap-3">
-                            <UpdateInventory id={inventory.id} onClick={openModal}/>
-                            
-                            <QRGeneratorButton 
-                              id={inventory.id} 
-                              onClick={qrModal}
-                              onSave={handleSave}
-                            />
-                            <DeleteInventory id={inventory.id} onClick={openDeleteModal}/>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                    </>
+  return (  
+    <>
+    <div className="gap-2">
+      <div className="overflow-x-auto sm:p-2">
+        <div className="inline-block min-w-full align-middle">
+          <div className="p-2 rounded-lg md:pt-0">
+            <table className="min-w-full md:table">
+              <thead className="text-sm text-left bg-gradient-to-r from-green-600 text-black border-black border rounded">
+                <tr className="">
+                  <th scope="col" className="px-4 py-1 font-extrabold">
+                    Assigned To
+                  </th>
+                  <th scope="col" className="px-3 py-1 font-extrabold">
+                    Department
+                  </th>
+                  <th scope="col" className="px-3 py-1 font-extrabold">
+                    Brand
+                  </th>
+                  <th scope="col" className="px-3 py-1 font-extrabold">
+                    IMEI
+                  </th>
+                  <th scope="col" className="px-3 py-1 font-extrabold">
+                    Serial Number
+                  </th>
+                  <th scope="col" className="px-3 py-1 font-extrabold">
+                    Number
+                  </th>
+                  <th scope="col" className="px-3 py-1 font-extrabold text-center">
+                    Status
+                  </th>
+                  {triggerValue === 'active' ? (
+                  <th scope="col" className="px-3 py-1 font-extrabold text-center">
+                    Date Issued
+                  </th>
+                  ) : (
+                  <th scope="col" className="px-3 py-1 font-extrabold text-center">
+                    Date Returned
+                  </th>
                   )}
-                </tbody>
-              </table>
-                    {isQRModalOpen && (
-                      <BarcodeMobileModal modalData={modalData} company={company} tablename={getTableName} id={selectedId} onClose={closeQrModal} />
-                    )}
-                    {isModalOpen && (
-                      
-                      <EditMobileModal triggerValue={triggerValue} onClose={closeEditModal} onSubmit={handleEditSubmit} id={selectedId} tablename={getTableName}/>  
-                    )}
-                    {isDeleteModalOpen && (
-                      <DeleteMobileModal onClose={closeDeleteModal} onSubmit={handleDeleteSubmit} id={selectedId} tablename={getTableName} />
-                    )}
-            </div>
-            {mobileInventory?.length !== 0 && mobileInventory !== undefined && !queryValue &&
-            <CustomPagination
-              pageCount={totalPages}
-              currentPage={currentPage}
-              onPageChange={handlePageClick}
-            />}
+                  <th scope="col" className="py-3 pl-6 pr-3 text-center">
+                    Action
+                  </th>
+                </tr>
+              </thead>
+      
+              <tbody className="bg-white cursor-pointer">
+                {mobileInventory?.length === null || mobileInventory?.length === 0 ? (
+                  <tr>
+                      <td colSpan={9} className="text-center">No data found...</td>
+                  </tr>
+                ): (
+                  <>
+                  {mobileInventory?.map((inventory) => (
+                    <tr key={inventory.id}
+                      className="w-full shadow-md shadow-gray-700 rounded border-green-500 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg hover:border-t-0"
+                    >
+                      <td className="py-3 pl-6 pr-3 whitespace-nowrap">
+                          <p>{inventory.assigned_to}</p>
+                      </td>
+                      <td className="px-3 py-3 whitespace-nowrap">
+                        {inventory.department}
+                      </td>
+                      <td className="px-3 py-3 whitespace-nowrap">
+                        {inventory.brand}
+                      </td>
+                      <td className="px-3 py-3 whitespace-nowrap">
+                      {inventory.imei?.split("IMEI").map((imei, index) => (
+                          index > 0 && (
+                              <div key={index}>
+                                  IMEI{imei.trim()}
+                              </div>
+                          )
+                      ))}
+                      </td>
+                      <td className="px-3 py-3 whitespace-nowrap">
+                        {inventory.serial_number}
+                      </td>
+                      <td className="px-3 py-3 whitespace-nowrap">
+                      {inventory.number}
+                      </td>
+                      <td className="px-3 py-3 whitespace-nowrap ">
+                        <div className="flex justify-center items-center">
+                          {inventory.is_active_id === 1 ? <CheckCircleIcon className="rounded-full w-5 h-5  text-green-800"/> : <XCircleIcon className="rounded-full w-5 h-5  text-red-800"/>}
+                        </div>
+                      </td>
+                      <td className="px-3 py-3 whitespace-nowrap text-center">
+                        {triggerValue === 'active' && inventory.date_issued}
+                        {triggerValue === 'inactive' && inventory.date_returned}
+                      </td>
+                      <td className="py-3 pl-6 whitespace-nowrap ">
+                        <div className="flex justify-center items-center gap-3">
+                          <UpdateInventory id={inventory.id} onClick={openModal}/>
+      
+                          <QRGeneratorButton
+                            id={inventory.id}
+                            onClick={qrModal}
+                            onSave={handleSave}
+                          />
+                          <DeleteInventory id={inventory.id} onClick={openDeleteModal}/>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                  </>
+                )}
+              </tbody>
+            </table>
+                  {isQRModalOpen && (
+                    <BarcodeMobileModal modalData={modalData} company={company} tablename={getTableName} id={selectedId} onClose={closeModal} />
+                  )}
+                  {isModalOpen && (
+      
+                    <EditMobileModal triggerValue={triggerValue} onClose={closeModal} onSubmit={handleEditSubmit} id={selectedId} tablename={getTableName}/>
+                  )}
+                  {isDeleteModalOpen && (
+                    <DeleteMobileModal triggerValue={triggerValue} onClose={closeModal} onSubmit={handleDeleteSubmit} id={selectedId} tablename={getTableName} />
+                  )}
           </div>
-        </div>     
-        )
+          {mobileInventory?.length !== 0 && mobileInventory !== undefined && !queryValue &&
+          <CustomPagination
+            pageCount={totalPages}
+            currentPage={currentPage}
+            onPageChange={handlePageClick}
+          />}
+        </div>
+        <div className="w-full border-black border mt-10"></div>
+      </div>
+    </div> 
+    <div className="p-4 my-2 border rounded-md bg-white justify-center items-center">
+        <div className="">
+            <h1 className="text-lg">Recent Activity</h1>
+            <ActivityLog tablename={getTableName} originTable={company} onDataSubmitted={handleFormSubmit} />
+        </div>
+    </div> 
+    </>  
+  )
 }

@@ -112,7 +112,7 @@ export default function Page({searchParams,}:{searchParams?: {search?: string}})
      return (
         
         <Layout>
-            <div className="p-2 border rounded shadow-2xl shadow-black relative h-screen bg-gray-100">
+            <div className={`p-2 border rounded shadow-2xl shadow-black relative ${name === '' ? 'h-screen' : 'h-full'} bg-gray-100`}>
                 <div className="p-5 border bg-white rounded">
                     <div className="grid grid-rows-1 self-end w-full">
                         <h1 className={`${lusitana.className} text-2xl`}> {name} Inventory</h1>
@@ -157,7 +157,7 @@ export default function Page({searchParams,}:{searchParams?: {search?: string}})
                 
                         {isModalOpen && (
                             <Modal onClose={closeModal} title={branch} companyName={name} onSubmit={handleFormSubmit} tablename={tblName}>
-                                <Form triggerValue={triggerValue} gettableName={tblName} onDataSubmitted={handleFormSubmit}/>
+                                <Form triggerValue={triggerValue} tablename={tblName} onDataSubmitted={handleFormSubmit}/>
                             </Modal>
                         )}
                 

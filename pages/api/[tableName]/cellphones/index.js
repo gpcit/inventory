@@ -38,20 +38,8 @@ export default async function handler (req, res) {
         }
     } else if (req.method === 'POST') {
       try {
-        const assigned_to = req.body.assigned_to;
-        const department = req.body.department
-        const brand = req.body.brand;
-        const model_specs = req.body.model_specs;
-        const imei = req.body.imei;
-        const number = req.body.number;
-        const email_password = req.body.email_password;
-        const serial_number = req.body.serial_number;
-        const inclusion = req.body.inclusion;
-        const comment = req.body.comment;
-        const date_issued = req.body.date_issued
-        const is_active_id = 1
-        const date_purchased = req.body.date_purchased
-        const date_returned = req.body.date_returned
+        const { assigned_to, department, brand, model_specs, imei, number, email_password, serial_number, inclusion, comment, date_issued, is_active_id, date_purchased, date_returned, user_id, user_name, company_name, details, db_table, actions} = req.body
+        
         if (!serial_number || serial_number === ' ') {
           return res.status(400).json({ error: 'Type "N/A + Brand Name" if Serial number is not applicable' });
         }
@@ -67,7 +55,10 @@ export default async function handler (req, res) {
         } else {
           message = 'failed';
         }
-  
+
+        const addActivityLog = await query(`INSERT INTO activity_log (user_id, user_name, company_name, details, db_table, actions) VALUES (?, ?, ?, ?, ?, ?)`,
+        [user_id, user_name, company_name, details, tableName, actions]);
+
         let inventory = {
           id: addInventory.insertId,
           assigned_to: assigned_to,

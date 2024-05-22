@@ -12,11 +12,11 @@ export default function LoginPage() {
     const router = useRouter();
     const { data: session, status } = useSession();
 
-    // useEffect(() => {
-    //   if(session) {
-    //     router.push(`${process.env.NEXT_PUBLIC_URL}/dashboard`)
-    //   }
-    // }, [session, router])
+    useEffect(() => {
+      if(session) {
+        router.push(`/dashboard`)
+      }
+    }, [session, router])
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setCredentials(prev => ({
@@ -38,7 +38,7 @@ export default function LoginPage() {
                 username,
                 password,
             });
-
+            console.log(`Results for NODE_ENV: ${process.env.NODE_ENV}`)
             console.log('Response:', result);
 
             if (result?.error) {

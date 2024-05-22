@@ -14,6 +14,7 @@ import Form from "@/components/ui/inventory/create-data/CreateAccount";
 import GetBranch from "@/components/ui/dropdowns/select-company";
 import toast from "react-hot-toast";
 import StatusToggle from "@/components/StatusToggle";
+import ActivityLog from "@/components/ui/tables/activity_log";
 
 export default function Page() {
     const [valueX, setValueX] = useState<string>("")
@@ -24,6 +25,7 @@ export default function Page() {
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [triggerValue, setTriggerValue] = useState("active")
     const [dataUploaderHandler, setDataUploaderHandler]  = useState<() => void>(() => () => {})
+    const [activityLogKey, setActivityLogKey] = useState(0);
 
     const name = tableName.find(display => display.name === valueX)?.displayName || valueX
     const companyName = tableName.find(company => company.name === valueX)?.company || valueX
@@ -63,10 +65,16 @@ export default function Page() {
         setIsModalOpen(false)
     }
     const handleFormSubmit = () => {
+        setActivityLogKey(prevKey => prevKey + 1);
         closeModal()
     }
-    
-
+    const handleEditSubmit = () => {
+        setActivityLogKey(prevKey => prevKey + 1);
+        closeModal()
+    }
+    useEffect(() => {
+        setActivityLogKey(prevKey => prevKey + 1);
+    }, [])
     useEffect(() => {
         if(tablename) {
             const handleDataUploaded = async () => {
@@ -106,7 +114,7 @@ export default function Page() {
 
     return (
         <Layout>
-            <div className="p-2 border rounded shadow-2xl shadow-black relative h-screen bg-gray-100">
+            <div className={`p-2 border rounded shadow-2xl shadow-black relative ${name === '' ? 'h-screen' : 'h-full'} bg-gray-100`}>
                 <div className="border rounded p-5 bg-white">
                     <div className="grid grid-rows-1 self-end w-full">
                         <h1 className={`${lato.className} text-2xl`}> {name} Server Accounts</h1>
@@ -145,11 +153,11 @@ export default function Page() {
                     {(company !== 'gpc_inventory' && company !== 'lsi_inventory' ) && company !== '' && <AccountInventoryTable triggerValue={triggerValue} getTableName={gettable} onDataSubmitted={handleFormSubmit}/>}
                     {isModalOpen && (
                             <Modal onClose={closeModal} title={`${branch} Accounts`} companyName={name} onSubmit={handleFormSubmit} tablename={gettable}>
-                                <Form triggerValue={triggerValue} gettableName={gettable} onDataSubmitted={handleFormSubmit}/>
+                                <Form triggerValue={triggerValue} tablename={gettable} onDataSubmitted={handleFormSubmit}/>
                             </Modal>
                         )}
                 </div>
-            </div>
+            </div>  
         </Layout>
     )
 }

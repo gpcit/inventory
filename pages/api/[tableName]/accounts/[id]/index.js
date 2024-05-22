@@ -45,7 +45,6 @@ export default async function handler(req, res) {
       } else {
         message = 'failed';
       }
-
       let inventory = {
         id: addInventory.insertId,
         name: name,
@@ -65,7 +64,7 @@ export default async function handler(req, res) {
 
     try {
       const {id} = req.query;
-      const {name, department, username, password, is_active_id, notes} = req.body
+      const {name, department, username, password, is_active_id, notes, user_id, user_name, company_name, details, db_table, actions } = req.body
 
       if(!id || !name || !username){
         return res.status(400).json({ error: 'Missing required fields' })
@@ -79,16 +78,26 @@ export default async function handler(req, res) {
       } else {
         res.status(404).json({ error: 'Data not found or not updated '});
       }
+      const addActivityLog = await query(`INSERT INTO activity_log (user_id, user_name, company_name, details, db_table, actions) VALUES (?, ?, ?, ?, ?, ?)`,
+      [user_id, user_name, company_name, details, tableName, actions]);
+      
     } catch (error){
       console.error('Error updating inventory: ', error);
       res.status(500).json({ error: 'Internal Server Error'})
     }
   } else if (req.method === 'DELETE') {
     try {
+      const {user_id, user_name, company_name, details, db_table, actions } = req.body
+
+      const addActivityLog = await query(`INSERT INTO activity_log (user_id, user_name, company_name, details, db_table, actions) VALUES (?, ?, ?, ?, ?, ?)`,
+        [user_id, user_name, company_name, details, tableName, actions]);
+
       if (!id) {
         return res.status(400).json({ error: 'Unable to delete'})
       }
       const deleteResult = await query(`DELETE FROM ${tableName} WHERE id=?`, [id])
+
+      
       if(deleteResult.affectedRows > 0) {
         res.status(200).json({ response: { message: 'success', deletedItem: id } })
       } else {

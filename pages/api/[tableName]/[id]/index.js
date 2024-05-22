@@ -3,7 +3,8 @@ import { query } from '@/lib/db';
 export default async function handler(req, res) {
     const tableName = req.query.tableName;
     const {id} = req.query
-    if (req.method === 'GET') {
+
+  if (req.method === 'GET') {
       try {
           if (id) { // If ID is provided, fetch specific data
               const data = `SELECT * FROM ${tableName} WHERE id = ?`;
@@ -19,7 +20,6 @@ export default async function handler(req, res) {
             //   console.log({results: inventory})
           }
       } catch (error) {
-          
           res.status(500).json({ error: 'Internal Server Error' });
       }
   } else if (req.method === 'POST') {
@@ -79,7 +79,7 @@ export default async function handler(req, res) {
 
     try {
       const {id} = req.query;
-      const {pc_name, name, ip_address, mac_address, computer_type, monitor, specs, department, anydesk, supplier, comment, date_purchased, date_installed, date_pullout, is_active_id} = req.body
+      const {pc_name, name, ip_address, mac_address, computer_type, monitor, specs, department, anydesk, supplier, comment, date_purchased, date_installed, date_pullout, is_active_id, user_id, user_name, company_name, details, db_table, actions} = req.body
 
       if(!id || !pc_name || !mac_address){
         return res.status(400).json({ error: 'Missing required fields' })
@@ -93,9 +93,36 @@ export default async function handler(req, res) {
       } else {
         res.status(404).json({ error: 'Item not found or not updated '});
       }
+    
+      // add details to activity log when edit the data
+    const addActivityLog = await query(`INSERT INTO activity_log (user_id, user_name, company_name, details, db_table, actions) VALUES (?, ?, ?, ?, ?, ?)`,
+    [user_id, user_name, company_name, details, tableName, actions]);
+      
     } catch (error){
       console.error('Error updating inventory: ', error);
       res.status(500).json({ error: 'Internal Server Error'})
+    }
+  } else if (req.method === 'DELETE') {
+    try {
+      const {user_id, user_name, company_name, details, db_table, actions } = req.body
+
+      const addActivityLog = await query(`INSERT INTO activity_log (user_id, user_name, company_name, details, db_table, actions) VALUES (?, ?, ?, ?, ?, ?)`,
+        [user_id, user_name, company_name, details, tableName, actions]);
+
+      if (!id) {
+        return res.status(400).json({ error: 'Unable to delete'})
+      }
+      const deleteResult = await query(`DELETE FROM ${tableName} WHERE id=?`, [id])
+
+      
+      if(deleteResult.affectedRows > 0) {
+        res.status(200).json({ response: { message: 'success', deletedItem: id } })
+      } else {
+        res.status(404).json({ error: 'Item not found or not deleted' })
+      }
+    } catch (error) {
+      console.error('Error deleting Account: ',error)
+      res.status(500).json({ error: 'Internal server Error' })
     }
   } else {
     res.status(405).json({ error: 'Method not allowed '})

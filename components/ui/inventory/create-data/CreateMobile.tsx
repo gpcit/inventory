@@ -1,18 +1,18 @@
 'use client'
 import { useState, useEffect, FormEvent } from 'react';
 import toast from 'react-hot-toast';
-import { status } from '@/lib/company';
+import { accountTables, status } from '@/lib/company';
+import { getSession } from 'next-auth/react';
 
 interface FormProps {
-  gettableName: string;
+  tablename: string;
   triggerValue: string;
   onDataSubmitted: () => void; // Callback function to handle data submission
 }
 
-export default function Form({triggerValue, gettableName, onDataSubmitted }: FormProps) {
+export default function Form({triggerValue, tablename, onDataSubmitted }: FormProps) {
   const [isDuplicate, setIsDuplicate] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const [getTriggerValue, setGetTriggerValue] = useState(0)
   const [formData, setFormData] = useState({
     assigned_to: '',
     department: '',
@@ -29,7 +29,23 @@ export default function Form({triggerValue, gettableName, onDataSubmitted }: For
     date_returned: '',
     is_active_id: 0
   });
-  // const [create, setCreated] = useState(false);
+
+  const [userDetails, setUserDetails] = useState({
+    userId: 0,
+    userName: ''
+  })
+  
+  const getCompany = accountTables[tablename] || ""
+
+  useEffect(() => {
+    const fetchUserDetails = async () => {
+      const session = await getSession();
+      if(session) {
+        setUserDetails({userId: session?.user?.uid, userName: session?.user?.username})
+      }
+    }
+    fetchUserDetails()
+  }, [])
   
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -76,15 +92,21 @@ export default function Form({triggerValue, gettableName, onDataSubmitted }: For
         date_issued: formData.date_issued,
         date_purchased: formData.date_purchased,
         date_returned: formData.date_returned,
-        is_active_id: formData.is_active_id
-          // tableName: gettableName
+        is_active_id: formData.is_active_id,
+        
+        user_id: userDetails.userId,
+        user_name: userDetails.userName.toUpperCase(),
+        company_name: getCompany,
+        details: `"${formData.assigned_to}" has been added to record - (${triggerValue})`,
+        db_table: tablename,
+        actions: "ADD"
         }),
       };
-      if(triggerValue === 'active') {
-        res = await fetch(`/api/${gettableName}/cellphones`, postInventory);
-      } else {
-        res = await fetch(`/api/${gettableName}/cellphones/inactive`, postInventory);
-      }
+      // if(triggerValue === 'active') {
+        res = await fetch(`/api/${tablename}/cellphones`, postInventory);
+      // } else {
+      //   res = await fetch(`/api/${tablename}/cellphones/inactive`, postInventory);
+      // }
        const response = await res.json();
       if (response && response.response && response.response.message === "success") {
         setTimeout(() => {

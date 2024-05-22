@@ -8,17 +8,16 @@ const ProtectedRoute = ({ children }: {children: React.ReactNode}) => {
   const router = useRouter();
 
   useEffect(() => {
-    if ( status === 'unauthenticated') {
+    if ( status === 'unauthenticated' && !session ) {
       router.push(`${process.env.NEXT_PUBLIC_URL}/login`);
-      console.log("Result for status: ")
+      
     }
   }, [status, router, session]);
-
   if (status === 'loading') {
     return <p>Loading...</p>;
   }
 
-  if (status === 'authenticated') {
+  if (status === 'authenticated' && session) {
     return children;
   }
   

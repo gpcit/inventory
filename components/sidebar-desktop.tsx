@@ -31,15 +31,13 @@ export function SidebarDesktop(props: SidebarDesktopProps) {
 
   const handleSubmit = async () => {
     try {
-
-      
       const toastLogout = toast.loading(`Logging Out`, { duration: 5000 });
       setTimeout(() => {
       toast.success('Logged Out Successfully', { id: toastLogout });
     }, 300);
-    await signOut({ callbackUrl: `http://10.20.10.108/login`, redirect: true});
-    } catch(error: any) {
-      console.error(`Signout Error: `, error)
+    await signOut({callbackUrl: 'http://10.20.10.108:3000/login', redirect:true});
+    } catch (error: any) {
+      console.error('Sign Out Error: ', error.message)
     }
   };
 

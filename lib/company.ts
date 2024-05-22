@@ -50,6 +50,30 @@ export const status = [
     {name: "Inactive", value: 2}
 ]
 
+export const accountTables: { [key: string]: string } = {
+    'gpc_accounts': 'GPC',
+    'gpc_inventory': 'GPC',
+    'gpc_sq_inventory': 'GPC',
+    'gpc_mobile_inventory': 'GPC',
+    'gpc_printer': 'GPC',
+    'gpc_sq_printer': 'GPC',
+    'gpc_sq_accounts': 'GPC',
+    'lsi_accounts': 'LSI',
+    'lsi_inventory': 'LSI',
+    'lsi_mobile_inventory': 'LSI',
+    'lsi_can_inventory': 'LSI',
+    'lsi_printer': 'LSI',
+    'lsi_can_accounts': 'LSI',
+    'lsi_can_printers': 'LSI',
+    'gkc_accounts': 'GKC',
+    'gkc_inventory': 'GKC',
+    'gkc_printer': 'GKC',
+    'gkc_mobile_inventory': 'GKC',
+    'gsrc_accounts': 'GSRC',
+    'gsrc_printer': 'GSRC',
+    'gsrc_mobile_inventory': 'GSRC',
+    'gsrc_inventory': 'GSRC',
+  };
 
 export const roles: { [key: number] : string} = {
     1: 'Admin',

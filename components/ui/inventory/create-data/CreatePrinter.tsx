@@ -1,19 +1,16 @@
 'use client'
 import { useState, useEffect, FormEvent } from 'react';
 import toast from 'react-hot-toast';
-import Status from '../../dropdowns/status';
+import { accountTables } from '@/lib/company';
+import { getSession } from 'next-auth/react';
 
 interface FormProps {
-  gettableName: string;
+  tablename: string;
   triggerValue: string;
   onDataSubmitted: () => void; // Callback function to handle data submission
 }
 
-export default function Form({triggerValue, gettableName, onDataSubmitted }: FormProps) {
-  const [isDuplicate, setIsDuplicate] = useState(false);
-  const [getValue, setGetValue] = useState('');
-  const [errorMessage, setErrorMessage] = useState("");
-  const [status, setStatus] = useState('')
+export default function Form({triggerValue, tablename, onDataSubmitted }: FormProps) {
   const [formData, setFormData] = useState({
     printer_name: '',
     assigned_to: '',
@@ -29,6 +26,22 @@ export default function Form({triggerValue, gettableName, onDataSubmitted }: For
     date_pullout: '',
     is_active_id: 0,
   });
+
+  const [userDetails, setUserDetails] = useState({
+    userId: 0,
+    userName: ''
+  })
+  useEffect(() => {
+    const fetchUserDetails = async () => {
+      const session = await getSession();
+      if(session) {
+        setUserDetails({userId: session?.user?.uid, userName: session?.user?.username})
+      }
+    }
+    fetchUserDetails()
+  }, [])
+  
+  const getCompany = accountTables[tablename] || ""
   // const [create, setCreated] = useState(false);
   useEffect(() => {
     if(triggerValue === 'active') {
@@ -76,9 +89,16 @@ export default function Form({triggerValue, gettableName, onDataSubmitted }: For
         date_pullout: formData.date_pullout,
         date_purchased: formData.date_purchased,
           // tableName: gettableName
+
+        user_id: userDetails.userId,
+        user_name: userDetails.userName.toUpperCase(),
+        company_name: getCompany,
+        details: `"${formData.printer_name}" has been added to record - (${triggerValue})`,
+        db_table: tablename,
+        actions: "ADD"
         }),
       };
-      const res = await fetch(`/api/${gettableName}/printers`, addPrinter);
+      const res = await fetch(`/api/${tablename}/printers`, addPrinter);
       const response = await res.json();
       if (response && response.response && response.response.message === "success") {
         setTimeout(() => {

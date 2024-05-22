@@ -1,19 +1,16 @@
 'use client'
 import { useState, useEffect, FormEvent } from 'react';
 import toast from 'react-hot-toast';
-import Status from '../../dropdowns/status';
+import { getSession } from 'next-auth/react';
+import { accountTables } from '@/lib/company';
 
 interface FormProps {
-  gettableName: string;
+  tablename: string;
   triggerValue: string;
   onDataSubmitted: () => void; // Callback function to handle data submission
 }
 
-export default function Form({triggerValue, gettableName, onDataSubmitted }: FormProps) {
-  const [isDuplicate, setIsDuplicate] = useState(false);
-  const [getValue, setGetValue] = useState('');
-  const [errorMessage, setErrorMessage] = useState("");
-  const [status, setStatus] = useState('')
+export default function Form({triggerValue, tablename, onDataSubmitted }: FormProps) {
   const [formData, setFormData] = useState({
     name: '',
     department: '',
@@ -22,7 +19,22 @@ export default function Form({triggerValue, gettableName, onDataSubmitted }: For
     is_active_id: 0,
     notes: ''
   });
-  // const [create, setCreated] = useState(false);
+  const [userDetails, setUserDetails] = useState({
+    userId: 0,
+    userName: ''
+  })
+  
+  const getCompany = accountTables[tablename] || ""
+
+  useEffect(() => {
+    const fetchUserDetails = async () => {
+      const session = await getSession();
+      if(session) {
+        setUserDetails({userId: session?.user?.uid, userName: session?.user?.username})
+      }
+    }
+    fetchUserDetails()
+  }, [])
   useEffect(() => {
     if(triggerValue === 'active') {
       setFormData(prevState => ({
@@ -37,6 +49,7 @@ export default function Form({triggerValue, gettableName, onDataSubmitted }: For
     }
   }, [triggerValue])
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    e.preventDefault();
     const { name, value } = e.target;
     setFormData(prevState => ({
       ...prevState,
@@ -61,10 +74,17 @@ export default function Form({triggerValue, gettableName, onDataSubmitted }: For
         password: formData.password,
         is_active_id: formData.is_active_id,
         notes: formData.notes,
+
+        user_id: userDetails.userId,
+        user_name: userDetails.userName.toUpperCase(),
+        company_name: getCompany,
+        details: `"${formData.name}" has been added to record - (${triggerValue})`,
+        db_table: tablename,
+        actions: "ADD"
           // tableName: gettableName
         }),
       };
-      const res = await fetch(`/api/${gettableName}/accounts`, addAccounts);
+      const res = await fetch(`/api/${tablename}/accounts`, addAccounts);
       const response = await res.json();
       if (response && response.response && response.response.message === "success") {
         setTimeout(() => {

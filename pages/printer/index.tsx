@@ -111,7 +111,7 @@ export default function Page() {
 
     return (
         <Layout>
-            <div className=" p-2 border rounded shadow-2xl shadow-black relative h-screen bg-gray-100">
+            <div className={`p-2 border rounded shadow-2xl shadow-black relative ${name === '' ? 'h-screen' : 'h-full'} bg-gray-100`}>
                 <div className="p-5 border bg-white rounded">
                     <div className="grid grid-rows-1 self-end w-full">
                         <h1 className={`${lato.className} text-2xl`}> {name} Printer</h1>
@@ -150,7 +150,7 @@ export default function Page() {
                     {(company !== 'gpc_inventory' && company !== 'lsi_inventory' ) && company !== '' && <PrinterTableInventory triggerValue={triggerValue} getTableName={gettable} onDataSubmitted={handleFormSubmit}/>}
                     {isModalOpen && (
                             <Modal onClose={closeModal} title={`${branch} Printer`} companyName={name} onSubmit={handleFormSubmit} tablename={gettable}>
-                                <Form triggerValue={triggerValue} gettableName={gettable} onDataSubmitted={handleFormSubmit}/>
+                                <Form triggerValue={triggerValue} tablename={gettable} onDataSubmitted={handleFormSubmit}/>
                             </Modal>
                         )}
                 </div>

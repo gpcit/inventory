@@ -40,25 +40,11 @@ export default async function handler(req, res) {
     }
   } else if (req.method === 'POST') {
     try {
-      const pc_name = req.body.pc_name;
-      const name = req.body.name;
-      const id = req.body.id
-      const mac_address = req.body.mac_address;
-      const ip_address = req.body.ip_address;
-      const computer_type = req.body.computer_type;
-      const specs = req.body.specs;
-      const monitor = req.body.monitor;
-      const department = req.body.department;
-      const supplier = req.body.supplier
-      const comment = req.body.comment
-      const anydesk = req.body.anydesk
-      const is_active_id = req.body.is_active_id
-      const date_purchased = req.body.date_purchased
-      const date_pullout = req.body.date_pullout
-      const date_installed = req.body.date_installed
-      // if (!pc_name || !mac_address) {
-      //   return res.status(400).json({ error: 'Missing required fields' });
-      // }
+      const { pc_name, name, id, mac_address, ip_address, computer_type, specs, monitor, department, supplier, comment, anydesk, is_active_id, date_purchased, date_pullout, date_installed, user_id, user_name, company_name, details, db_table, actions } = req.body
+      
+      if (!pc_name || !mac_address) {
+        return res.status(400).json({ error: 'Missing required fields' });
+      }
       const addInventory = await query(`INSERT INTO ${tableName} (pc_name, name, ip_address, mac_address, computer_type, monitor, specs, department, anydesk, supplier, comment, date_purchased, date_installed, date_pullout, is_active_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, [pc_name, name, ip_address, mac_address, computer_type, monitor, specs, department, anydesk, supplier, comment, date_purchased, date_installed, date_pullout, is_active_id]);
       console.log("this will be shown if success: ",addInventory.insertId)
       let message;
@@ -68,6 +54,10 @@ export default async function handler(req, res) {
       } else {
         message = 'failed';
       }
+      
+      // add data to activity log
+      const addActivityLog = await query(`INSERT INTO activity_log (user_id, user_name, company_name, details, db_table, actions) VALUES (?, ?, ?, ?, ?, ?)`,
+      [user_id, user_name, company_name, details, tableName, actions]);
 
       let inventory = {
         id: addInventory.insertId,

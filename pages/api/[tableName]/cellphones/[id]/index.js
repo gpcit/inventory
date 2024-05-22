@@ -23,20 +23,9 @@ export default async function handler(req, res) {
       }
   } else if (req.method === 'POST') {
     try {
-      const assigned_to = req.body.assigned_to;
-      const department = req.body.department
-      const brand = req.body.brand;
-      const model_specs = req.body.model_specs;
-      const imei = req.body.imei;
-      const number = req.body.number;
-      const email_password = req.body.email_password;
-      const serial_number = req.body.serial_number
-      const inclusion = req.body.inclusion
-      const comment = req.body.comment
-      const date_issued = req.body.date_issued
-      const date_purchased = req.body.date_purchased
-      const date_returned = req.body.date_returned
-      const is_active_id = req.body.is_active_id
+
+      const { assigned_to, department, brand, model_specs, imei, number, email_password, serial_number, inclusion, comment, date_issued, is_active_id, date_purchased, date_returned, user_id, user_name, company_name, details, db_table, actions} = req.body
+
       if (!assigned_to || !brand) {
         return res.status(400).json({ error: 'Missing required fields' });
       }
@@ -47,6 +36,9 @@ export default async function handler(req, res) {
       } else {
         message = 'failed';
       }
+
+      const addActivityLog = await query(`INSERT INTO activity_log (user_id, user_name, company_name, details, db_table, actions) VALUES (?, ?, ?, ?, ?, ?)`,
+      [user_id, user_name, company_name, details, tableName, actions]);
 
       let inventory = {
         id: addInventory.insertId,
@@ -75,7 +67,7 @@ export default async function handler(req, res) {
 
     try {
       const {id} = req.query;
-      const {assigned_to, department, brand, model_specs, serial_number, imei, number, email_password, inclusion, comment, date_issued, date_purchased, is_active_id, date_returned} = req.body
+      const {assigned_to, department, brand, model_specs, serial_number, imei, number, email_password, inclusion, comment, date_issued, date_purchased, is_active_id, date_returned, user_id, user_name, company_name, details, db_table, actions} = req.body
 
       if(!id || !assigned_to || !brand){
         return res.status(400).json({ error: 'Missing required fields' })
@@ -89,12 +81,19 @@ export default async function handler(req, res) {
       } else {
         res.status(404).json({ error: 'Item not found or not updated '});
       }
+      const addActivityLog = await query(`INSERT INTO activity_log (user_id, user_name, company_name, details, db_table, actions) VALUES (?, ?, ?, ?, ?, ?)`,
+        [user_id, user_name, company_name, details, tableName, actions]);
     } catch (error){
       console.error('Error updating inventory: ', error);
       res.status(500).json({ error: 'Internal Server Error'})
     }
   } else if (req.method === 'DELETE') {
     try {
+      const {user_id, user_name, company_name, details, db_table, actions } = req.body
+
+      const addActivityLog = await query(`INSERT INTO activity_log (user_id, user_name, company_name, details, db_table, actions) VALUES (?, ?, ?, ?, ?, ?)`,
+        [user_id, user_name, company_name, details, tableName, actions]);
+
       if (!id) {
         return res.status(400).json({ error: 'Unable to delete'})
       }

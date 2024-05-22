@@ -6,7 +6,8 @@ import { DeleteInventory, UpdateInventory } from "../buttons";
 import CustomPagination from "@/components/Pagination";
 import {tableName} from "@/lib/company";
 import { XCircleIcon, CheckCircleIcon } from "@heroicons/react/24/solid";
-import DeleteAccountModal from "../inventory/delete-data/DeleteAccountInventory";
+import DeletePrinterModal from "../inventory/delete-data/DeletePrinterInventory";
+import ActivityLog from "./activity_log";
 
 interface PrinterInventoryProps {
     getTableName: string,
@@ -26,7 +27,9 @@ const [modalData, setModalData] = useState<any>(null)
 
 const getQuery = new URLSearchParams(window.location.search)
 const queryValue = getQuery.get('query')
-let company = tableName.find(company => company.name === getTableName)?.company || getTableName
+let company = tableName.find(company => company.name === getTableName)?.displayName || getTableName
+
+
 
 async function fetchPrinter(trigger: string) {
   try {
@@ -237,7 +240,7 @@ const closeModal = () => {
                 <>
                 {printerInventories?.map((printer) => (
                   <tr key={printer.id}
-                    className="w-full shadow-md shadow-gray-700 rounded text-sm   hover:bg-gray-200 hover:border-t-0"
+                    className="w-full shadow-md shadow-gray-700 rounded text-sm hover:border-t-0"
                   >
                     <td className=" pl-6 pr-3 whitespace-nowrap relative cursor-pointer">
                       <div className="flex items-center gap-3">
@@ -283,7 +286,7 @@ const closeModal = () => {
               <EditPrinterModal triggerValue={triggerValue} onClose={closeModal} onSubmit={handleFormSubmit} id={selectedId} tablename={getTableName}/>
             )} 
             {isDeleteModalOpen && (
-              <DeleteAccountModal onClose={closeModal} onSubmit={handleFormSubmit} id={selectedId} tablename={getTableName}/>
+              <DeletePrinterModal triggerValue={triggerValue} onClose={closeModal} onSubmit={handleFormSubmit} id={selectedId} tablename={getTableName}/>
             )} 
 
         </div>
@@ -294,6 +297,13 @@ const closeModal = () => {
           onPageChange={handlePageClick}
         />}
       </div>
+      <div className="w-full border-black border mt-10"></div>
+        <div className="p-4 my-2 border rounded-md bg-white">
+            <div className="">
+                <h1 className="text-lg">Recent Activity</h1>
+                <ActivityLog tablename={getTableName} originTable={company} onDataSubmitted={handleFormSubmit} />
+            </div>
+        </div>
     </div>     
     )
 }

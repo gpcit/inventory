@@ -1,4 +1,4 @@
-import { FormEvent, useState } from 'react'
+import { FormEvent, useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { lato } from '@/styles/font'
 import toast from 'react-hot-toast'
@@ -6,6 +6,7 @@ import { Toaster } from 'react-hot-toast'
 import Link from 'next/link'
 import { Preahvihear } from 'next/font/google'
 import AnimatedName from '@/components/AnimatedName'
+import { useSession } from 'next-auth/react'
  
 export default function RegisterPage() {
     const[user, setUser] = useState({
@@ -14,6 +15,15 @@ export default function RegisterPage() {
         password: '',
         confirmPassword: ''
     })
+    const router = useRouter();
+    const { data: session, status} = useSession()
+    
+    
+      if(session) {
+        router.push(`/dashboard`)
+      }
+    
+
  const handlechange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
     setUser(prev => ({
@@ -21,7 +31,7 @@ export default function RegisterPage() {
         [name]: value,
     }))
  }
-  const router = useRouter();
+ 
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();

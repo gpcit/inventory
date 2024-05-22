@@ -103,3 +103,13 @@ export interface ServerAccountsInventory {
     is_active_id: number;
     notes: string;
 }
+
+export interface ActivityLogInventory {
+    id: number;
+    user_id: number;
+    user_name: string;
+    actions: string;
+    details: string;
+    company_name: string;
+    date_created: string;
+}

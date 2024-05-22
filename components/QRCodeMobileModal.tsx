@@ -41,21 +41,34 @@ const BarcodeMobileModal: React.FC<ModalProps> = ({id, tablename, onClose, compa
         date_issued: ''
       });
 useEffect(() => {
-        async function fetchInventoryItem() {
-          try {
-            const res = await fetch(`/api/${tablename}/cellphones/${id}`);
-            if(!res.ok){
-              throw new Error('Failed to fetch inventory item')
-            }
-            const data = await res.json();
-           
-            setFormData(data.results[0])
-          } catch(error) {
-            console.error('Error fetching inventory item:', error)
-          }
-        }
-        fetchInventoryItem()
-      }, [tablename, id])
+  async function fetchInventoryItem() {
+    try {
+      const res = await fetch(`/api/${tablename}/cellphones/${id}`);
+      if(!res.ok){
+        throw new Error('Failed to fetch inventory item')
+      }
+      const data = await res.json();
+      
+      setFormData(data.results[0])
+    } catch(error) {
+      console.error('Error fetching inventory item:', error)
+    }
+  }
+  fetchInventoryItem()
+}, [tablename, id])
+
+useEffect(() => {
+  const handleKeyDown = (event: KeyboardEvent) => {
+    // console.log('Key pressed: ', event.key)
+    if(event.key === 'Escape'){
+      onClose()
+    }
+  };
+  window.addEventListener('keydown', handleKeyDown);
+  return () => {
+    window.removeEventListener('keydown', handleKeyDown)
+  };
+}, [onClose])
 return (
     <div className="fixed inset-0 z-50 flex items-center justify-center overflow-x-hidden overflow-y-auto outline-none focus:outline-none">
       <div className="fixed inset-0 bg-black opacity-50"></div>

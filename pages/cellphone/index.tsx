@@ -86,7 +86,7 @@ const [dataUploaderHandler, setDataUploaderHandler] = useState<() => void>(() =>
     
     return (
         <Layout>
-            <div className=" p-2 border rounded shadow-2xl shadow-black relative h-screen bg-gray-100">
+            <div className={`p-2 border rounded shadow-2xl shadow-black relative ${name === '' ? 'h-screen' : 'h-full'} bg-gray-100`}>
                 <div className="p-5 border bg-white rounded">
                     <div className="flex items-center justify-between w-full">
                         <h1 className={`${lato.className} text-2xl`}> {name} Mobile</h1>
@@ -110,7 +110,7 @@ const [dataUploaderHandler, setDataUploaderHandler] = useState<() => void>(() =>
                     {name !=='' && <MobileTableInventory triggerValue={triggerValue} getTableName={getTable} onDataSubmitted={handleFormSubmit}/>}
                     {isModalOpen && (
                             <Modal onClose={closeModal} title="Mobile" companyName={name} onSubmit={handleFormSubmit} tablename={getTable}>
-                                <Form gettableName={getTable} onDataSubmitted={handleFormSubmit} triggerValue={triggerValue}/>
+                                <Form tablename={getTable} onDataSubmitted={handleFormSubmit} triggerValue={triggerValue}/>
                             </Modal>
                         )}
                 </div>

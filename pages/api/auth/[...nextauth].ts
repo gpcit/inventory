@@ -1,9 +1,10 @@
 // pages/api/auth/[...nextauth].ts
-import NextAuth, { NextAuthOptions } from 'next-auth';
+import NextAuth, { AuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { authenticateUser } from '../../../lib/auth';
+import  axios  from 'axios'
 
-export const authOptions: NextAuthOptions = {
+export const authOptions: AuthOptions = {
   providers: [
     CredentialsProvider({
       name: 'Credentials',
@@ -16,10 +17,10 @@ export const authOptions: NextAuthOptions = {
           if (!credentials) {
             throw new Error('Missing credentials');
           }
+          // const res = await axios.post("/auth/login", {})
           const user = await authenticateUser(credentials.username, credentials.password);
 
           if (user) {
-            console.log("Result for user inside nextauth: ", user);
             return user;
           } else {
             throw new Error('Invalid credentials');
@@ -30,11 +31,6 @@ export const authOptions: NextAuthOptions = {
       },
     }),
   ],
-  secret: process.env.NEXTAUTH_SECRET,
-  session: {
-    strategy: 'jwt',
-    maxAge: 60 * 60
-  },
   callbacks: {
     async session({ session, token }) {
       if (token) {
@@ -47,10 +43,9 @@ export const authOptions: NextAuthOptions = {
         };
       }
 
-      console.log("Result for session: ", session);
       return session;
     },
-    async jwt({ token, user }) {
+    async jwt({ token, user, account }) {
       if (user) {
         token.uid = user.uid;
         token.name = user.name;
@@ -58,11 +53,16 @@ export const authOptions: NextAuthOptions = {
         token.email = user.email;
         token.role_id = user.role_id;
       }
-      console.log("Result for token: ", token.uid);
       token.exp = Math.floor(Date.now() / 1000) + (60 * 60)
       return token;
     },
   },
+  secret: process.env.NEXTAUTH_SECRET,
+  session: {
+    strategy: 'jwt',
+    maxAge: 60 * 60
+  },
+  debug: process.env.NODE_ENV === "development"
 };
+export default NextAuth(authOptions)
 
-export default NextAuth(authOptions);

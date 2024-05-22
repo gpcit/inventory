@@ -1,18 +1,20 @@
 'use client'
 
+import { accountTables } from '@/lib/company';
+import { getSession } from 'next-auth/react';
 import { useState, useEffect, FormEvent } from 'react';
 import toast from 'react-hot-toast';
 
 interface FormProps {
-  gettableName: string;
+  tablename: string;
   onDataSubmitted: () => void; // Callback function to handle data submission
   triggerValue: string
 }
 
-export default function Form({triggerValue, gettableName, onDataSubmitted }: FormProps) {
-  // console.log("This is from create-form", gettableName)
+export default function Form({triggerValue, tablename, onDataSubmitted }: FormProps) {
+  // console.log("This is from create-form", tablename)
   const [formData, setFormData] = useState({
-    pcname: '',
+    pc_name: '',
     name: '',
     ip_address: '',
     mac_address: '',
@@ -28,7 +30,22 @@ export default function Form({triggerValue, gettableName, onDataSubmitted }: For
     date_pullout: '',
     date_installed: '',
   });
-  // const [create, setCreated] = useState(false);
+  const [userDetails, setUserDetails] = useState({
+    userId: 0,
+    userName: ''
+  })
+  
+  const getCompany = accountTables[tablename] || ""
+
+  useEffect(() => {
+    const fetchUserDetails = async () => {
+      const session = await getSession();
+      if(session) {
+        setUserDetails({userId: session?.user?.uid, userName: session?.user?.username})
+      }
+    }
+    fetchUserDetails()
+  }, [])
   
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -48,7 +65,7 @@ export default function Form({triggerValue, gettableName, onDataSubmitted }: For
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          pc_name: formData.pcname,
+          pc_name: formData.pc_name,
           name: formData.name,
           mac_address: formData.mac_address,
           ip_address: formData.ip_address,
@@ -62,17 +79,23 @@ export default function Form({triggerValue, gettableName, onDataSubmitted }: For
           is_active_id: formData.is_active_id,
           date_purchased: formData.date_purchased,
           date_pullout: formData.date_pullout,
-          date_installed: formData.date_installed
+          date_installed: formData.date_installed,
           
-          // tableName: gettableName
+          user_id: userDetails.userId,
+          user_name: userDetails.userName.toUpperCase(),
+          company_name: getCompany,
+          details: `"${formData.pc_name}" has been added to record - (${triggerValue})`,
+          db_table: tablename,
+          actions: "ADD"
+          // tableName: tablename
         }),
       };
-      const res = await fetch(`/api/${gettableName}`, postInventory);
+      const res = await fetch(`/api/${tablename}`, postInventory);
       const response = await res.json();
       if (response && response.response && response.response.message === "success") {
         setTimeout(() => {
           setFormData({
-            pcname: '',
+            pc_name: '',
             name: '',
             ip_address: '',
             mac_address: '',
@@ -150,14 +173,14 @@ export default function Form({triggerValue, gettableName, onDataSubmitted }: For
 
         {/* PC Name */}
         <div className="mb-4 col-span-2">
-          <label htmlFor="pcname" className="block mb-2 text-sm font-medium">
+          <label htmlFor="pc_name" className="block mb-2 text-sm font-medium">
             PC Name:
           </label>
           <input
             type="text"
-            id="pcname"
-            name="pcname"
-            value={formData.pcname}
+            id="pc_name"
+            name="pc_name"
+            value={formData.pc_name}
             onChange={handleChange}
             className="block w-full px-3 py-2 text-sm border border-gray-600/35 rounded-md focus:outline-none focus:border-gray-400 shadow-md"
             placeholder="Enter PC Name"

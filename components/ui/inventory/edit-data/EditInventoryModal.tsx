@@ -1,4 +1,5 @@
-import { status } from '@/lib/company';
+import { accountTables, status } from '@/lib/company';
+import { getSession } from 'next-auth/react';
 import React, { FormEvent, useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { useTimeout } from 'usehooks-ts';
@@ -30,6 +31,23 @@ const EditInventoryModal: React.FC<ModalProps> = ({triggerValue, onClose, onSubm
     date_purchased: '',
     date_installed: ''
   });
+
+  const getCompany = accountTables[tablename] || ""
+
+  const [userDetails, setUserDetails] = useState({
+    userId: 0,
+    userName: ''
+  })
+ 
+  useEffect(() => {
+    const fetchUserDetails = async () => {
+      const session = await getSession();
+      if(session){
+        setUserDetails({ userId: session?.user?.uid, userName: session?.user?.username})
+      }
+    }
+    fetchUserDetails()
+  }, [])
   // handle for changing the value in inputs
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
@@ -90,7 +108,13 @@ const EditInventoryModal: React.FC<ModalProps> = ({triggerValue, onClose, onSubm
           is_active_id: formData.is_active_id,
           date_purchased: formattedDate,
           date_installed: formData.date_installed,
-          // tableName: gettableName
+          
+          user_id: userDetails.userId,
+          user_name: userDetails.userName.toUpperCase(),
+          company_name: getCompany,
+          details: `Edit the details of "${formData.pc_name}" - (${triggerValue})`,
+          db_table: tablename,
+          actions: "EDIT"
         }),
       };
       const res = await fetch(`/api/${tablename}/${id}`, putInventory);

@@ -7,6 +7,7 @@ import CustomPagination from "@/components/Pagination";
 import {tableName} from "@/lib/company";
 import { XCircleIcon, CheckCircleIcon } from "@heroicons/react/24/solid";
 import DeleteAccountModal from "../inventory/delete-data/DeleteAccountInventory";
+import ActivityLog from "./activity_log";
 
 interface AccountInventoryProps {
     getTableName: string,
@@ -23,10 +24,11 @@ const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 const [totalPages, setTotalPages] = useState(1);
 const [currentPage, setCurrentPage] = useState(1);
 const [modalData, setModalData] = useState<any>(null)
+const [isUpdate, setIsUpdate] = useState(false)
 
 const getQuery = new URLSearchParams(window.location.search)
 const queryValue = getQuery.get('query')
-let company = tableName.find(company => company.name === getTableName)?.company || getTableName
+let company = tableName.find(company => company.name === getTableName)?.displayName || getTableName
 
 async function fetchAccount(trigger: string) {
   try {
@@ -106,18 +108,13 @@ useEffect(() => {
 const handleFormSubmit = async () => {
   if(triggerValue === 'active') {
     fetchAccount('active');
-    closeModal();
-    onDataSubmitted()
+    
   } else {
     fetchAccount('inactive')
-    onDataSubmitted()
-    closeModal();
+    
   }
-  console.log("Result after submiting update on edit: ", getTableName)
-  console.log("Result after submiting update on edit accountInventories: ", accountInventories)
+  closeModal();
 }
-
-
 
 const handlePageClick = async (selected: { selected: number }) => {
   try {
@@ -145,21 +142,7 @@ const handlePageClick = async (selected: { selected: number }) => {
   
 };
 
-const handleSave = async () => {
-  try {
-      // Call any necessary functions or perform any actions here
-      console.log("Saving data...");
-      // Once everything is saved, close the QR modal
-      closeQrModal();
-  } catch (error) {
-      console.error('Error saving data:', error);
-  }
-}
-
-
-const openEditModal = async (id: number) => {
-  setSelectedId(id)
-  setIsEditModalOpen(true)
+const fetchAccountData = async (id: number) => {
   try {
     const res = await fetch (`/api/${getTableName}/accounts/${id}`)
     if(!res.ok){
@@ -170,125 +153,131 @@ const openEditModal = async (id: number) => {
   } catch (error){
     console.error('Internal Error', error)
   }
+}
+
+const openEditModal = async (id: number) => {
+  setSelectedId(id)
+  setIsEditModalOpen(true)
+  
+  await fetchAccountData(id)
 }
 
 const openDeleteModal = async (id: number) => {
   setSelectedId(id)
   setIsDeleteModalOpen(true)
-  try {
-    const res = await fetch (`/api/${getTableName}/accounts/${id}`)
-    if(!res.ok){
-      throw new Error (`Failed to fetch seleted Data`)
-    }
-    const data = await res.json()
-    setModalData(data.results[0])
-  } catch (error){
-    console.error('Internal Error', error)
-  }
+
+  await fetchAccountData(id)
 }
 
-const closeQrModal = () => {
-  setSelectedId(null)
-}
 const closeModal = () => {
   setIsEditModalOpen(false);
   setIsDeleteModalOpen(false)
   setSelectedId(null)
 }
     return (  
-    <div className="overflow-x-auto sm:p-2">
-      <div className="inline-block min-w-full align-middle">
-        <div className="p-2 rounded  md:pt-0">
-          <table className="min-w-full   md:table">
-            <thead className="text-sm text-left bg-black text-white border rounded-lg">
-              <tr>
-                <th scope="col" className="px-4 py-1  font-extrabold">
-                  Name
-                </th>
-                <th scope="col" className="px-3 py-1 font-extrabold">
-                  Department
-                </th>
-                <th scope="col" className="px-3 py-1 font-extrabold">
-                  Username
-                </th>
-                <th scope="col" className="px-3 py-1 font-extrabold">
-                  Password
-                </th>
-                <th scope="col" className="px-3 py-1 font-extrabold text-center">
-                  Status
-                </th>
-                <th scope="col" className="px-3 py-1 font-extrabold text-center">
-                  Notes
-                </th>
-                <th scope="col" className="py-3 pl-6 pr-3 text-center">
-                  Action
-                </th>
-                
-              </tr>
-            </thead>
-            <tbody className="bg-white ">
-              {accountInventories?.length === 0 ? (
-                <tr className="">
-                  <td colSpan={7} className="text-center"> No data found... </td>
-                </tr>
-              ) : (
-                <>
-                {accountInventories?.map((accounts) => (
-                  <tr key={accounts.id}
-                    className="w-full shadow-md shadow-gray-700 rounded text-sm   hover:bg-gray-200 hover:border-t-0"
-                  >
-                    <td className=" pl-6 pr-3 whitespace-nowrap relative cursor-pointer">
-                      <div className="flex items-center gap-3">
-                        <p>{accounts.name} </p>
-                      </div>
-                    </td>
-                    <td className="px-3  whitespace-nowrap">
-                      {accounts.department}
-                    </td>
-                    <td className="px-3 py-3 whitespace-nowrap">
-                      {accounts.username}
-                    </td>
-                    <td className="px-3 py-3 whitespace-nowrap">
-                      **********
-                    </td>
-                    <td className="px-3 py-3 whitespace-nowrap">
-                      <div className="flex items-center justify-center gap-3">
-                          {accounts.is_active_id === 1 ? <CheckCircleIcon className="rounded-full w-5 h-5 bg-white text-green-800"/> : <XCircleIcon className="rounded-full w-5 h-5 bg-white text-red-800"/>}
-                      </div>
-                    </td>
-                    <td className="px-3 py-3 whitespace-nowrap">
-                      <div className="flex items-center justify-center gap-3">{accounts.notes}</div>
-                    </td>
-                    <td className="px-3 py-3 whitespace-nowrap">
-                      <div className="flex items-center justify-center gap-3">
-                        <UpdateInventory id={accounts.id} onClick={openEditModal}/>
-                        <DeleteInventory id={accounts.id} onClick={openDeleteModal}/>
-                      </div>
-                    </td>
+    <>
+      <div className="gap-2">
+        <div className="overflow-x-auto sm:p-2">
+          <div className="inline-block min-w-full align-middle">
+            <div className="p-2 rounded  md:pt-0">
+              <table className="min-w-full md:table">
+                <thead className="text-sm text-left bg-black text-white border rounded-lg">
+                  <tr>
+                    <th scope="col" className="px-4 py-1  font-extrabold">
+                      Name
+                    </th>
+                    <th scope="col" className="px-3 py-1 font-extrabold">
+                      Department
+                    </th>
+                    <th scope="col" className="px-3 py-1 font-extrabold">
+                      Username
+                    </th>
+                    <th scope="col" className="px-3 py-1 font-extrabold">
+                      Password
+                    </th>
+                    <th scope="col" className="px-3 py-1 font-extrabold text-center">
+                      Status
+                    </th>
+                    <th scope="col" className="px-3 py-1 font-extrabold text-center">
+                      Notes
+                    </th>
+                    <th scope="col" className="py-3 pl-6 pr-3 text-center">
+                      Action
+                    </th>
+        
                   </tr>
-                ))}
-                </>
-              )}
-            </tbody>
-             
-           
-          </table>
-         
-            {isEditModalOpen && (
-              <EditAccountModal onClose={closeModal} onSubmit={handleFormSubmit} id={selectedId} tablename={getTableName}/>
-            )} 
-            {isDeleteModalOpen && (
-              <DeleteAccountModal onClose={closeModal} onSubmit={handleFormSubmit} id={selectedId} tablename={getTableName}/>
-            )} 
-
+                </thead>
+                <tbody className="bg-white ">
+                  {accountInventories?.length === 0 ? (
+                    <tr className="">
+                      <td colSpan={7} className="text-center"> No data found... </td>
+                    </tr>
+                  ) : (
+                    <>
+                    {accountInventories?.map((accounts) => (
+                      <tr key={accounts.id}
+                        className="w-full shadow-md shadow-gray-700 rounded text-sm hover:border-t-0"
+                      >
+                        <td className=" pl-6 pr-3 whitespace-nowrap relative cursor-pointer">
+                          <div className="flex items-center gap-3">
+                            <p>{accounts.name} </p>
+                          </div>
+                        </td>
+                        <td className="px-3  whitespace-nowrap">
+                          {accounts.department}
+                        </td>
+                        <td className="px-3 py-3 whitespace-nowrap">
+                          {accounts.username}
+                        </td>
+                        <td className="px-3 py-3 whitespace-nowrap">
+                          **********
+                        </td>
+                        <td className="px-3 py-3 whitespace-nowrap">
+                          <div className="flex items-center justify-center gap-3">
+                              {accounts.is_active_id === 1 ? <CheckCircleIcon className="rounded-full w-5 h-5 bg-white text-green-800"/> : <XCircleIcon className="rounded-full w-5 h-5 bg-white text-red-800"/>}
+                          </div>
+                        </td>
+                        <td className="px-3 py-3 whitespace-nowrap">
+                          <div className="flex items-center justify-center gap-3">{accounts.notes}</div>
+                        </td>
+                        <td className="px-3 py-3 whitespace-nowrap">
+                          <div className="flex items-center justify-center gap-3">
+                            <UpdateInventory id={accounts.id} onClick={openEditModal}/>
+                            <DeleteInventory id={accounts.id} onClick={openDeleteModal}/>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                    </>
+                  )}
+                </tbody>
+        
+        
+              </table>
+        
+                {isEditModalOpen && (
+                  <EditAccountModal triggerValue={triggerValue} onClose={closeModal} onSubmit={handleFormSubmit} id={selectedId} tablename={getTableName}/>
+                )}
+                {isDeleteModalOpen && (
+                  <DeleteAccountModal triggerValue={triggerValue} onClose={closeModal} onSubmit={handleFormSubmit} id={selectedId} tablename={getTableName}/>
+                )}
+            </div>
+            {!queryValue && totalPages > 0 &&
+            <CustomPagination
+              pageCount={totalPages}
+              currentPage={currentPage}
+              onPageChange={handlePageClick}
+            />}
+          </div>
         </div>
-        {!queryValue && totalPages > 0 &&
-        <CustomPagination
-          pageCount={totalPages}
-          currentPage={currentPage}
-          onPageChange={handlePageClick}
-        />}
+        <div className="w-full border-black border mt-10"></div>
       </div>
-    </div>     
+      <div className="p-4 my-2 border rounded-md bg-white">
+          <div className="">
+              <h1 className="text-md font-bold">Recent Activity</h1>
+              <ActivityLog tablename={getTableName} originTable={company} onDataSubmitted={handleFormSubmit} />
+          </div>
+      </div>
+    </>
     )
 }

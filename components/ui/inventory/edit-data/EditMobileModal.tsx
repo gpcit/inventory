@@ -1,4 +1,5 @@
-import { status } from '@/lib/company';
+import { accountTables, status } from '@/lib/company';
+import { getSession } from 'next-auth/react';
 import React, { FormEvent, useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 
@@ -29,6 +30,22 @@ const EditMobileModal: React.FC<ModalProps> = ({triggerValue, onClose, onSubmit,
     date_returned: '',
     is_active_id: 1
   });
+
+  const getCompany = accountTables[tablename] || ""
+  const [userDetails, setUserDetails] = useState({
+    userId: 0,
+    userName: ''
+  })
+ 
+  useEffect(() => {
+    const fetchUserDetails = async () => {
+      const session = await getSession();
+      if(session){
+        setUserDetails({ userId: session?.user?.uid, userName: session?.user?.username})
+      }
+    }
+    fetchUserDetails()
+  }, [])
   // handle for changing the value in inputs
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
@@ -82,8 +99,14 @@ const EditMobileModal: React.FC<ModalProps> = ({triggerValue, onClose, onSubmit,
           date_issued: formData.date_issued,
           date_purchased: formData.date_purchased,
           date_returned: formData.date_returned,
-          is_active_id: formData.is_active_id
-          // tableName: gettableName
+          is_active_id: formData.is_active_id,
+          
+          user_id: userDetails.userId,
+          user_name: userDetails.userName.toUpperCase(),
+          company_name: getCompany,
+          details: `Edit the details of "${formData.assigned_to}" - (${triggerValue})`,
+          db_table: tablename,
+          actions: "EDIT"
         }),
       };
       const res = await fetch(`/api/${tablename}/cellphones/${id}`, putInventory);
