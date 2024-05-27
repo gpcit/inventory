@@ -9,7 +9,7 @@ const ProtectedRoute = ({ children }: {children: React.ReactNode}) => {
 
   useEffect(() => {
     if ( status === 'unauthenticated' && !session ) {
-      router.push(`${process.env.NEXT_PUBLIC_URL}/login`);
+      router.push(`/login`);
       
     }
   }, [status, router, session]);
