@@ -34,7 +34,14 @@ const getQuery = new URLSearchParams(window.location.search)
 const queryValue = getQuery.get('query')
 let company = tableName.find(company => company.name === getTableName)?.company || getTableName
 
-
+const tables = {
+  header: ["Assigned To", "Department", "Brand", "Email", "Serial Number", "Number", "Status", "Date Issued", "Action"],
+}
+const extractEmail = (emailPassword: string | null) => {
+  if(!emailPassword) return ''
+  const emailMatch = emailPassword.match(/Email:\s*([^\s]+)/i)
+  return emailMatch ? emailMatch[1] : '';
+}
 // function for fetching data for Mobile
 async function fetchMobile (trigger: string) {
   try {
@@ -51,23 +58,29 @@ async function fetchMobile (trigger: string) {
         response = await fetch(apiUrlEndpoint);
         data = await response.json();
       }
-      setMobileInventory(data.results)
+
+      const updateData = data.results.map((item: { email_password: string }) => ({
+        ...item,
+        email: extractEmail(item.email_password)
+      }));
+      setMobileInventory(updateData)
       setTotalPages(data.totalPages);
       setCurrentPage(1);
+      
     } else {
-      if(trigger === 'active') {
-        apiUrlEndpoint = `/api/${getTableName}/cellphones/?page=${currentPage}`;
-        response = await fetch(apiUrlEndpoint);
-        data = await response.json()
-      } else {
-        apiUrlEndpoint = `/api/${getTableName}/cellphones/inactive/?page=${currentPage}`;
-        response = await fetch(apiUrlEndpoint);
-        data = await response.json()
+        apiUrlEndpoint = trigger === 'active' ? `/api/${getTableName}/cellphones/?page=${currentPage}` : `/api/${getTableName}/cellphones/inactive/?page=${currentPage}`
       }
-      setMobileInventory(data.results);
+      response = await fetch(apiUrlEndpoint)
+      data = await response.json()
+
+      const updateData = data.results.map((item: { email_password: string; }) => ({
+        ...item,
+        email: extractEmail(item.email_password)
+      }))
+      setMobileInventory(updateData);
       setCurrentPage(1);
       setTotalPages(data.totalPages)
-    }
+    
   } catch (error) {
       console.error('Error fetching data', error)
   }
@@ -89,8 +102,13 @@ useEffect(() => {
         response = await fetch(apiUrlEndpoint);
         data = await response.json();
       }
-        setMobileInventory(data.results)
+      const updateData = data.results.map((item: { email_password: string; }) => ({
+        ...item,
+        email: extractEmail(item.email_password)
+      }))
+        setMobileInventory(updateData)
         setTotalPages(data.totalPages);
+
       } else {
         if (triggerValue === 'active') {
           apiUrlEndpoint = `/api/${getTableName}/cellphones`;
@@ -103,10 +121,15 @@ useEffect(() => {
           data = await response.json();
           get_serial = data.data?.map((res: { serial_number: any; }) => res.serial_number)
         }
+        const updateData = data.results.map((item: { email_password: string; }) => ({
+          ...item,
+          email: extractEmail(item.email_password)
+        }))
         setDuplicate(get_serial)
-        setMobileInventory(data.results);
+        setMobileInventory(updateData);
         setCurrentPage(1);
         setTotalPages(data.totalPages)
+        
       }
     } catch (error) {
         console.error('Error fetching data', error)
@@ -114,7 +137,7 @@ useEffect(() => {
   }
     fetchMobileInventory()
 }, [getTableName, onDataSubmitted, queryValue, triggerValue ])
-
+console.log("Result of mobileInventory: ", mobileInventory)
 // action button for edit
 const handleEditSubmit = async () => {
  
@@ -171,7 +194,11 @@ const handlePageClick = async (selected: { selected: number }) => {
         response = await fetch(apiUrlEndpoint);
         data = await response.json()
       }
-        setMobileInventory(data.results)
+      const updateData = data.results.map((item: { email_password: string; }) => ({
+        ...item,
+        email: extractEmail(item.email_password)
+      }))
+        setMobileInventory(updateData)
         setTotalPages(data.totalPages)
     } else if (newPage < currentPage) {
       if (triggerValue === 'active') {
@@ -183,8 +210,12 @@ const handlePageClick = async (selected: { selected: number }) => {
         response = await fetch(apiUrlEndpoint);
         data = await response.json()
       }
-    setMobileInventory(data.results)
-    setTotalPages(data.totalPages)
+      const updateData = data.results.map((item: { email_password: string; }) => ({
+        ...item,
+        email: extractEmail(item.email_password)
+      }))
+        setMobileInventory(updateData)
+        setTotalPages(data.totalPages)
     }
     setCurrentPage(newPage)
   } catch ( error) {
@@ -266,41 +297,13 @@ const openDeleteModal = async (id: number) => {
         <div className="inline-block min-w-full align-middle">
           <div className="p-2 rounded-lg md:pt-0">
             <table className="min-w-full md:table">
-              <thead className="text-sm text-left bg-gradient-to-r from-green-600 text-black border-black border rounded">
-                <tr className="">
-                  <th scope="col" className="px-4 py-1 font-extrabold">
-                    Assigned To
-                  </th>
-                  <th scope="col" className="px-3 py-1 font-extrabold">
-                    Department
-                  </th>
-                  <th scope="col" className="px-3 py-1 font-extrabold">
-                    Brand
-                  </th>
-                  <th scope="col" className="px-3 py-1 font-extrabold">
-                    IMEI
-                  </th>
-                  <th scope="col" className="px-3 py-1 font-extrabold">
-                    Serial Number
-                  </th>
-                  <th scope="col" className="px-3 py-1 font-extrabold">
-                    Number
-                  </th>
-                  <th scope="col" className="px-3 py-1 font-extrabold text-center">
-                    Status
-                  </th>
-                  {triggerValue === 'active' ? (
-                  <th scope="col" className="px-3 py-1 font-extrabold text-center">
-                    Date Issued
-                  </th>
-                  ) : (
-                  <th scope="col" className="px-3 py-1 font-extrabold text-center">
-                    Date Returned
-                  </th>
-                  )}
-                  <th scope="col" className="py-3 pl-6 pr-3 text-center">
-                    Action
-                  </th>
+              <thead className="text-sm text-left bg-gradient-to-r border-2 border-black from-green-600 text-black rounded">
+                <tr className="bg-gradient-to-r ">
+                  {tables.header.map((headerItem, index) => (
+                    <th key={index} className="px-4 py-2 border-b text-center">
+                      {triggerValue === 'active' ? headerItem.replace('Date Returned', 'Date Issued') : headerItem.replace('Date Issued', 'Date Returned')}
+                    </th>
+                  ))}
                 </tr>
               </thead>
       
@@ -313,33 +316,27 @@ const openDeleteModal = async (id: number) => {
                   <>
                   {mobileInventory?.map((inventory) => (
                     <tr key={inventory.id}
-                      className="w-full shadow-md shadow-gray-700 rounded border-green-500 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg hover:border-t-0"
+                      className="w-full shadow-sm shadow-gray-700 rounded border-green-500 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg hover:border-t-0"
                     >
-                      <td className="py-3 pl-6 pr-3 whitespace-nowrap">
+                      <td className="py-3 pl-6 pr-3 whitespace-nowrap text-center">
                           <p>{inventory.assigned_to}</p>
                       </td>
-                      <td className="px-3 py-3 whitespace-nowrap">
+                      <td className="px-3 py-3 whitespace-nowrap text-center">
                         {inventory.department}
                       </td>
-                      <td className="px-3 py-3 whitespace-nowrap">
+                      <td className="px-3 py-3 whitespace-nowrap text-center">
                         {inventory.brand}
                       </td>
-                      <td className="px-3 py-3 whitespace-nowrap">
-                      {inventory.imei?.split("IMEI").map((imei, index) => (
-                          index > 0 && (
-                              <div key={index}>
-                                  IMEI{imei.trim()}
-                              </div>
-                          )
-                      ))}
+                      <td className="px-3 py-3 whitespace-nowrap text-center">
+                      {inventory.email}
                       </td>
-                      <td className="px-3 py-3 whitespace-nowrap">
+                      <td className="px-3 py-3 whitespace-nowrap text-center">
                         {inventory.serial_number}
                       </td>
-                      <td className="px-3 py-3 whitespace-nowrap">
+                      <td className="px-3 py-3 whitespace-nowrap text-center">
                       {inventory.number}
                       </td>
-                      <td className="px-3 py-3 whitespace-nowrap ">
+                      <td className="px-3 py-3 whitespace-nowrap  text-center">
                         <div className="flex justify-center items-center">
                           {inventory.is_active_id === 1 ? <CheckCircleIcon className="rounded-full w-5 h-5  text-green-800"/> : <XCircleIcon className="rounded-full w-5 h-5  text-red-800"/>}
                         </div>
@@ -384,8 +381,9 @@ const openDeleteModal = async (id: number) => {
             onPageChange={handlePageClick}
           />}
         </div>
-        <div className="w-full border-black border mt-10"></div>
+        
       </div>
+      <div className="w-full border-black border mt-10"></div>
     </div> 
     <div className="p-4 my-2 border rounded-md bg-white justify-center items-center">
         <div className="">

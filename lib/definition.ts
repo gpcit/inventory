@@ -38,6 +38,8 @@ export interface MobileInventoryList {
     brand: string;
     model_specs: string;
     imei: string;
+    email_password: string;
+    email?: string;
     number: string;
     serial_number: string;
     inclusion: string;
