@@ -146,7 +146,6 @@ export default function Form({triggerValue, tablename, onDataSubmitted }: FormPr
       ...prevState,
       is_active_id: selectedValue
     }));
-    console.log(formData.is_active_id)
   }
  
 

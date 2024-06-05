@@ -39,13 +39,13 @@ export interface MobileInventoryList {
     model_specs: string;
     imei: string;
     email_password: string;
-    email?: string;
     number: string;
     serial_number: string;
     inclusion: string;
     date_issued: string;
     date_returned: string;
     is_active_id: number;
+    email?: string
 }
 
 export interface PrinterInventoryList {
@@ -114,4 +114,28 @@ export interface ActivityLogInventory {
     details: string;
     company_name: string;
     date_created: string;
+}
+
+export interface SupplyInventory {
+    id: number;
+    item_no: string;
+    name: string;
+    manufacturer: string;
+    description: string;
+    cost_per_item: number;
+    stock_quantity: number;
+    inventory_value: number;
+    reorder_level: number;
+    days_per_reorder: number;
+    item_reorder_quantity: number;
+    item_discontinued: string;
+}
+
+export interface DeliverInentory {
+    id: number;
+    quantity: number;
+    description: string;
+    location: string;
+    name: string;
+    date_acquired: string
 }

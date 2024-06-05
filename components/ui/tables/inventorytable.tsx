@@ -33,7 +33,11 @@ export default function GPCInventoryTable ({triggerValue, gettableName, onDataSu
   
   const getquery = new URLSearchParams(window.location.search)
   const queryvalue = getquery.get('query')
- 
+  
+  const tables = {
+    header: ["PC Name", "Mac Address", "Computer Type", "Specs", "Supplier", "Date Installed", "Status", "Action"]
+  }
+
   async function fetchInventory(trigger: string){
     try 
     {
@@ -231,43 +235,17 @@ export default function GPCInventoryTable ({triggerValue, gettableName, onDataSu
         <div className="overflow-x-auto sm:p-2">
           <div className="inline-block min-w-full align-middle">
             <div className="py-2 rounded  md:pt-0">
-              <table className="min-w-full   md:table">
-                <thead className={`text-sm text-left bg-gradient-to-r from-green-600 text-black border-black border rounded`}>
+              <table className="min-w-full  md:table">
+                <thead className={`text-sm text-left bg-gradient-to-r from-green-600 border-black border-2 text-black rounded`}>
                   <tr>
-                    <th scope="col" className="px-4 py-1  font-extrabold">
-                      PC Name
-                    </th>
-                    <th scope="col" className="px-3 py-1 font-extrabold">
-                      Mac Address
-                    </th>
-                    <th scope="col" className="px-3 py-1 font-extrabold">
-                      Computer Type
-                    </th>
-                    <th scope="col" className="px-3 py-1 font-extrabold">
-                      Specs
-                    </th>
-                    <th scope="col" className="px-3 py-1 font-extrabold">
-                      Supplier
-                    </th>
-                    {triggerValue === 'active' ? (
-                    <th scope="col" className="px-3 py-1 font-extrabold">
-                      Date Installed
-                    </th>
-                    ) : (
-                    <th scope="col" className="px-3 py-1 font-extrabold">
-                      Date Pull-out
-                    </th>
-                    )}
-                    <th scope="col" className="px-3 py-1 font-extrabold">
-                      Status
-                    </th>
-                    <th scope="col" className="py-3 pl-6 pr-3 text-center">
-                      Action
-                    </th>
-        
+                    {tables.header.map((tableItems, index) => (
+                      <th key={index} className={`px-4 py-2   ${tableItems.match('Action') ? 'text-center' : '' } `}>
+                        { triggerValue === 'active' ? tableItems.replace('Date Pullout', "Date Insatlled") : tableItems.replace('Date Installed', 'Date Pullout')}
+                      </th>
+                    ))}
                   </tr>
                 </thead>
-                <tbody className="bg-white ">
+                <tbody className="bg-white">
                   {inventories.length === null || inventories.length === 0? (
                     <tr>
                       <td colSpan={8} className="text-center">No data found...</td>
@@ -276,21 +254,18 @@ export default function GPCInventoryTable ({triggerValue, gettableName, onDataSu
                     <>
                   {inventories?.map((inventory) => (
                     <tr key={inventory.id}
-                      className="w-full shadow-md shadow-gray-700 rounded border-green-500 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg  hover:border-t-0"
+                      className="w-full shadow-sm shadow-gray-700 rounded border-green-500 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg  hover:border-t-0"
                     >
                       <td className=" pl-6 pr-3 whitespace-nowrap relative cursor-pointer">
-                        <div className="flex items-center gap-3">
                           <p>{inventory.pc_name}</p>
-        
-                        </div>
                       </td>
                       <td className="px-3  whitespace-nowrap">
                         {inventory.mac_address}
                       </td>
-                      <td className="px-3 py-3 whitespace-nowrap">
+                      <td className="px-3 py-1 whitespace-nowrap">
                         {inventory.computer_type}
                       </td>
-                      <td className="px-3 py-3 whitespace-nowrap">
+                      <td className="px-3 py-1 whitespace-nowrap ">
                         {inventory.specs?.split(",").map((specs, index) => (
                           index >= 0 && (
                             <div key={index}>
@@ -299,14 +274,14 @@ export default function GPCInventoryTable ({triggerValue, gettableName, onDataSu
                           )
                         ))}
                       </td>
-                      <td className="px-3 py-3 whitespace-nowrap">
+                      <td className="px-3 py-1 whitespace-nowrap">
                         {inventory.supplier}
                       </td>
         
-                      <td className="px-3 py-3 whitespace-nowrap">
+                      <td className="px-3 py-1 whitespace-nowrap">
                         {triggerValue === 'active' ? inventory.date_installed : inventory.date_pullout}
                       </td>
-                      <td className="px-3 py-3 whitespace-nowrap">
+                      <td className="px-3 py-1 whitespace-nowrap">
                         <div className="flex items-center justify-center">
                           {inventory.is_active_id === 1 ?
                           <CheckCircleIcon className="rounded-full w-5 h-5 bg-white text-green-800"/>

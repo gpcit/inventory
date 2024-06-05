@@ -29,7 +29,9 @@ const getQuery = new URLSearchParams(window.location.search)
 const queryValue = getQuery.get('query')
 let company = tableName.find(company => company.name === getTableName)?.displayName || getTableName
 
-
+const tables = {
+  header: ["Printer Name", "Department", "Assigned To", "Manufacturer", "Model", "Serial Number", "Status", "Action"]
+}
 
 async function fetchPrinter(trigger: string) {
   try {
@@ -68,43 +70,22 @@ async function fetchPrinter(trigger: string) {
   }
 }
 useEffect(() => {
-  async function fetchPrinterInventory () {
+  const fetchPrinterInventory = async (trigger = triggerValue, page = currentPage) => {
     try {
-      let apiUrlEndpoint;
-      let response;
-      let data;
-      if(queryValue) {
-        if(triggerValue === 'active') {
-          apiUrlEndpoint = `/api/${getTableName}/printers/?query=${queryValue}`
-          response = await fetch(apiUrlEndpoint);
-          data = await response.json();
-        } else {
-          apiUrlEndpoint = `/api/${getTableName}/printers/inactive/?query=${queryValue}`
-          response = await fetch(apiUrlEndpoint);
-          data = await response.json();
-        }
-        setPrinterInventories(data.results)
-        setTotalPages(data.totalPages);
-      } else {
-          if(triggerValue === 'active') {
-            apiUrlEndpoint = `/api/${getTableName}/printers`;
-            response = await fetch(apiUrlEndpoint);
-            data = await response.json()
-          } else {
-            apiUrlEndpoint = `/api/${getTableName}/printers/inactive`;
-            response = await fetch(apiUrlEndpoint);
-            data = await response.json()
-          }
-          setPrinterInventories(data.results);
-        setCurrentPage(1);
-        setTotalPages(data.totalPages)
-      }
+      const queryPart = queryValue ? `?query=${queryValue}` : `?page=${page}`;
+      const statusPart = trigger === 'active' ? '' : 'inactive/';
+      const apiUrlEndpoint = `/api/${getTableName}/printers/${statusPart}${queryPart}`;
+      const response = await fetch(apiUrlEndpoint);
+      const data = await response.json();
+      setPrinterInventories(data.results);
+      setTotalPages(data.totalPages);
+      setCurrentPage(page);
     } catch (error) {
-        console.error('Error fetching data', error)
+      console.error('Error fetching data', error);
     }
-  }
+  };
   fetchPrinterInventory()
-}, [getTableName, onDataSubmitted, queryValue, triggerValue])
+}, [getTableName, onDataSubmitted, queryValue, triggerValue, currentPage])
 
 const handleFormSubmit = async () => {
   if(triggerValue === 'active') {
@@ -148,17 +129,6 @@ const handlePageClick = async (selected: { selected: number }) => {
   
 };
 
-const handleSave = async () => {
-  try {
-      // Call any necessary functions or perform any actions here
-      console.log("Saving data...");
-      // Once everything is saved, close the QR modal
-      closeQrModal();
-  } catch (error) {
-      console.error('Error saving data:', error);
-  }
-}
-
 
 const openEdit = async (id: number) => {
   setSelectedId(id)
@@ -199,103 +169,83 @@ const closeModal = () => {
   setSelectedId(null)
 }
     return (  
-    <div className="overflow-x-auto sm:p-2">
-      <div className="inline-block min-w-full align-middle">
-        <div className="p-2 rounded  md:pt-0">
-          <table className="min-w-full   md:table">
-            <thead className="text-sm text-left bg-gradient-to-r  from-green-600 text-black border rounded-lg border-black">
-              <tr>
-                <th scope="col" className="px-4 py-1  font-extrabold">
-                  Printer Name
-                </th>
-                <th scope="col" className="px-3 py-1 font-extrabold">
-                  Department
-                </th>
-                <th scope="col" className="px-3 py-1 font-extrabold">
-                  Assigned To
-                </th>
-                <th scope="col" className="px-3 py-1 font-extrabold">
-                  Manufacturer
-                </th>
-                <th scope="col" className="px-3 py-1 font-extrabold">
-                  Model
-                </th>
-                <th scope="col" className="px-3 py-1 font-extrabold">
-                  Serial Number
-                </th>
-                <th scope="col" className="px-3 py-1 font-extrabold text-center">
-                  Status
-                </th>
-                <th scope="col" className="py-3 pl-6 pr-3 text-center">
-                  Action
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white ">
-              {printerInventories?.length === 0 ? (
-                <tr className="">
-                  <td colSpan={8} className="text-center"> No data found... </td>
+    <div className="gap-2">
+      <div className="overflow-x-auto sm:p-2">
+        <div className="inline-block min-w-full align-middle">
+          <div className="p-2 rounded  md:pt-0">
+            <table className="min-w-full   md:table">
+              <thead className="text-sm text-left bg-gradient-to-r  from-green-600 text-black border rounded-lg border-black">
+                <tr>
+                  {tables.header.map((headerItem, index) => (
+                    <th key={index} className={`px-3 py-3 ${headerItem.match("Action")  ? 'text-center' : ''}`}>
+                      {headerItem}
+                    </th>
+                  ))}
                 </tr>
-              ) : (
-                <>
-                {printerInventories?.map((printer) => (
-                  <tr key={printer.id}
-                    className="w-full shadow-md shadow-gray-700 rounded text-sm hover:border-t-0"
-                  >
-                    <td className=" pl-6 pr-3 whitespace-nowrap relative cursor-pointer">
-                      <div className="flex items-center gap-3">
-                        <p>{printer.printer_name} </p>
-                      </div>
-                    </td>
-                    <td className="px-3  whitespace-nowrap">
-                      {printer.department}
-                    </td>
-                    <td className="px-3 py-3 whitespace-nowrap">
-                      {printer.assigned_to}
-                    </td>
-                    <td className="px-3 py-3 whitespace-nowrap">
-                      {printer.manufacturer}
-                    </td>
-                    <td className="px-3 py-3 whitespace-nowrap">
-                      {printer.model}
-                    </td>
-                    <td className="px-3 py-3 whitespace-nowrap">
-                      {printer.serial_number}
-                    </td>
-                    <td className="px-3 py-3 whitespace-nowrap">
-                      <div className="flex items-center justify-center gap-3">
-                          {printer.is_active_id === 1 ? <CheckCircleIcon className="rounded-full w-5 h-5 bg-white text-green-800"/> : <XCircleIcon className="rounded-full w-5 h-5 bg-white text-red-800"/>}
-                      </div>
-                    </td>
-                    <td className="px-3 py-3 whitespace-nowrap">
-                      <div className="flex items-center justify-center gap-3">
-                        <UpdateInventory id={printer.id} onClick={openEdit}/>
-                        <DeleteInventory id={printer.id} onClick={openDeleteModal}/>
-                      </div>
-                    </td>
+              </thead>
+              <tbody className="bg-white ">
+                {printerInventories?.length === 0 ? (
+                  <tr className="">
+                    <td colSpan={8} className="text-center"> No data found... </td>
                   </tr>
-                ))}
-                </>
+                ) : (
+                  <>
+                  {printerInventories?.map((printer) => (
+                    <tr key={printer.id}
+                      className="w-full shadow-sm shadow-gray-700 rounded text-sm hover:border-t-0"
+                    >
+                      <td className=" px-3 whitespace-nowrap relative cursor-pointer">
+                          {printer.printer_name}
+                      </td>
+                      <td className="px-3  whitespace-nowrap">
+                        {printer.department}
+                      </td>
+                      <td className="px-3 py-3 whitespace-nowrap">
+                        {printer.assigned_to}
+                      </td>
+                      <td className="px-3 py-3 whitespace-nowrap">
+                        {printer.manufacturer}
+                      </td>
+                      <td className="px-3 py-3 whitespace-nowrap">
+                        {printer.model}
+                      </td>
+                      <td className="px-3 py-3 whitespace-nowrap">
+                        {printer.serial_number}
+                      </td>
+                      <td className="px-3 py-3 whitespace-nowrap">
+                        <div className="flex items-center justify-center gap-3">
+                            {printer.is_active_id === 1 ? <CheckCircleIcon className="rounded-full w-5 h-5 bg-white text-green-800"/> : <XCircleIcon className="rounded-full w-5 h-5 bg-white text-red-800"/>}
+                        </div>
+                      </td>
+                      <td className="px-3 py-3 whitespace-nowrap">
+                        <div className="flex items-center justify-center gap-3">
+                          <UpdateInventory id={printer.id} onClick={openEdit}/>
+                          <DeleteInventory id={printer.id} onClick={openDeleteModal}/>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                  </>
+                )}
+              </tbody>
+      
+      
+            </table>
+      
+              {isEditModalOpen && (
+                <EditPrinterModal triggerValue={triggerValue} onClose={closeModal} onSubmit={handleFormSubmit} id={selectedId} tablename={getTableName}/>
               )}
-            </tbody>
-             
-           
-          </table>
-         
-            {isEditModalOpen && (
-              <EditPrinterModal triggerValue={triggerValue} onClose={closeModal} onSubmit={handleFormSubmit} id={selectedId} tablename={getTableName}/>
-            )} 
-            {isDeleteModalOpen && (
-              <DeletePrinterModal triggerValue={triggerValue} onClose={closeModal} onSubmit={handleFormSubmit} id={selectedId} tablename={getTableName}/>
-            )} 
-
+              {isDeleteModalOpen && (
+                <DeletePrinterModal triggerValue={triggerValue} onClose={closeModal} onSubmit={handleFormSubmit} id={selectedId} tablename={getTableName}/>
+              )}
+          </div>
+          {!queryValue && totalPages > 0 &&
+          <CustomPagination
+            pageCount={totalPages}
+            currentPage={currentPage}
+            onPageChange={handlePageClick}
+          />}
         </div>
-        {!queryValue && totalPages > 0 &&
-        <CustomPagination
-          pageCount={totalPages}
-          currentPage={currentPage}
-          onPageChange={handlePageClick}
-        />}
       </div>
       <div className="w-full border-black border mt-10"></div>
         <div className="p-4 my-2 border rounded-md bg-white">

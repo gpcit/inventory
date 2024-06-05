@@ -6,6 +6,7 @@ import {
   Home,
   Server,
   Printer,
+  List,
 } from 'lucide-react';
 import { SidebarDesktop } from './sidebar-desktop';
 import { SidebarItems } from '@/types';
@@ -20,6 +21,7 @@ const sidebarItems: SidebarItems = {
     { label: 'Printer', href: '/printer', icon: Printer },
     { label: 'Cellphone', href: '/cellphone', icon: Smartphone },
     { label: 'Server Accounts', href: '/accounts', icon: Server },
+    { label: 'Others', href: '/others', icon: List },
     // {
     //   href: '/item/lists',
     //   icon: List,

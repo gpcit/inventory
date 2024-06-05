@@ -109,3 +109,14 @@ export function ExportInventory({onClick, table}: ExportInventoryProps) {
     </>
   );
 }
+
+export function AddQTY({id, onClick}: PropsForID) {
+  return (
+    <button
+      onClick={() => onClick(id)}
+      className="p-2 border rounded-md hover:bg-green-100"
+    >
+      <PlusIcon className="w-5" />
+    </button>
+  );
+}

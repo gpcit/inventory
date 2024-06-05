@@ -8,6 +8,7 @@ import {tableName} from "@/lib/company";
 import { XCircleIcon, CheckCircleIcon } from "@heroicons/react/24/solid";
 import DeleteAccountModal from "../inventory/delete-data/DeleteAccountInventory";
 import ActivityLog from "./activity_log";
+import { lato } from "@/styles/font";
 
 interface AccountInventoryProps {
     getTableName: string,
@@ -29,6 +30,10 @@ const [isUpdate, setIsUpdate] = useState(false)
 const getQuery = new URLSearchParams(window.location.search)
 const queryValue = getQuery.get('query')
 let company = tableName.find(company => company.name === getTableName)?.displayName || getTableName
+
+const tables = {
+  headers: ["Name", "Department", "Username", "Password", "Status", "Notes", "Action"]
+}
 
 async function fetchAccount(trigger: string) {
   try {
@@ -180,34 +185,17 @@ const closeModal = () => {
         <div className="overflow-x-auto sm:p-2">
           <div className="inline-block min-w-full align-middle">
             <div className="p-2 rounded  md:pt-0">
-              <table className="min-w-full md:table">
-                <thead className="text-sm text-left bg-black text-white border rounded-lg">
+              <table className={`min-w-full md:table ${lato.className}`}>
+                <thead className="text-sm text-left bg-gradient-to-r from-green-600 border-black text-black border-2 rounded-lg">
                   <tr>
-                    <th scope="col" className="px-4 py-1  font-extrabold">
-                      Name
-                    </th>
-                    <th scope="col" className="px-3 py-1 font-extrabold">
-                      Department
-                    </th>
-                    <th scope="col" className="px-3 py-1 font-extrabold">
-                      Username
-                    </th>
-                    <th scope="col" className="px-3 py-1 font-extrabold">
-                      Password
-                    </th>
-                    <th scope="col" className="px-3 py-1 font-extrabold text-center">
-                      Status
-                    </th>
-                    <th scope="col" className="px-3 py-1 font-extrabold text-center">
-                      Notes
-                    </th>
-                    <th scope="col" className="py-3 pl-6 pr-3 text-center">
-                      Action
-                    </th>
-        
+                    {tables.headers.map((headerItem, index) => (
+                      <th key={index} className="px-4 py-3 text-center" scope="col">
+                        {headerItem}
+                      </th>
+                    ))}
                   </tr>
                 </thead>
-                <tbody className="bg-white ">
+                <tbody className="bg-white text-center">
                   {accountInventories?.length === 0 ? (
                     <tr className="">
                       <td colSpan={7} className="text-center"> No data found... </td>
@@ -216,12 +204,10 @@ const closeModal = () => {
                     <>
                     {accountInventories?.map((accounts) => (
                       <tr key={accounts.id}
-                        className="w-full shadow-md shadow-gray-700 rounded text-sm hover:border-t-0"
+                        className="w-full shadow-sm shadow-gray-700 rounded text-sm hover:border-t-0"
                       >
-                        <td className=" pl-6 pr-3 whitespace-nowrap relative cursor-pointer">
-                          <div className="flex items-center gap-3">
+                        <td className="px-3 whitespace-nowrap relative cursor-pointer">
                             <p>{accounts.name} </p>
-                          </div>
                         </td>
                         <td className="px-3  whitespace-nowrap">
                           {accounts.department}
