@@ -9,7 +9,7 @@ export default async function handler (req, res) {
             const fiveYearsAgo = new Date();
             fiveYearsAgo.setFullYear(fiveYearsAgo.getFullYear() - 5)
            
-            let result = await query(`SELECT COUNT(*) as count FROM ${tableName} WHERE date_purchased <= ? AND computer_type LIKE ?`, [fiveYearsAgo, `%${computerType}%`])
+            let result = await query(`SELECT COUNT(*) as count FROM ${tableName} WHERE date_purchased <= ? AND date_purchased IS NOT NULL AND date_purchased != '' AND computer_type LIKE ?`, [fiveYearsAgo, `%${computerType}%`])
             const count = result[0].count;
         res.status(200).json({ count })
         } catch (error) {

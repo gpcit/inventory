@@ -246,7 +246,7 @@ export default function GPCInventoryTable ({triggerValue, gettableName, onDataSu
                   </tr>
                 </thead>
                 <tbody className="bg-white">
-                  {inventories.length === null || inventories.length === 0? (
+                  {inventories?.length === null || inventories?.length === 0? (
                     <tr>
                       <td colSpan={8} className="text-center">No data found...</td>
                     </tr>

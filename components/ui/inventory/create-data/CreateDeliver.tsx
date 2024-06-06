@@ -36,7 +36,7 @@ export default function DeliverForm({ onDataSubmitted }: FormProps) {
   useEffect(() => {
     const fetchSupply = async () => {
       try {
-        const apiUrlEndpoint = `/api/supplies`
+        const apiUrlEndpoint = `/api/supplies/allData`
         const resonse = await fetch(apiUrlEndpoint)
         const data = await resonse.json()
 
@@ -121,7 +121,7 @@ export default function DeliverForm({ onDataSubmitted }: FormProps) {
       ...prevState,
       description: selectedValue
     }));
-    const selectedItem = itemName.find(item => item.name === selectedValue);
+    const selectedItem = itemName.find(item => item.description === selectedValue);
     setSelectedItemQty(selectedItem ? selectedItem.stock_quantity : null)
   }
 
@@ -141,7 +141,7 @@ export default function DeliverForm({ onDataSubmitted }: FormProps) {
             className='block w-full px-2 py-2 text-sm border-md border border-gray-600/35 rounded-md font-extrabold '>
               <option value="">Select</option>
             {itemName?.map((item) => (
-              <option key={item.name} value={item.name}>{item.name}</option>
+              <option key={item.name} value={item.description}>{item.name} - {item.description}</option>
 
             ))}
           </select>

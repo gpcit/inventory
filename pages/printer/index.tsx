@@ -45,6 +45,10 @@ export default function Page() {
                 setTablename('gkc_printer')
             } else if (value === 'gsrc_inventory') {
                 setTablename('gsrc_printer')
+            } else if (value === 'gcc_inventory') {
+                setTablename('gcc_printer')
+            } else if (value === 'steniel_inventory') {
+                setTablename('steniel_printer')
             } else {
                 setBranch('')
                 setCompany('')
@@ -67,7 +71,21 @@ export default function Page() {
     const handleFormSubmit = () => {
         closeModal()
     }
-    
+
+    const handleCreateFormSubmit = () => {
+        closeModal()
+        handleCreateData()
+    }
+    const handleCreateData = async () => {
+        try {
+            const url = `/api/${gettable}/accounts`;
+            const response = await fetch(url);
+            const data = await response.json();
+            setTablePrinter(data.results);
+        } catch (error) {
+            console.error('Unable to fetch data: ', error);
+        }
+    }
 
     useEffect(() => {
         if(tablename) {
@@ -150,7 +168,7 @@ export default function Page() {
                     {(company !== 'gpc_inventory' && company !== 'lsi_inventory' ) && company !== '' && <PrinterTableInventory triggerValue={triggerValue} getTableName={gettable} onDataSubmitted={handleFormSubmit}/>}
                     {isModalOpen && (
                             <Modal onClose={closeModal} title={`${branch} Printer`} companyName={name} onSubmit={handleFormSubmit} tablename={gettable}>
-                                <Form triggerValue={triggerValue} tablename={gettable} onDataSubmitted={handleFormSubmit}/>
+                                <Form triggerValue={triggerValue} tablename={gettable} onDataSubmitted={handleCreateFormSubmit}/>
                             </Modal>
                         )}
                 </div>

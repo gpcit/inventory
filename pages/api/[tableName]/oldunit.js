@@ -5,9 +5,10 @@ export default async function handler (req, res) {
     if(req.method === 'GET'){
         try {
             const results = []
-
+            
+            fiveYearsAgo.setFullYear(fiveYearsAgo.getFullYear() - 5)
             for (const table of tableName){
-            let data = `SELECT *, '${table.displayName}' AS source_table FROM ${table.name} WHERE date_purchased <= DATE_SUB(NOW(), INTERVAL 5 YEAR)`
+            let data = `SELECT *, '${table.displayName}' AS source_table FROM ${table.name} WHERE date_purchased IS NOT NULL AND date_purchased != '' AND date_purchased <= DATE_SUB(NOW(), INTERVAL 5 YEAR)`
             const inventory = await query(data)
             results.push(...inventory)
             }

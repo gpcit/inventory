@@ -28,27 +28,42 @@ export default function Oldunit (){
     const now = new Date();
     const purchasedDate = new Date(datePurchased);
 
-    // Calculate the difference in milliseconds
-    let diff = now.getTime() - purchasedDate.getTime();
+    let years = now.getFullYear() - purchasedDate.getFullYear()
+    let months = now.getMonth() - purchasedDate.getMonth();
+    let days = now.getDate() - purchasedDate.getDate();
 
-    // Convert milliseconds to days
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    if (days < 0) {
+      months--;
 
-    // Estimate years and remaining days
-    let years = Math.floor(days / 365);
-    let remainingDays = days % 365;
-
-    // Adjust for leap years
-    const currentYear = now.getFullYear();
-    const purchasedYear = purchasedDate.getFullYear();
-    for (let year = purchasedYear; year < currentYear; year++) {
-        if ((year % 4 === 0 && year % 100 !== 0) || year % 400 === 0) {
-            remainingDays++; // Add an extra day for leap years
-        }
+      let prevMonth = new Date(now.getFullYear(), now.getMonth(), 0)
+      days += prevMonth.getDate();
     }
 
+    if (months < 0) {
+      years--;
+      months += 12;
+    }
+    // Calculate the difference in milliseconds
+    // let diff = now.getTime() - purchasedDate.getTime();
+
+    // Convert milliseconds to days
+    // const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+
+    // Estimate years and remaining days
+    // let years = Math.floor(days / 365);
+    // let remainingDays = days % 365;
+
+    // Adjust for leap years
+    // const currentYear = now.getFullYear();
+    // const purchasedYear = purchasedDate.getFullYear();
+    // for (let year = purchasedYear; year < currentYear; year++) {
+    //     if ((year % 4 === 0 && year % 100 !== 0) || year % 400 === 0) {
+    //         remainingDays++; // Add an extra day for leap years
+    //     }
+    // }
+
     // Format the output string
-    return `${years} years ${remainingDays} days`;
+    return `${years} years, ${months} ${months <= 1 ? 'month' : 'months'}, and ${days} days`;
     }
 
     return (
@@ -66,6 +81,9 @@ export default function Oldunit (){
                             </th>
                             <th scope="col" className="px-3 py-5 font-medium">
                             Mac Address
+                            </th>
+                            <th scope="col" className="px-3 py-5 font-medium">
+                            Coputer Type
                             </th>
                             {/* <th scope="col" className="px-3 py-5 font-medium">
                             Computer Type
@@ -100,6 +118,9 @@ export default function Oldunit (){
                             </td>
                             <td className="px-3 py-3 whitespace-nowrap">
                               {inventory.mac_address}
+                            </td>
+                            <td className="px-3 py-3 whitespace-nowrap">
+                              {inventory.computer_type}
                             </td>
                             {/* Uncomment and add other fields as needed */}
                             {/* <td className="px-3 py-3 whitespace-nowrap">

@@ -1,12 +1,26 @@
 import { query } from '@/lib/db';
 
 export default async function handler (req, res) {
-
+    const page = req.query.page || 1
+    const itemPerPage = 10;
     if(req.method === 'GET'){
         try {
-            const getQuery = `SELECT * FROM supplies`
-            const supplies = await query(getQuery)
-            res.status(200).json({ results: supplies })
+        let getQuery;
+        let values = []
+        let pageTotal
+
+            pageTotal = `SELECT COUNT(*) AS total FROM supplies`
+            getQuery = `SELECT * FROM supplies GROUP BY date_created desc LIMIT ? OFFSET ?`
+            values = [itemPerPage, (page - 1 ) * itemPerPage]
+
+            const [supplies, totalCountRows] = await Promise.all([
+                query(getQuery, values),
+                query(pageTotal)
+            ])
+            const totalCount = totalCountRows[0].total
+            const totalPages = Math.ceil(totalCount / itemPerPage)
+
+            res.status(200).json({ results: supplies, totalPages })
         } catch(error) {
             console.error('Error fetching activity log:', error);
             res.status(500).json({ error: 'Internal Server Errors' });

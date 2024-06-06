@@ -46,6 +46,10 @@ export default function Page() {
                 setTablename('gkc_accounts')
             } else if (value === 'gsrc_inventory') {
                 setTablename('gsrc_accounts')
+            } else if (value === 'gcc_inventory') {
+                setTablename('gcc_accounts')
+            } else if (value === 'steniel_inventory') {
+                setTablename('steniel_accounts')
             } else {
                 setBranch('')
             }

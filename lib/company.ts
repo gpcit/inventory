@@ -75,6 +75,14 @@ export const accountTables: { [key: string]: string } = {
     'gsrc_printer': 'GSRC',
     'gsrc_mobile_inventory': 'GSRC',
     'gsrc_inventory': 'GSRC',
+    'gcc_accounts': 'GCC',
+    'gcc_printer': 'GCC',
+    'gcc_mobile_inventory': 'GCC',
+    'gcc_inventory': 'GCC',
+    'steniel_accounts': 'STENIEL',
+    'steniel_printer': 'STENIEL',
+    'steniel_mobile_inventory': 'STENIEL',
+    'steniel_inventory': 'STENIEL',
   };
 
 export const roles: { [key: number] : string} = {

@@ -3,6 +3,7 @@ import { DeliverInentory, SupplyInventory } from '@/lib/definition';
 import React, { useEffect, useState } from 'react';
 import { AddQTY } from '../buttons';
 import AddQTYForm from '../inventory/create-data/AddQTY';
+import CustomPagination from '@/components/Pagination';
 
 interface TabsWithTablesProps {
   onActiveTabChange: (activeTab: number) => void;
@@ -18,6 +19,10 @@ export default function TabsWithTables ({onDataSubmitted, onActiveTabChange}: Ta
   const [selectedId, setSelectedId] = useState<number | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalData, setModalData] = useState<any>(null)
+  const [totalPages, setTotalPages] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalDeliverPages, setTotalDeliverPages] = useState(1);
+  const [currentDeliverPage, setCurrentDeliverPage] = useState(1);
 
   const tabs = ['Supplies', 'Delivered', 'Returned'];
   const tables = [
@@ -44,6 +49,7 @@ export default function TabsWithTables ({onDataSubmitted, onActiveTabChange}: Ta
       const apiUrlEndpoint = `/api/supplies`
       const supply = await fetch(apiUrlEndpoint)
       const data = await supply.json()
+
       setSupplies(data.results)
 
       const transformedRows = data.results.map((supply: SupplyInventory) => [
@@ -61,6 +67,8 @@ export default function TabsWithTables ({onDataSubmitted, onActiveTabChange}: Ta
         supply.item_discontinued,
       ])
       setSupplyRows(transformedRows)
+      setTotalPages(data.totalPages)
+      setCurrentPage(1)
     } catch (error) {
       console.error('Error fetching data', error)
     }
@@ -93,7 +101,9 @@ export default function TabsWithTables ({onDataSubmitted, onActiveTabChange}: Ta
           supply.item_reorder_quantity,
           supply.item_discontinued,
         ])
-        setSupplyRows(transformedRows)
+        setSupplyRows(transformedRows);
+        setCurrentPage(1);
+        setTotalPages(data.totalPages)
       } catch (error) {
         console.error('Error fetching data', error)
       }
@@ -132,7 +142,10 @@ export default function TabsWithTables ({onDataSubmitted, onActiveTabChange}: Ta
           deliver.location,
           deliver.name
         ])
+        
         setDeliverRows(transformedRows)
+        setTotalDeliverPages(data.totalPages)
+        setCurrentDeliverPage(1)
       } catch (error) {
         console.error('Error fetching data', error)
       }
@@ -140,15 +153,125 @@ export default function TabsWithTables ({onDataSubmitted, onActiveTabChange}: Ta
     fetchDeliver()
   }, [onDataSubmitted])
 
-const closeModal = () => {
-    setIsModalOpen(false)
-    //setIsDeleteModalOpen(false)
-    setSelectedId(null)
-   // setIsQRModalOpen(false)
-}
+  const closeModal = () => {
+      setIsModalOpen(false)
+      //setIsDeleteModalOpen(false)
+      setSelectedId(null)
+    // setIsQRModalOpen(false)
+  }
+
+  const handleSuppliesPageClick = async (selected: { selected: number }) => {
+    try {
+      const newPage = selected.selected + 1
+      let apiUrlEndpoint;
+      let response;
+      let data;
+      if (newPage > currentPage) {
+        
+          apiUrlEndpoint = `/api/supplies/?page=${newPage}`;
+          response = await fetch(apiUrlEndpoint);
+          data = await response.json()
+          setSupplies(data.results)
+
+          const transformedRows = data.results.map((supply: SupplyInventory) => [
+            supply.stock_quantity < supply.reorder_level ? 'Yes' : 'No',
+            supply.item_no,
+            supply.name,
+            supply.manufacturer,
+            supply.description,
+            `₱ ${supply.cost_per_item}`,
+            supply.stock_quantity,
+            `₱ ${supply.cost_per_item * supply.stock_quantity}`,
+            supply.reorder_level,
+            supply.days_per_reorder,
+            supply.item_reorder_quantity,
+            supply.item_discontinued,
+          ])
+          setSupplyRows(transformedRows)
+          setTotalPages(data.totalPages)
+      } else if (newPage < currentPage) {
+        apiUrlEndpoint = `/api/supplies/?page=${newPage}`;
+        response = await fetch(apiUrlEndpoint);
+        data = await response.json()
+        setSupplies(data.results)
+
+        const transformedRows = data.results.map((supply: SupplyInventory) => 
+          [
+            supply.stock_quantity < supply.reorder_level ? 'Yes' : 'No',
+            supply.item_no,
+            supply.name,
+            supply.manufacturer,
+            supply.description,
+            `₱ ${supply.cost_per_item}`,
+            supply.stock_quantity,
+            `₱ ${supply.cost_per_item * supply.stock_quantity}`,
+            supply.reorder_level,
+            supply.days_per_reorder,
+            supply.item_reorder_quantity,
+            supply.item_discontinued,
+          ])
+
+        setSupplyRows(transformedRows)
+        setTotalPages(data.totalPages)
+      }
+      setCurrentPage(newPage)
+    } catch ( error) {
+      console.error('Error fetching inventory data:', error)
+    }
+    
+  };
+
+  const handleDeliverPageClick = async (selected: { selected: number }) => {
+    try {
+      const newPage = selected.selected + 1
+      let apiUrlEndpoint;
+      let response;
+      let data;
+      if (newPage > currentDeliverPage) {
+        
+          apiUrlEndpoint = `/api/deliver/?page=${newPage}`;
+          response = await fetch(apiUrlEndpoint);
+          data = await response.json()
+          setDelivers(data.results)
+
+          const transformedRows = data.results.map((deliver: DeliverInentory) => [
+            deliver.date_acquired,
+            deliver.quantity,
+            deliver.description,
+            deliver.location,
+            deliver.name
+          ])
+
+          setDeliverRows(transformedRows)
+          setTotalDeliverPages(data.totalPages)
+          setCurrentDeliverPage(1)
+      } else if (newPage < currentDeliverPage) {
+        apiUrlEndpoint = `/api/deliver/?page=${newPage}`;
+        response = await fetch(apiUrlEndpoint);
+        data = await response.json()
+        setDelivers(data.results)
+
+        const transformedRows = data.results.map((deliver: DeliverInentory) => [
+            deliver.date_acquired,
+            deliver.quantity,
+            deliver.description,
+            deliver.location,
+            deliver.name
+          ])
+
+        setDeliverRows(transformedRows)
+        setTotalDeliverPages(data.totalPages)
+        setCurrentDeliverPage(1)
+      }
+      setCurrentDeliverPage(newPage)
+    } catch ( error) {
+      console.error('Error fetching inventory data:', error)
+    }
+    
+  };
   
   return (
-    <div className="w-full mx-auto p-2">
+    <div className="w-full p-2">
       <div className="flex border-b border-gray-300 mb-4">
         {tabs.map((tab, index) => (
           <button
@@ -164,7 +287,7 @@ const closeModal = () => {
           </button>
         ))}
       </div>
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto ">
         <table className="min-w-full bg-white border border-gray-300">
           <thead>
             <tr>
@@ -231,61 +354,6 @@ const closeModal = () => {
               </tr>
             ))
           )}
-
-            {/* {activeTab === 0 ? (
-              <>
-              {supplies?.map((supply) => (
-                <tr key={supply.id} >
-                  <td className='text-left px-4 py-2'>
-                    {supply.stock_quantity < supply.reorder_level ? 'Yes' : 'No'}
-                  </td>
-                  <td className='text-left px-4 py-2'>
-                    {supply.item_no}
-                  </td>
-                  <td className='text-left px-4 py-2'>
-                    {supply.name}
-                  </td>
-                  <td className='text-left px-4 py-2'>
-                    {supply.manufacturer}
-                  </td>
-                  <td className='text-left px-4 py-2'>
-                    {supply.description}
-                  </td>
-                  <td className='text-left px-4 py-2'>
-                    ₱ {supply.cost_per_item}
-                  </td>
-                  <td className='text-left px-4 py-2'>
-                    {supply.stock_quantity}
-                  </td>
-                  <td className='text-left px-4 py-2'>
-                    ₱ {supply.cost_per_item * supply.stock_quantity}
-                  </td>
-                  <td className='text-left px-4 py-2'>
-                    {supply.reorder_level}
-                  </td>
-                  <td className='text-left px-4 py-2'>
-                    {supply.days_per_reorder}
-                  </td>
-                  <td className='text-left px-4 py-2'>
-                    {supply.item_reorder_quantity}
-                  </td>
-                  <td className='text-left px-4 py-2'>
-                    {supply.item_discontinued}
-                  </td>
-                </tr>
-              ))}
-              </>  
-            ) : (
-              <>
-              {supplies?.map((supply, index) => (
-                <tr key={index}>
-                  <td>
-                    {supply.name}
-                  </td>
-                </tr>
-              ))}
-              </>
-            )} */}
             
           </tbody>
         </table>
@@ -293,6 +361,20 @@ const closeModal = () => {
           <AddQTYForm onClose={closeModal} onDataSubmitted={handleFormSubmit} id={selectedId} />
         )}
       </div>
+      <>
+      {activeTab === 0 && supplies?.length !== 0 && supplies !== undefined &&
+          <CustomPagination
+            pageCount={totalPages}
+            currentPage={currentPage}
+            onPageChange={handleSuppliesPageClick}
+        />}
+      {activeTab === 1 && delivers?.length !== 0 && delivers !== undefined &&
+          <CustomPagination
+            pageCount={totalDeliverPages}
+            currentPage={currentDeliverPage}
+            onPageChange={handleDeliverPageClick}
+        />}
+      </>
     </div>
   );
 };
