@@ -4,6 +4,8 @@ export const tableName = [
         {name: 'gkc_inventory', accounts: 'gkc_accounts',company: 'Greenkraft Corporation.', table: 'gkc_mobile_inventory', displayName: "GKC"},
         {name: 'lsi_inventory', accounts: 'lsi_accounts',company: 'Lamitek Systems Incorporated.', table: 'lsi_mobile_inventory', displayName: "LSI"},
         {name: 'gsrc_inventory', accounts: 'gsrc_accounts',company: 'Green Siam Resources Corporation.', table: 'gsrc_mobile_inventory', displayName: "GSRC"},
+        {name: 'gcc_inventory', accounts: 'gcc_accounts',company: 'Greencycle Corporation.', table: 'gcc_mobile_inventory', displayName: "GCC"},
+        {name: 'steniel_inventory', accounts: 'steniel_accounts',company: 'Steniel.', table: 'steniel_mobile_inventory', displayName: "STENIEL"},
     ]
 
 export const allTables = [
