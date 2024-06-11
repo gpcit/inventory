@@ -145,13 +145,13 @@ export default function Page({searchParams,}:{searchParams?: {search?: string}})
                         </div>
                     </div>
                 
-                        {company === 'gpc_inventory' && branch === 'Balintawak' && <GPCInventoryTable triggerValue={triggerValue} query={search} gettableName={company} onDataSubmitted={handleFormSubmit}/>}
-                        {company === 'gpc_inventory' && branch === 'SQ'  && <GPCInventoryTable triggerValue={triggerValue} query={search} gettableName={tblName} onDataSubmitted={handleFormSubmit}/>}
+                        {company === 'gpc_inventory' && branch === 'Balintawak' && <GPCInventoryTable inventory_type="computer" triggerValue={triggerValue} query={search} gettableName={company} onDataSubmitted={handleFormSubmit}/>}
+                        {company === 'gpc_inventory' && branch === 'SQ'  && <GPCInventoryTable inventory_type="computer" triggerValue={triggerValue} query={search} gettableName={tblName} onDataSubmitted={handleFormSubmit}/>}
                 
-                        {company === 'lsi_inventory' && branch === 'Valenzuela' && <GPCInventoryTable triggerValue={triggerValue} query={search} gettableName={company} onDataSubmitted={handleFormSubmit}/>}
-                        {company === 'lsi_inventory' && branch === 'Canlubang'  && <GPCInventoryTable triggerValue={triggerValue} query={search} gettableName={tblName} onDataSubmitted={handleFormSubmit}/>}
+                        {company === 'lsi_inventory' && branch === 'Valenzuela' && <GPCInventoryTable inventory_type="computer" triggerValue={triggerValue} query={search} gettableName={company} onDataSubmitted={handleFormSubmit}/>}
+                        {company === 'lsi_inventory' && branch === 'Canlubang'  && <GPCInventoryTable inventory_type="computer" triggerValue={triggerValue} query={search} gettableName={tblName} onDataSubmitted={handleFormSubmit}/>}
                 
-                        {(company !== 'gpc_inventory' && company !== 'lsi_inventory' ) && company !== '' && <GPCInventoryTable triggerValue={triggerValue} query={search} gettableName={company} onDataSubmitted={handleFormSubmit}/>}
+                        {(company !== 'gpc_inventory' && company !== 'lsi_inventory' ) && company !== '' && <GPCInventoryTable inventory_type="computer" triggerValue={triggerValue} query={search} gettableName={company} onDataSubmitted={handleFormSubmit}/>}
                 
                 
                 

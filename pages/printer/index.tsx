@@ -160,12 +160,12 @@ export default function Page() {
                         {name !=='' &&  <StatusToggle loading={false} onChange={handleTrigger} /> }
                         </div>
                     </div>
-                    {company === 'gpc_inventory' && branch === 'Balintawak' && <PrinterTableInventory triggerValue={triggerValue} getTableName={tablename} onDataSubmitted={handleFormSubmit}/>}
-                        {company === 'gpc_inventory' && branch === 'SQ'  && <PrinterTableInventory triggerValue={triggerValue} getTableName={tablename} onDataSubmitted={handleFormSubmit}/>}
+                    {company === 'gpc_inventory' && branch === 'Balintawak' && <PrinterTableInventory inventory_type="printer" triggerValue={triggerValue} getTableName={tablename} onDataSubmitted={handleFormSubmit}/>}
+                        {company === 'gpc_inventory' && branch === 'SQ'  && <PrinterTableInventory inventory_type="printer" triggerValue={triggerValue} getTableName={tablename} onDataSubmitted={handleFormSubmit}/>}
                 
-                        {company === 'lsi_inventory' && branch === 'Valenzuela' && <PrinterTableInventory triggerValue={triggerValue} getTableName={tablename} onDataSubmitted={handleFormSubmit}/>}
-                        {company === 'lsi_inventory' && branch === 'Canlubang'  && <PrinterTableInventory triggerValue={triggerValue} getTableName={tablename} onDataSubmitted={handleFormSubmit}/>}
-                    {(company !== 'gpc_inventory' && company !== 'lsi_inventory' ) && company !== '' && <PrinterTableInventory triggerValue={triggerValue} getTableName={gettable} onDataSubmitted={handleFormSubmit}/>}
+                        {company === 'lsi_inventory' && branch === 'Valenzuela' && <PrinterTableInventory inventory_type="printer" triggerValue={triggerValue} getTableName={tablename} onDataSubmitted={handleFormSubmit}/>}
+                        {company === 'lsi_inventory' && branch === 'Canlubang'  && <PrinterTableInventory inventory_type="printer" triggerValue={triggerValue} getTableName={tablename} onDataSubmitted={handleFormSubmit}/>}
+                    {(company !== 'gpc_inventory' && company !== 'lsi_inventory' ) && company !== '' && <PrinterTableInventory inventory_type="printer" triggerValue={triggerValue} getTableName={gettable} onDataSubmitted={handleFormSubmit}/>}
                     {isModalOpen && (
                             <Modal onClose={closeModal} title={`${branch} Printer`} companyName={name} onSubmit={handleFormSubmit} tablename={gettable}>
                                 <Form triggerValue={triggerValue} tablename={gettable} onDataSubmitted={handleCreateFormSubmit}/>

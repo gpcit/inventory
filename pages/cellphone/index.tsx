@@ -107,7 +107,7 @@ const [dataUploaderHandler, setDataUploaderHandler] = useState<() => void>(() =>
                         {name !=='' &&  <StatusToggle loading={loading} onChange={handleTrigger}/> }
                         </div>
                     </div>
-                    {name !=='' && <MobileTableInventory triggerValue={triggerValue} getTableName={getTable} onDataSubmitted={handleFormSubmit}/>}
+                    {name !=='' && <MobileTableInventory inventory_type="mobile" triggerValue={triggerValue} getTableName={getTable} onDataSubmitted={handleFormSubmit}/>}
                     {isModalOpen && (
                             <Modal onClose={closeModal} title="Mobile" companyName={name} onSubmit={handleFormSubmit} tablename={getTable}>
                                 <Form tablename={getTable} onDataSubmitted={handleFormSubmit} triggerValue={triggerValue}/>

@@ -13,9 +13,10 @@ interface PrinterInventoryProps {
     getTableName: string,
     onDataSubmitted: () => void;
     triggerValue: string;
+    inventory_type: string
 }
 
-export default function PrinterTableInventory ({triggerValue, getTableName, onDataSubmitted}: PrinterInventoryProps) {
+export default function PrinterTableInventory ({inventory_type, triggerValue, getTableName, onDataSubmitted}: PrinterInventoryProps) {
 
 const [printerInventories, setPrinterInventories] = useState<PrinterInventoryList[]>([])
 const [selectedId, setSelectedId] = useState<number | null>(null)
@@ -254,7 +255,7 @@ const closeModal = () => {
       <div className="p-4 my-2 border rounded-md bg-white row-span-2">
           <div className="">
               <h1 className="text-lg">Recent Activity</h1>
-              <ActivityLog tablename={getTableName} originTable={company} onDataSubmitted={handleFormSubmit} />
+              <ActivityLog tablename={inventory_type} originTable={company} onDataSubmitted={handleFormSubmit} />
           </div>
       </div>
     </div>     

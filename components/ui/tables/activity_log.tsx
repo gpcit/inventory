@@ -25,7 +25,7 @@ const queryValue = getQuery.get('query')
 useEffect(() => {
   async function fetchActivityLog () {
     try {
-       const apiUrlEndpoint = `/api/${tablename}/activity_log`;
+       const apiUrlEndpoint = `/api/activity_log/${tablename}`;
        const response = await fetch(apiUrlEndpoint);
        const data = await response.json()
         setActivityLog(data.results);
@@ -45,13 +45,13 @@ const handlePageClick = async (selected: { selected: number }) => {
     const newPage = selected.selected + 1
     
     if (newPage > currentPage) {
-    const apiUrlEndpoint = `/api/${tablename}/activity_log?page=${newPage}`;
+    const apiUrlEndpoint = `/api/activity_log/${tablename}?page=${newPage}`;
     const response = await fetch(apiUrlEndpoint);
     const data = await response.json()
     setActivityLog(data.results)
     setTotalPages(data.totalPages)
     } else if (newPage < currentPage) {
-    const apiUrlEndpoint = `/api/${tablename}/activity_log?page=${newPage}`;
+    const apiUrlEndpoint = `/api/activity_log/${tablename}?page=${newPage}`;
     const response = await fetch(apiUrlEndpoint);
     const data = await response.json()
     setActivityLog(data.results)

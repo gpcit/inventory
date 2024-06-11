@@ -14,9 +14,10 @@ interface AccountInventoryProps {
     getTableName: string,
     onDataSubmitted: () => void;
     triggerValue: string;
+    inventory_type: string
 }
 
-export default function AccountTableInventory ({triggerValue, getTableName, onDataSubmitted}: AccountInventoryProps) {
+export default function AccountTableInventory ({inventory_type, triggerValue, getTableName, onDataSubmitted}: AccountInventoryProps) {
 
 const [accountInventories, setAccountInventories] = useState<ServerAccountsInventory[]>([])
 const [selectedId, setSelectedId] = useState<number | null>(null)
@@ -261,7 +262,7 @@ const closeModal = () => {
       <div className="p-4 my-2 border rounded-md bg-white">
           <div className="">
               <h1 className="text-md font-bold">Recent Activity</h1>
-              <ActivityLog tablename={getTableName} originTable={company} onDataSubmitted={handleFormSubmit} />
+              <ActivityLog tablename={inventory_type} originTable={company} onDataSubmitted={handleFormSubmit} />
           </div>
       </div>
     </>

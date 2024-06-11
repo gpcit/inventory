@@ -16,9 +16,10 @@ interface MobileInventoryProps {
     getTableName: string,
     onDataSubmitted: () => void;
     triggerValue: string
+    inventory_type: string
 }
 
-export default function MobileTableInventory ({triggerValue, getTableName, onDataSubmitted}: MobileInventoryProps) {
+export default function MobileTableInventory ({inventory_type, triggerValue, getTableName, onDataSubmitted}: MobileInventoryProps) {
 
 const [mobileInventory, setMobileInventory] = useState<MobileInventoryList[]>([])
 const [selectedId, setSelectedId] = useState<number | null>(null)
@@ -390,7 +391,7 @@ const openDeleteModal = async (id: number) => {
     <div className="p-4 my-2 border rounded-md bg-white justify-center items-center">
         <div className="">
             <h1 className="text-lg">Recent Activity</h1>
-            <ActivityLog tablename={getTableName} originTable={company} onDataSubmitted={handleFormSubmit} />
+            <ActivityLog tablename={inventory_type} originTable={company} onDataSubmitted={handleFormSubmit} />
         </div>
     </div> 
     </>  
