@@ -1,6 +1,6 @@
 import { lato } from "@/styles/font";
 import Layout from "../layout";
-import TabsWithTables from "@/components/ui/tables/otherstable";
+import SuppliesTableInventory from "@/components/ui/tables/otherstable";
 import { CreateInventory } from "@/components/ui/buttons";
 import { useState } from "react";
 import Modal from "@/components/modal";
@@ -33,11 +33,11 @@ export default function Page() {
                         <h1 className={`text-2xl ${lato.className}`}>IT Supply</h1>
                     </div>
                     <div className="flex items-end justify-end gap-2 mt-4 md:mt-8">
-                         <CreateInventory onClick={openModal}/>
+                        {activeTab > 1 ? ( ''  ) :  <CreateInventory onClick={openModal}/>}
                     </div>
                     <div className="py-5">
                         <div className=" bg-gray-100">
-                            <TabsWithTables onDataSubmitted={handleSubmit} onActiveTabChange={handleActiveTabChange} />
+                            <SuppliesTableInventory onDataSubmitted={handleSubmit} onActiveTabChange={handleActiveTabChange} />
                         </div>
                     </div>
                 </div>

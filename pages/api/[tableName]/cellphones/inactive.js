@@ -47,6 +47,7 @@ export default async function handler (req, res) {
         const email_password = req.body.email_password;
         const serial_number = req.body.serial_number;
         const inclusion = req.body.inclusion;
+        const plan = req.body.plan;
         const comment = req.body.comment;
         const date_issued = req.body.date_issued
         const is_active_id = req.body.is_active_id
@@ -60,7 +61,7 @@ export default async function handler (req, res) {
         if(duplicateCheck.length > 0){
           return res.status(400).json({ error: `Serial Number belongs to ${seperate} Department`})
         }
-        const addInventory = await query(`INSERT INTO ${tableName} (assigned_to, department, brand, model_specs, serial_number, imei, number, email_password, inclusion, comment, date_issued, date_purchased, is_active_id, date_returned) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, [assigned_to, department, brand, model_specs, serial_number, imei, number, email_password, inclusion, comment, date_issued, date_purchased, is_active_id, date_returned],);
+        const addInventory = await query(`INSERT INTO ${tableName} (assigned_to, department, brand, model_specs, serial_number, imei, number, email_password, inclusion, comment, date_issued, date_purchased, is_active_id, date_returned, plan) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, [assigned_to, department, brand, model_specs, serial_number, imei, number, email_password, inclusion, comment, date_issued, date_purchased, is_active_id, date_returned, plan],);
         let message;
         if (addInventory.insertId) {
           message = 'success';
@@ -79,6 +80,7 @@ export default async function handler (req, res) {
           email_password: email_password,
           serial_number: serial_number,
           inclusion: inclusion,
+          plan: plan,
           comment: comment,
           date_issued: date_issued,
           is_active_id: is_active_id,

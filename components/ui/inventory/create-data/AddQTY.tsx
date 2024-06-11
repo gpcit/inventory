@@ -56,7 +56,6 @@ export default function AddQTYForm({onClose, onDataSubmitted, id }: FormProps) {
       ...prevState,
       [name]: value
     }));
-   
   };
   
   async function updateQTYSupply(e: FormEvent<HTMLFormElement>) {

@@ -22,6 +22,7 @@ export default function Form({triggerValue, tablename, onDataSubmitted }: FormPr
     number: '',
     email_password: '',
     serial_number: '',
+    plan: '',
     inclusion: '',
     date_issued: '',
     comment: '',
@@ -88,6 +89,7 @@ export default function Form({triggerValue, tablename, onDataSubmitted }: FormPr
         email_password: formData.email_password,
         serial_number: formData.serial_number,
         inclusion: formData.inclusion,
+        plan: formData.plan,
         comment: formData.comment,
         date_issued: formData.date_issued,
         date_purchased: formData.date_purchased,
@@ -119,6 +121,7 @@ export default function Form({triggerValue, tablename, onDataSubmitted }: FormPr
           number: '',
           email_password: '',
           serial_number: '',
+          plan: '',
           inclusion: '',
           comment: '',
           date_issued: '',
@@ -234,7 +237,7 @@ export default function Form({triggerValue, tablename, onDataSubmitted }: FormPr
         </div>
 
         {/* Email and Password */}
-        <div className="mb-2 col-span-3">
+        <div className="mb-2 col-span-2">
           <label htmlFor="email_password" className="block mb-2 text-sm font-semibold">
             Email and Password
           </label>
@@ -248,12 +251,28 @@ export default function Form({triggerValue, tablename, onDataSubmitted }: FormPr
             placeholder="Enter Email and Password"
           />
         </div>
+        {/* Plan */}
+        <div className="mb-2 col-span-2">
+          <label htmlFor="plan" className="block mb-2 text-sm font-semibold">
+            Plan
+          </label>
+          <textarea
+            rows={1}
+            id="plan"
+            name="plan"
+            value={formData.plan}
+            onChange={handleChange}
+            className="block w-full px-3 py-2 text-sm border border-gray-200 rounded-md focus:outline-none focus:border-black shadow-md"
+            placeholder="Enter Plan"
+          />
+        </div>
         {/* IMEI */}
-        <div className="mb-2 col-span-3">
+        <div className="mb-2 col-span-2">
           <label htmlFor="imei" className="block mb-2 text-sm font-semibold">
             IMEI
           </label>
           <textarea
+            rows={1}
             id="imei"
             name="imei"
             value={formData.imei}

@@ -1,7 +1,6 @@
 'use client'
 import { useState, useEffect, FormEvent } from 'react';
 import toast from 'react-hot-toast';
-import { accountTables } from '@/lib/company';
 import { getSession } from 'next-auth/react';
 import { SupplyInventory } from '@/lib/definition';
 
@@ -16,9 +15,11 @@ export default function DeliverForm({ onDataSubmitted }: FormProps) {
     description: '',
     location: '',
     name: '',
+    item_name: ''
   });
   const [itemName, setItemName] = useState<SupplyInventory[]>([])
   const [selectedItemQty, setSelectedItemQty] = useState<number | null >(null)
+  const [item, setItem] = useState<string | null >(null)
   const [userDetails, setUserDetails] = useState({
     userId: 0,
     userName: ''
@@ -75,6 +76,7 @@ export default function DeliverForm({ onDataSubmitted }: FormProps) {
         body: JSON.stringify({
         date_acquired: formData.date_acquired,
         name: formData.name,
+        item_name: item,
         quantity: formData.quantity,
         description: formData.description,
         location: formData.location,
@@ -96,7 +98,8 @@ export default function DeliverForm({ onDataSubmitted }: FormProps) {
             quantity: '',
             description: '',
             location: '',
-            date_acquired: ''
+            date_acquired: '',
+            item_name: ''
           });
           onDataSubmitted();
           toast.success("Data has been successfully added", {id: addToastLoading});
@@ -115,7 +118,7 @@ export default function DeliverForm({ onDataSubmitted }: FormProps) {
       toast.error('Unable to add new data')
     }
   }
-  const handleChangeStatus = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleSelectItem = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedValue = (event.target.value)
     setFormData(prevState => ({
       ...prevState,
@@ -123,6 +126,7 @@ export default function DeliverForm({ onDataSubmitted }: FormProps) {
     }));
     const selectedItem = itemName.find(item => item.description === selectedValue);
     setSelectedItemQty(selectedItem ? selectedItem.stock_quantity : null)
+    setItem(selectedItem ? selectedItem.name : null)
   }
 
   return (
@@ -135,7 +139,7 @@ export default function DeliverForm({ onDataSubmitted }: FormProps) {
             </label>
             <select
             value={formData.description}
-            onChange={handleChangeStatus}
+            onChange={handleSelectItem}
             name="description" 
             id="description" 
             className='block w-full px-2 py-2 text-sm border-md border border-gray-600/35 rounded-md font-extrabold '>
@@ -213,8 +217,7 @@ export default function DeliverForm({ onDataSubmitted }: FormProps) {
             onChange={handleChange}
             className="block w-full px-3 py-2 text-sm border border-gray-200 rounded-md focus:outline-none focus:border-black shadow-md"
           />
-        </div>
-        
+        </div>        
       </div>
       <div className="flex justify-end py-2 mt-2">
           <button

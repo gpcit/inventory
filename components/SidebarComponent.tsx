@@ -7,6 +7,7 @@ import {
   Server,
   Printer,
   List,
+  UserRoundCheck
 } from 'lucide-react';
 import { SidebarDesktop } from './sidebar-desktop';
 import { SidebarItems } from '@/types';
@@ -20,7 +21,7 @@ const sidebarItems: SidebarItems = {
     { label: 'CPU / Laptop', href: '/inventory', icon: Laptop },
     { label: 'Printer', href: '/printer', icon: Printer },
     { label: 'Cellphone', href: '/cellphone', icon: Smartphone },
-    { label: 'Server Accounts', href: '/accounts', icon: Server },
+    { label: 'Server Accounts', href: '/accounts', icon: UserRoundCheck },
     { label: 'Others', href: '/others', icon: List },
     // {
     //   href: '/item/lists',

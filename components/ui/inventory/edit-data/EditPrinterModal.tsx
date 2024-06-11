@@ -38,7 +38,7 @@ const EditPrinterModal: React.FC<ModalProps> = ({triggerValue, onClose, onSubmit
 
   // Converting db_table to company Acronym
   const getCompany = accountTables[tablename] || ""
-
+  console.log("Result for get company: ", getCompany)
   useEffect(() => {
     const fetchUserDetails = async () => {
       const session = await getSession();

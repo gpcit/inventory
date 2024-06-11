@@ -33,6 +33,8 @@ const tables = {
   header: ["Printer Name", "Department", "Assigned To", "Manufacturer", "Model", "Serial Number", "Status", "Action"]
 }
 
+console.log("Result for company: ", company)
+
 async function fetchPrinter(trigger: string) {
   try {
     let apiUrlEndpoint;
@@ -169,8 +171,8 @@ const closeModal = () => {
   setSelectedId(null)
 }
     return (  
-    <div className="gap-2">
-      <div className="overflow-x-auto sm:p-2">
+    <div className=" grid grid-rows-5">
+      <div className="overflow-x-auto sm:p-2 row-span-3">
         <div className="inline-block min-w-full align-middle">
           <div className="p-2 rounded  md:pt-0">
             <table className="min-w-full   md:table">
@@ -246,14 +248,15 @@ const closeModal = () => {
             onPageChange={handlePageClick}
           />}
         </div>
+        <div className="w-full border-black border mt-10"></div>
       </div>
-      <div className="w-full border-black border mt-10"></div>
-        <div className="p-4 my-2 border rounded-md bg-white">
-            <div className="">
-                <h1 className="text-lg">Recent Activity</h1>
-                <ActivityLog tablename={getTableName} originTable={company} onDataSubmitted={handleFormSubmit} />
-            </div>
-        </div>
+      
+      <div className="p-4 my-2 border rounded-md bg-white row-span-2">
+          <div className="">
+              <h1 className="text-lg">Recent Activity</h1>
+              <ActivityLog tablename={getTableName} originTable={company} onDataSubmitted={handleFormSubmit} />
+          </div>
+      </div>
     </div>     
     )
 }

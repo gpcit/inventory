@@ -67,14 +67,14 @@ export default async function handler(req, res) {
 
     try {
       const {id} = req.query;
-      const {assigned_to, department, brand, model_specs, serial_number, imei, number, email_password, inclusion, comment, date_issued, date_purchased, is_active_id, date_returned, user_id, user_name, company_name, details, db_table, actions} = req.body
+      const {assigned_to, department, brand, model_specs, serial_number, imei, number, email_password, inclusion, comment, date_issued, date_purchased, is_active_id, date_returned, user_id, user_name, company_name, details, db_table, plan, actions} = req.body
 
       if(!id || !assigned_to || !brand){
         return res.status(400).json({ error: 'Missing required fields' })
       }
       const updateResult = await query
-      (`UPDATE ${tableName} SET assigned_to=?, department=?, brand=?, model_specs=?, serial_number=?, imei=?, number=?, email_password=?,  inclusion=?, comment=?, date_issued=?, date_purchased=?, is_active_id=?, date_returned=? WHERE id=?`,
-      [assigned_to, department, brand, model_specs, serial_number, imei, number, email_password, inclusion, comment, date_issued, date_purchased, is_active_id, date_returned, id]);
+      (`UPDATE ${tableName} SET assigned_to=?, department=?, brand=?, model_specs=?, serial_number=?, imei=?, number=?, email_password=?,  inclusion=?, comment=?, date_issued=?, date_purchased=?, is_active_id=?, date_returned=?, plan=? WHERE id=?`,
+      [assigned_to, department, brand, model_specs, serial_number, imei, number, email_password, inclusion, comment, date_issued, date_purchased, is_active_id, date_returned, plan, id]);
       
       if(updateResult.affectedRows > 0){
         res.status(200).json({response: { message: 'success', updatedItem: id }})

@@ -12,7 +12,8 @@ import { TbFileExport } from 'react-icons/tb';
 import { SidebarItems } from '@/types';
 import { roles } from '@/lib/company';
 import LoggedUser from './LoggedUser';
-import { ChevronRight, Container, Router } from 'lucide-react';
+import { ChevronRight, Container, Router, Server } from 'lucide-react';
+
 
 interface SidebarDesktopProps {
   sidebarItems: SidebarItems;
@@ -74,6 +75,11 @@ export function SidebarDesktop(props: SidebarDesktopProps) {
                       <div className='ml-4'>
                         <Link href='/supplies/switches-routers'>
                           <SidebarButton className={`w-full focus:ring-2 hover:underline hover:text-green-200 ${pathname === '/supplies/switches-routers' ? 'border border-green-600 ' : ''}`} icon={Router}>Switches | Routers</SidebarButton>
+                        </Link>
+                      </div>
+                      <div className='ml-4'>
+                        <Link href='/supplies/nas'>
+                          <SidebarButton className={`w-full focus:ring-2 hover:underline hover:text-green-200 ${pathname === '/supplies/nas' ? 'border border-green-600 ' : ''}`} icon={Server}>NAS</SidebarButton>
                         </Link>
                       </div>
                     </div>

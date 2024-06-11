@@ -45,7 +45,8 @@ export interface MobileInventoryList {
     date_issued: string;
     date_returned: string;
     is_active_id: number;
-    email?: string
+    email?: string;
+    plan: string;
 }
 
 export interface PrinterInventoryList {
@@ -131,11 +132,36 @@ export interface SupplyInventory {
     item_discontinued: string;
 }
 
-export interface DeliverInentory {
+export interface DeliverInventory {
     id: number;
     quantity: number;
+    item_name: string;
     description: string;
     location: string;
     name: string;
     date_acquired: string
+}
+
+export interface ReturnInventory {
+    id: number;
+    date_returned: string;
+    item_name: string;
+    item_description: string;
+    quantity: number;
+    name: string;
+}
+
+export interface NasInventory {
+    id: number;
+    name: string;
+    company_name: string;
+    ip_address: string;
+    mac_address: string;
+    manufacturer: string;
+    model: string;
+    specs: string;
+    location_area: string;
+    date_purchased: string;
+    date_installed: string;
+    status?: boolean;
 }

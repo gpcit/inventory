@@ -10,7 +10,7 @@ export default async function handler(req, res) {
         let pageTotal;
 
             pageTotal = `SELECT COUNT(*) AS total FROM deliver`
-            getQuery = `SELECT * FROM deliver GROUP BY id desc LIMIT ? OFFSET ?`;
+            getQuery = `SELECT * FROM deliver WHERE id NOT IN(SELECT deliver_id FROM return_table) GROUP BY id desc LIMIT ? OFFSET ?`;
             values = [itemPerPage, (page - 1) * itemPerPage]
 
             const [delivered, totalCountRows] = await Promise.all([
@@ -27,15 +27,15 @@ export default async function handler(req, res) {
         }
     } else if (req.method === 'POST') {
         try {
-            const { quantity, description, location, name, date_acquired } = req.body;
+            const { quantity, item_name, description, location, name, date_acquired } = req.body;
             if (!quantity || !name) {
                 return res.status(400).json({ error: 'Missing Fields' });
             }
 
             // Insert into the deliver table
             const insertData = await query(
-                `INSERT INTO deliver (quantity, description, location, name, date_acquired) VALUES (?, ?, ?, ?, ?)`,
-                [quantity, description, location, name, date_acquired]
+                `INSERT INTO deliver (quantity, item_name, description, location, name, date_acquired) VALUES (?, ?, ?, ?, ?, ?)`,
+                [quantity, item_name, description, location, name, date_acquired]
             );
 
             if (!insertData.insertId) {
@@ -44,12 +44,12 @@ export default async function handler(req, res) {
 
             // Update the supplies table
             const updateSupplies = await query(
-                `UPDATE supplies SET stock_quantity = stock_quantity - ? WHERE name = ?`,
+                `UPDATE supplies SET stock_quantity = stock_quantity - ? WHERE description = ?`,
                 [quantity, description]
             );
 
             if (updateSupplies.affectedRows === 0) {
-                await query('ROLLBACK');
+               
                 return res.status(400).json({ error: 'Failed to update supplies table or item not found' });
             }
 
@@ -57,6 +57,7 @@ export default async function handler(req, res) {
                 id: insertData.insertId,
                 quantity: quantity,
                 description: description,
+                item_name: item_name,
                 location: location,
                 name: name,
                 date_acquired: date_acquired,
@@ -64,7 +65,7 @@ export default async function handler(req, res) {
             res.status(200).json({ response: { message: 'success', results: delivered } });
         } catch (error) {
             console.error('Error adding delivered:', error);
-            await query('ROLLBACK');
+            
             res.status(500).json({ error: 'Internal Server Error' });
         }
     }

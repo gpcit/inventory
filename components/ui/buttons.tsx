@@ -2,6 +2,7 @@ import { PencilIcon, PlusIcon, TrashIcon, QrCodeIcon, EyeIcon,  } from '@heroico
 import { useState } from 'react';
 import { FaFileExport } from 'react-icons/fa';
 import Link from 'next/link';
+import { Undo2 } from 'lucide-react';
 
 interface CreateInventoryProps {
   onClick: () => void;
@@ -117,6 +118,20 @@ export function AddQTY({id, onClick}: PropsForID) {
       className="p-2 border rounded-md hover:bg-green-100"
     >
       <PlusIcon className="w-5" />
+      
+    </button>
+  );
+}
+
+export function ReturnUnit({id, onClick}: PropsForID) {
+  return (
+    <button
+      onClick={() => onClick(id)}
+      className="p-2 flex gap-1 border rounded-full hover:bg-green-100"
+    >
+      
+      <span className='text-[.8rem] font-bold'>RETURN</span>
+      <Undo2 className="w-5 h-5 text-blue-600" />
     </button>
   );
 }

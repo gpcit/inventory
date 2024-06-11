@@ -10,7 +10,7 @@ export default async function handler (req, res) {
         let pageTotal
 
             pageTotal = `SELECT COUNT(*) AS total FROM supplies`
-            getQuery = `SELECT * FROM supplies GROUP BY date_created desc LIMIT ? OFFSET ?`
+            getQuery = `SELECT * FROM supplies LIMIT ? OFFSET ?`
             values = [itemPerPage, (page - 1 ) * itemPerPage]
 
             const [supplies, totalCountRows] = await Promise.all([
