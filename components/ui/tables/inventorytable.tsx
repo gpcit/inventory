@@ -294,11 +294,11 @@ export default function GPCInventoryTable ({inventory_type, triggerValue, gettab
                       <td className="px-3 py-3 whitespace-nowrap">
                         <div className="flex items-center justify-center gap-3 edit-button">
                           <UpdateInventory id={inventory.id} onClick={openModal}/>
-                          <QRGeneratorButton
+                          {/* <QRGeneratorButton
                             id={inventory.id}
                             onClick={qrModal}
                             onSave={handleSave}
-                          />
+                          /> */}
                           <DeleteInventory id={inventory.id} onClick={openDeleteModal}/>
                         </div>
                       </td>

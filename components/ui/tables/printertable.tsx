@@ -8,6 +8,7 @@ import {tableName} from "@/lib/company";
 import { XCircleIcon, CheckCircleIcon } from "@heroicons/react/24/solid";
 import DeletePrinterModal from "../inventory/delete-data/DeletePrinterInventory";
 import ActivityLog from "./activity_log";
+import { usePathname } from "next/navigation";
 
 interface PrinterInventoryProps {
     getTableName: string,
@@ -26,6 +27,7 @@ const [totalPages, setTotalPages] = useState(1);
 const [currentPage, setCurrentPage] = useState(1);
 const [modalData, setModalData] = useState<any>(null)
 
+const pathname = usePathname()
 const getQuery = new URLSearchParams(window.location.search)
 const queryValue = getQuery.get('query')
 let company = tableName.find(company => company.name === getTableName)?.displayName || getTableName

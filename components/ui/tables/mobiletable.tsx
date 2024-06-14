@@ -4,13 +4,11 @@ import { MobileInventoryList } from "@/lib/definition"
 import { useEffect, useState } from "react"
 import { QRGeneratorButton, UpdateInventory, DeleteInventory } from "../../../components/ui/buttons";
 import CustomPagination from "@/components/Pagination";
-import BarcodeModal from "@/components/QRCodeModal";
-import BarcodeMobileModal from "@/components/QRCodeMobileModal";
 import {tableName} from "@/lib/company";
-import MobileEditModal from "@/components/ModalEditInventory";
 import DeleteMobileModal from "../inventory/delete-data/DeleteMobileInventory";
 import { XCircleIcon, CheckCircleIcon } from "@heroicons/react/24/solid";
 import ActivityLog from "./activity_log";
+import TransferModal from "@/components/TransferModal";
 
 interface MobileInventoryProps {
     getTableName: string,
@@ -367,7 +365,7 @@ const openDeleteModal = async (id: number) => {
               </tbody>
             </table>
                   {isQRModalOpen && (
-                    <BarcodeMobileModal modalData={modalData} company={company} tablename={getTableName} id={selectedId} onClose={closeModal} />
+                    <TransferModal triggerValue={triggerValue} onClose={closeModal} onSubmit={handleEditSubmit} id={selectedId} tablename={getTableName}/>
                   )}
                   {isModalOpen && (
       

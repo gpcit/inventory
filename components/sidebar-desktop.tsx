@@ -31,7 +31,7 @@ export function SidebarDesktop(props: SidebarDesktopProps) {
   };
 
   useEffect(() => {
-    if(pathname === '/supplies/supply' || pathname === '/supplies/switches-routers') {
+    if(pathname === '/supplies/supply' || pathname === '/supplies/switches-routers' || pathname === '/supplies/nas') {
       setIsOthersOpen(true)
     } else {
       setIsOthersOpen(false)

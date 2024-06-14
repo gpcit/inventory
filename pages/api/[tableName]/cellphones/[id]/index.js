@@ -3,7 +3,7 @@ import { query } from '@/lib/db';
 export default async function handler(req, res) {
     const tableName = req.query.tableName;
     const {id} = req.query
-    if (req.method === 'GET') {
+  if (req.method === 'GET') {
       try {
           if (id) { // If ID is provided, fetch specific data
               const data = `SELECT * FROM ${tableName} WHERE id = ?`;

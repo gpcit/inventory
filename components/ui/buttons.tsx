@@ -3,6 +3,9 @@ import { useState } from 'react';
 import { FaFileExport } from 'react-icons/fa';
 import Link from 'next/link';
 import { Undo2 } from 'lucide-react';
+import { usePathname } from 'next/navigation';
+import { ArrowRightLeft } from 'lucide-react';
+
 
 interface CreateInventoryProps {
   onClick: () => void;
@@ -16,8 +19,11 @@ interface ExportInventoryProps {
   table: string;
 }
 
+
+
 export function CreateInventory({ onClick}: CreateInventoryProps) {
   const [isHovered, setIsHovered] = useState(false);
+  const pathname = usePathname()
   return (
     <>
     <button
@@ -26,7 +32,7 @@ export function CreateInventory({ onClick}: CreateInventoryProps) {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <span className="hidden md:block text-white">Create New</span>{' '}
+      <span className="hidden md:block text-white">Create New {pathname.slice(1).toUpperCase()}</span>{' '}
       <PlusIcon className="h-5 md:ml-2 text-white" />
     </button>
     </>
@@ -68,7 +74,7 @@ export function QRGeneratorButton ({ id, onClick, onSave }:  {id: number, onClic
       onClick={() => onClick(id, handleSave)}
       className="p-2 border rounded-md hover:bg-gray-100"
     >
-      <QrCodeIcon className='w-5' />  
+      <ArrowRightLeft className='w-5' />  
     </button>
   )
 }
