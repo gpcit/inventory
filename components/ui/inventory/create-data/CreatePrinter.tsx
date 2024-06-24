@@ -95,6 +95,7 @@ export default function Form({triggerValue, tablename, onDataSubmitted }: FormPr
         company_name: getCompany,
         details: `"${formData.printer_name}" has been added to record - (${triggerValue})`,
         db_table: tablename,
+        inventory_type: 'printer',
         actions: "ADD"
         }),
       };

@@ -80,6 +80,7 @@ export default function Form({triggerValue, tablename, onDataSubmitted }: FormPr
         company_name: getCompany,
         details: `"${formData.name}" has been added to record - (${triggerValue})`,
         db_table: tablename,
+        inventory_type: 'account',
         actions: "ADD"
           // tableName: gettableName
         }),

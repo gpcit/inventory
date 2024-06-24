@@ -22,9 +22,9 @@ export default function Layout({ children }: {children: React.ReactNode}){
                 {/* <SidebarMotion /> */}
                 {/* <Sidebar  /> */}
                 
-                <div className='absolute top-0 right-5 z-50'>
+                {/* <div className='absolute top-0 right-5 z-50'>
                     <AnimatedTitle />
-                </div>
+                </div> */}
                 <div className={` ${lato.className}`}>
                     <SidebarToggle />
                 </div>

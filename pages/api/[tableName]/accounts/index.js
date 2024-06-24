@@ -39,7 +39,7 @@ export default async function handler (req, res) {
     } else if (req.method === 'POST') {
       try {
         
-        const { name, department, username, password, is_active_id, notes, user_id, user_name, company_name, details, db_table, actions } = req.body
+        const { name, department, username, password, is_active_id, notes, user_id, user_name, company_name, details, db_table, actions, inventory_type } = req.body
 
         if (!name || !username) {
           return res.status(400).json({ error: 'Missing required fields' });
@@ -57,8 +57,8 @@ export default async function handler (req, res) {
           message = 'failed';
         }
         
-        const addActivityLog = await query(`INSERT INTO activity_log (user_id, user_name, company_name, details, db_table, actions) VALUES (?, ?, ?, ?, ?, ?)`,
-        [user_id, user_name, company_name, details, tableName, actions]);
+        const addActivityLog = await query(`INSERT INTO activity_log (user_id, user_name, company_name, details, db_table, actions, inventory_type) VALUES (?, ?, ?, ?, ?, ?, ?)`,
+        [user_id, user_name, company_name, details, tableName, actions, inventory_type]);
 
         let inventory = {
           id: addInventory.insertId,

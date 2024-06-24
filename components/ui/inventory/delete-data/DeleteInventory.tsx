@@ -62,6 +62,7 @@ const DeleteInventoryModal: React.FC<ModalProps> = ({triggerValue, onClose, onSu
           company_name: getCompany,
           details: `Delete data of "${formData.name}" - (${triggerValue})`,
           db_table: tablename,
+          inventory_type: 'computer',
           actions: "DELETE"
         })
       }

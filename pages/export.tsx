@@ -5,6 +5,7 @@ import { lato } from "@/styles/font";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { ArrowPathIcon } from "@heroicons/react/24/outline";
+import { accountTables } from "@/lib/company";
 
 export default function Page() {
     const [getTable, setGetTable] = useState<string>("")
@@ -34,6 +35,10 @@ export default function Page() {
         return selectedBranch ? disabledBranches.includes(selectedBranch) : false
     }
 
+    const fileName = getTable.split('_')?.join(' ')
+
+    const sheetName = accountTables[getTable] || ''
+
     const clearSelection = () => {
         
         setIsLoading(true)
@@ -49,7 +54,13 @@ export default function Page() {
         if(getTable) {
             try {
                 
-                const response = await fetch(`/api/${getTable}/export`)
+                const response = await fetch(`/api/${getTable}/export`, {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ sheetName })
+                })
                 console.log("Result for Response: ", response)
                 
                 if (response.ok) {
@@ -62,7 +73,7 @@ export default function Page() {
                     // Create a temporary anchor element to trigger download
                     const a = document.createElement('a');
                     a.href = url;
-                    a.download = `${getTable}.xlsx`;
+                    a.download = `${fileName}.xlsx`;
                     document.body.appendChild(a);
                     a.click();
                     document.body.removeChild(a);

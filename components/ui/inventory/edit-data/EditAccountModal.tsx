@@ -102,6 +102,7 @@ const EditAccountModal: React.FC<ModalProps> = ({triggerValue, onClose, onSubmit
           company_name: getCompany,
           details: `Edit the details of "${formData.name}" - (${triggerValue})`,
           db_table: tablename,
+          inventory_type: 'account',
           actions: "EDIT"
         }),
       };

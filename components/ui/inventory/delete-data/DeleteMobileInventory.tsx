@@ -70,6 +70,7 @@ const DeleteMobileModal: React.FC<ModalProps> = ({triggerValue, onClose, onSubmi
           company_name: getCompany,
           details: `Delete data of "${formData.assigned_to}" - (${triggerValue})`,
           db_table: tablename,
+          inventory_type: 'mobile',
           actions: "DELETE"
         })
       }

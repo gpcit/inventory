@@ -40,7 +40,7 @@ export default async function handler(req, res) {
     }
   } else if (req.method === 'POST') {
     try {
-      const { pc_name, name, id, mac_address, ip_address, computer_type, specs, monitor, department, supplier, comment, anydesk, is_active_id, date_purchased, date_pullout, date_installed, user_id, user_name, company_name, details, db_table, actions } = req.body
+      const { pc_name, name, id, mac_address, ip_address, computer_type, specs, monitor, department, supplier, comment, anydesk, is_active_id, date_purchased, date_pullout, date_installed, user_id, user_name, company_name, details, db_table, actions, inventory_type } = req.body
       
       if (!pc_name || !mac_address) {
         return res.status(400).json({ error: 'Missing required fields' });
@@ -56,8 +56,8 @@ export default async function handler(req, res) {
       }
       
       // add data to activity log
-      const addActivityLog = await query(`INSERT INTO activity_log (user_id, user_name, company_name, details, db_table, actions) VALUES (?, ?, ?, ?, ?, ?)`,
-      [user_id, user_name, company_name, details, tableName, actions]);
+      const addActivityLog = await query(`INSERT INTO activity_log (user_id, user_name, company_name, details, db_table, actions, inventory_type) VALUES (?, ?, ?, ?, ?, ?, ?)`,
+      [user_id, user_name, company_name, details, tableName, actions, inventory_type]);
 
       let inventory = {
         id: addInventory.insertId,

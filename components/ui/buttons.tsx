@@ -32,7 +32,7 @@ export function CreateInventory({ onClick}: CreateInventoryProps) {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <span className="hidden md:block text-white">Create New {pathname.slice(1).toUpperCase()}</span>{' '}
+      <span className="hidden md:block text-white">Create New </span>{' '}
       <PlusIcon className="h-5 md:ml-2 text-white" />
     </button>
     </>

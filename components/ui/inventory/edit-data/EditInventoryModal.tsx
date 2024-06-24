@@ -112,6 +112,7 @@ const EditInventoryModal: React.FC<ModalProps> = ({triggerValue, onClose, onSubm
           user_id: userDetails.userId,
           user_name: userDetails.userName.toUpperCase(),
           company_name: getCompany,
+          inventory_type: 'computer',
           details: `Edit the details of "${formData.pc_name}" - (${triggerValue})`,
           db_table: tablename,
           actions: "EDIT"

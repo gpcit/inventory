@@ -4,7 +4,8 @@ import xlsx from 'xlsx';
 export default async function handler(req, res) {
   const tablename = req.query.tableName;
 
-  if (req.method === 'GET') {
+  if (req.method === 'POST') {
+    const { sheetName } = req.body
     try {
       // Fetch data from the database table
       const queryResult = await query(`SELECT * FROM ${tablename}`);
@@ -24,7 +25,7 @@ export default async function handler(req, res) {
       });
       
       // Extract column headers from the query result
-      const headers = Object.keys(transformedData[0]).filter((header) => header !== 'date_created');
+      const headers = Object.keys(transformedData[0]);
 
       // Extract rows from the query result
       const rows = transformedData.map((row) => Object.values(row));
@@ -34,7 +35,7 @@ export default async function handler(req, res) {
       const worksheet = xlsx.utils.aoa_to_sheet([headers, ...rows]);
       console.log("Result for worksheet: ", worksheet)
       // Add the worksheet to the workbook
-      xlsx.utils.book_append_sheet(workbook, worksheet, tablename);
+      xlsx.utils.book_append_sheet(workbook, worksheet, sheetName);
 
       // Generate a buffer containing the Excel file
       const excelBuffer = xlsx.write(workbook, { type: 'buffer' });

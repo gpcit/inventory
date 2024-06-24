@@ -38,7 +38,7 @@ export default async function handler (req, res) {
         }
     } else if (req.method === 'POST') {
       try {
-        const { assigned_to, department, brand, model_specs, imei, number, email_password, serial_number, inclusion, comment, date_issued, is_active_id, date_purchased, date_returned, user_id, user_name, company_name, details, db_table, actions} = req.body
+        const { assigned_to, department, brand, model_specs, imei, number, email_password, serial_number, inclusion, comment, date_issued, is_active_id, date_purchased, date_returned, user_id, user_name, company_name, details, db_table, actions, inventory_type} = req.body
         
         if (!serial_number || serial_number === ' ') {
           return res.status(400).json({ error: 'Type "N/A + Brand Name" if Serial number is not applicable' });
@@ -56,8 +56,8 @@ export default async function handler (req, res) {
           message = 'failed';
         }
 
-        const addActivityLog = await query(`INSERT INTO activity_log (user_id, user_name, company_name, details, db_table, actions) VALUES (?, ?, ?, ?, ?, ?)`,
-        [user_id, user_name, company_name, details, tableName, actions]);
+        const addActivityLog = await query(`INSERT INTO activity_log (user_id, user_name, company_name, details, db_table, actions, inventory_type) VALUES (?, ?, ?, ?, ?, ?, ?)`,
+        [user_id, user_name, company_name, details, tableName, actions, inventory_type]);
 
         let inventory = {
           id: addInventory.insertId,

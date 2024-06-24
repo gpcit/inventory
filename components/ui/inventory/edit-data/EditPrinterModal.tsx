@@ -14,8 +14,6 @@ interface ModalProps {
 
 
 const EditPrinterModal: React.FC<ModalProps> = ({triggerValue, onClose, onSubmit, tablename, id}) => {
-  const [getvalue, setGetValue] = useState('');
-  const [getstatus, setGetStatus] = useState('')
   const [formData, setFormData] = useState({
     printer_name: '',
     assigned_to: '',
@@ -77,13 +75,13 @@ const EditPrinterModal: React.FC<ModalProps> = ({triggerValue, onClose, onSubmit
         }
         const data = await res.json();
         const accountData = data.results[0];
-        setFormData(data.results[0])
+        setFormData(accountData)
       } catch(error) {
         console.error('Error fetching inventory item:', error)
       }
     }
     fetchAccountTable()
-  }, [tablename, id, getstatus])
+  }, [tablename, id])
 
   // this function to be called upon clicking the save button in edit modal and automaticall save in the database and show in the table
   
@@ -117,6 +115,7 @@ const EditPrinterModal: React.FC<ModalProps> = ({triggerValue, onClose, onSubmit
           company_name: getCompany,
           details: `Edit the details of "${formData.printer_name}" - (${triggerValue})`,
           db_table: tablename,
+          inventory_type: 'printer',
           actions: "EDIT"
         }),
       };
@@ -152,14 +151,6 @@ const EditPrinterModal: React.FC<ModalProps> = ({triggerValue, onClose, onSubmit
     }
   }
 
-  const statusChange = (value: string) => {
-    setGetValue(value)
-    if(value === '1') {
-      setGetStatus('1')
-    } else {
-      setGetStatus('2')
-    }
-  }
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       // console.log('Key pressed: ', event.key)

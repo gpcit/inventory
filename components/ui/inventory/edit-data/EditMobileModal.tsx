@@ -108,6 +108,7 @@ const EditMobileModal: React.FC<ModalProps> = ({triggerValue, onClose, onSubmit,
           company_name: getCompany,
           details: `Edit the details of "${formData.assigned_to}" - (${triggerValue})`,
           db_table: tablename,
+          inventory_type: 'mobile',
           actions: "EDIT"
         }),
       };

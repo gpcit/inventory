@@ -66,6 +66,7 @@ const DeletePrinterModal: React.FC<ModalProps> = ({triggerValue, onClose, onSubm
           company_name: getCompany,
           details: `Delete record printer "${formData.printer_name}" - (${triggerValue})`,
           db_table: tablename,
+          inventory_type: 'printer',
           actions: "DELETE"
         })
       }

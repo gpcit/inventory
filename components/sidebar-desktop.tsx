@@ -97,9 +97,9 @@ export function SidebarDesktop(props: SidebarDesktopProps) {
                 </Link>
               )
             ))}
-            <div className='mt-12 rounded focus:selection:border-white hover:border-y-2 border-green-500/50 hover:text-green-200 focus:ring-white w-full py-2'>
+            <div className={`mt-12 rounded focus:selection:border-white hover:border-y-2 border-green-500/50 hover:text-green-200 focus:ring-white w-full py-2 ${pathname === '/export' ? 'bg-green-700/50 border border-white' : ''}`}>
               <Link href={'/export'}>
-                <div className={`flex items-center gap-1 justify-start ml-3 ${lato.className}`}>
+                <div className={`flex items-center gap-1 justify-start ml-3 ${lato.className} `}>
                   <TbFileExport className='h-6 w-7' />
                   <span className='text-sm'>Export Data</span>
                 </div>

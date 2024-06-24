@@ -79,7 +79,7 @@ export default async function handler(req, res) {
 
     try {
       const {id} = req.query;
-      const {pc_name, name, ip_address, mac_address, computer_type, monitor, specs, department, anydesk, supplier, comment, date_purchased, date_installed, date_pullout, is_active_id, user_id, user_name, company_name, details, db_table, actions} = req.body
+      const {pc_name, name, ip_address, mac_address, computer_type, monitor, specs, department, anydesk, supplier, comment, date_purchased, date_installed, date_pullout, is_active_id, user_id, user_name, company_name, details, db_table, actions, inventory_type} = req.body
 
       if(!id || !pc_name || !mac_address){
         return res.status(400).json({ error: 'Missing required fields' })
@@ -95,8 +95,8 @@ export default async function handler(req, res) {
       }
     
       // add details to activity log when edit the data
-    const addActivityLog = await query(`INSERT INTO activity_log (user_id, user_name, company_name, details, db_table, actions) VALUES (?, ?, ?, ?, ?, ?)`,
-    [user_id, user_name, company_name, details, tableName, actions]);
+      const addActivityLog = await query(`INSERT INTO activity_log (user_id, user_name, company_name, details, db_table, actions, inventory_type) VALUES (?, ?, ?, ?, ?, ?, ?)`,
+      [user_id, user_name, company_name, details, tableName, actions, inventory_type]);
       
     } catch (error){
       console.error('Error updating inventory: ', error);
@@ -104,10 +104,10 @@ export default async function handler(req, res) {
     }
   } else if (req.method === 'DELETE') {
     try {
-      const {user_id, user_name, company_name, details, db_table, actions } = req.body
+      const {user_id, user_name, company_name, details, db_table, actions, inventory_type } = req.body
 
-      const addActivityLog = await query(`INSERT INTO activity_log (user_id, user_name, company_name, details, db_table, actions) VALUES (?, ?, ?, ?, ?, ?)`,
-        [user_id, user_name, company_name, details, tableName, actions]);
+      const addActivityLog = await query(`INSERT INTO activity_log (user_id, user_name, company_name, details, db_table, actions, inventory_type) VALUES (?, ?, ?, ?, ?, ?, ?)`,
+        [user_id, user_name, company_name, details, tableName, actions, inventory_type]);
 
       if (!id) {
         return res.status(400).json({ error: 'Unable to delete'})

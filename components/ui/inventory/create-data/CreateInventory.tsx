@@ -84,6 +84,7 @@ export default function Form({triggerValue, tablename, onDataSubmitted }: FormPr
           user_id: userDetails.userId,
           user_name: userDetails.userName.toUpperCase(),
           company_name: getCompany,
+          inventory_type: 'computer',
           details: `"${formData.pc_name}" has been added to record - (${triggerValue})`,
           db_table: tablename,
           actions: "ADD"

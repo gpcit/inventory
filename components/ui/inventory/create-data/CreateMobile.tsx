@@ -101,6 +101,7 @@ export default function Form({triggerValue, tablename, onDataSubmitted }: FormPr
         company_name: getCompany,
         details: `"${formData.assigned_to}" has been added to record - (${triggerValue})`,
         db_table: tablename,
+        inventory_type: 'mobile',
         actions: "ADD"
         }),
       };
