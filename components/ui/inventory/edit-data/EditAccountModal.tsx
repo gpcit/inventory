@@ -151,7 +151,7 @@ const EditAccountModal: React.FC<ModalProps> = ({triggerValue, onClose, onSubmit
     <div className="fixed inset-0 z-50 bg-black bg-opacity-25 backdrop-blur-sm flex justify-center items-center">
         <div className="relative w-[680px] ">
           <div className="relative grid grid-col md:w-[680px] w-auto bg-white rounded-lg shadow-lg outline-none focus:outline-none">
-          <div className="flex items-start justify-between p-5 border-b border-solid rounded-t border-blueGray-200">
+          <div className="flex items-start justify-between p-5 border-b border-solid rounded-t">
               
             <h3 className="text-xl font-semibold">Edit Account for {formData.name}</h3>
             <button

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import  {tableName}  from "../../../lib/company";
 import { lusitana } from "../../../styles/font";
 import  {Select, Option} from "@material-tailwind/react"
+import { usePathname } from "next/navigation";
 interface DropdownProps {
     onCompanyChange: (value: string) => void
 }
@@ -14,7 +15,7 @@ export default function Dropdown({onCompanyChange}: DropdownProps){
     onCompanyChange(values)
     // window.location.href = `/dashboard/inventory/${values}`;
    }
-   
+   const pathname = usePathname()
     return (
     <select 
     onChange={handleCompanyChange}
@@ -23,16 +24,12 @@ export default function Dropdown({onCompanyChange}: DropdownProps){
             <option className="rounded border text-black" value="">Select</option>
             {tableName.map(company => (
             <option className="font-extrabold text-sm" key={company.name} value={company.name}>{company.displayName}</option>
+            
             ))}
+            {pathname === '/inventory' ? ( <option className="font-extrabold text-sm" key="Baling Station" value="baling_inventory">BALING</option>) : null}
         
     </select>
              
-            // <Select value={value} labelId="selet-company" id="select-company" label="Select Company" onChange?={handleCompanyChange}>
-            //     <Option value="">Select</Option>
-            //     {tableName.map(company => (
-            //     <Option key={company.name} value="company.name">{company.displayName}</Option>
-            //      ))}
-            // </Select>
         
           
     )

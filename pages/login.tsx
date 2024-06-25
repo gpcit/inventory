@@ -31,7 +31,6 @@ export default function LoginPage() {
         event.preventDefault();
 
         const { username, password } = credentials;
-        const toastLogin = toast.loading(`Logging In. Please Wait...`, {duration: 1000})
         try {
             const result = await signIn('credentials', {
                 redirect: false,
@@ -42,19 +41,12 @@ export default function LoginPage() {
             console.log('Response:', result);
 
             if (result?.error) {
-              setTimeout(() => {
-                toast.error(result.error,{id: toastLogin});
-              }, 500)
-                
+                toast.error(result.error); 
             } else {
-                setTimeout(() => {
-                  toast.success('Successfully logged in', {id: toastLogin});
                   router.push('/dashboard')
-                }, 2000)
             }
         } catch (error) {
             console.error('Login error:', error);
-            toast.error('Login failed');
         }
     };
 

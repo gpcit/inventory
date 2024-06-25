@@ -30,11 +30,7 @@ export default function Page() {
     const gettable = tableName.find(table => table.name === tablename)?.accounts || tablename
 
         
-    const handleDropdown = (value: string) => {
-        const pageLoading = toast.loading(`Selecting company, Please wait...`, {duration: 3000})
-            setTimeout(() => {
-                toast.success(`Loading Successful`, {id: pageLoading})
-     
+    const handleDropdown = (value: string) => {     
             if(value === 'gpc_inventory') {
                 setBranch('Balintawak')
                 setTablename('gpc_printer')
@@ -59,7 +55,6 @@ export default function Page() {
             }
             setCompany(value)
             setValue(value)
-        }, 2000)
     }
     const openModal = () => {
         setIsModalOpen(true)
@@ -106,16 +101,9 @@ export default function Page() {
 
     const handleBranchChange = (value: string) => {
         const branchTableName = printerTableMap[value as keyof typeof printerTableMap] || value;
-        const companyChange = toast.loading(`Changing branch...`, {duration: 3000})
-        console.log("current table: ", branchTableName)
-        
-        setTimeout(() => {
-            toast.success('Changed successful!', {id: companyChange})
-            setTablename(branchTableName)
-            setBranch(value)
-            dataUploaderHandler()
-            
-        }, 2000)
+        setTablename(branchTableName)
+        setBranch(value)
+        dataUploaderHandler()
         console.log("Seleted printer table: ", tableName)
     }
     

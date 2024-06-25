@@ -33,46 +33,36 @@ export default function Page() {
     const title = "Accounts"
 
     const handleDropdown = (value: string) => {
-        const pageLoading = toast.loading(`Selecting company, Please wait...`, {duration: 3000})
-        setTimeout(() => {
-            toast.success(`Loading Successful`, {id: pageLoading})
-            if(value === 'gpc_inventory') {
-                setBranch('Balintawak')
-                setTablename('gpc_accounts')
-            } else if (value === 'lsi_inventory') {
-                setBranch('Valenzuela')
-                setTablename('lsi_accounts')
-            } else if (value === 'gkc_inventory') {
-                setTablename('gkc_accounts')
-            } else if (value === 'gsrc_inventory') {
-                setTablename('gsrc_accounts')
-            } else if (value === 'gcc_inventory') {
-                setTablename('gcc_accounts')
-            } else if (value === 'steniel_inventory') {
-                setTablename('steniel_accounts')
-            } else {
-                setBranch('')
-            }
-            if(name === '') {
-                setTriggerValue("active");
-            }
-            setCompany(value)
-            setValueX(value)
-        }, 2000)
-        
+        if(value === 'gpc_inventory') {
+            setBranch('Balintawak')
+            setTablename('gpc_accounts')
+        } else if (value === 'lsi_inventory') {
+            setBranch('Valenzuela')
+            setTablename('lsi_accounts')
+        } else if (value === 'gkc_inventory') {
+            setTablename('gkc_accounts')
+        } else if (value === 'gsrc_inventory') {
+            setTablename('gsrc_accounts')
+        } else if (value === 'gcc_inventory') {
+            setTablename('gcc_accounts')
+        } else if (value === 'steniel_inventory') {
+            setTablename('steniel_accounts')
+        } else {
+            setBranch('')
+        }
+        if(name === '') {
+            setTriggerValue("active");
+        }
+        setCompany(value)
+        setValueX(value)       
     }
     const openModal = () => {
         setIsModalOpen(true)
-        console.log("result for clicking add new data: " ,gettable ,branch)
     }
     const closeModal = () => {
         setIsModalOpen(false)
     }
     const handleFormSubmit = () => {
-        setActivityLogKey(prevKey => prevKey + 1);
-        closeModal()
-    }
-    const handleEditSubmit = () => {
         setActivityLogKey(prevKey => prevKey + 1);
         closeModal()
     }
@@ -97,15 +87,10 @@ export default function Page() {
     }, [gettable, tablename])
 
     const handleBranchChange = (value: string) => {
-        const branchTableName = accountTableMap[value as keyof typeof accountTableMap] || value;
-        const companyChange = toast.loading(`Changing branch...`, {duration: 3000})
-        
-        setTimeout(() => {
-            toast.success('Changed successful!', {id: companyChange})
+        const branchTableName = accountTableMap[value as keyof typeof accountTableMap] || value;     
             setTablename(branchTableName)
             setBranch(value)
             dataUploaderHandler()
-        }, 2000)
     }
 
     const handleTrigger = () =>{

@@ -32,15 +32,11 @@ const [dataUploaderHandler, setDataUploaderHandler] = useState<() => void>(() =>
     
     // function for changing company
     const handleDropdown = (value: string) => {
-        const pageLoading = toast.loading(`Selecting company, Please wait...`, {duration: 2500})
-        setTimeout(() => {
-        toast.success(`Loading Successful`, {id: pageLoading})
         if(name === '') {
             setTriggerValue("active");
         }
-            setTableName(value)
-            setValue(value)
-        }, 2000)
+        setTableName(value)
+        setValue(value)
     }
     
     // function for create modal
