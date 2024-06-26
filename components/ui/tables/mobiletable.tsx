@@ -8,7 +8,7 @@ import {tableName} from "@/lib/company";
 import DeleteMobileModal from "../inventory/delete-data/DeleteMobileInventory";
 import { XCircleIcon, CheckCircleIcon } from "@heroicons/react/24/solid";
 import ActivityLog from "./activity_log";
-import TransferModal from "@/components/TransferModal";
+import TransferMobileModal from "@/components/ui/inventory/transfer-data/TransferMobileModal";
 
 interface MobileInventoryProps {
     getTableName: string,
@@ -50,11 +50,11 @@ async function fetchMobile (trigger: string) {
     let data
     if(queryValue) {
       if(trigger === 'active') {
-        apiUrlEndpoint = `/api/${getTableName}/cellphones/?query=${queryValue}`
+        apiUrlEndpoint = `/api/${getTableName}/cellphone/?query=${queryValue}`
         response = await fetch(apiUrlEndpoint);
         data = await response.json();
       } else {
-        apiUrlEndpoint = `/api/${getTableName}/cellphones/inactive/?query=${queryValue}`
+        apiUrlEndpoint = `/api/${getTableName}/cellphone/inactive/?query=${queryValue}`
         response = await fetch(apiUrlEndpoint);
         data = await response.json();
       }
@@ -69,7 +69,7 @@ async function fetchMobile (trigger: string) {
       setCurrentPage(1);
       
     } else {
-        apiUrlEndpoint = trigger === 'active' ? `/api/${getTableName}/cellphones/?page=${currentPage}` : `/api/${getTableName}/cellphones/inactive/?page=${currentPage}`
+        apiUrlEndpoint = trigger === 'active' ? `/api/${getTableName}/cellphone/?page=${currentPage}` : `/api/${getTableName}/cellphone/inactive/?page=${currentPage}`
       }
       response = await fetch(apiUrlEndpoint)
       data = await response.json()
@@ -95,11 +95,11 @@ useEffect(() => {
     let get_serial
     if(queryValue) {
       if(triggerValue === 'active') {
-        apiUrlEndpoint = `/api/${getTableName}/cellphones/?query=${queryValue}`
+        apiUrlEndpoint = `/api/${getTableName}/cellphone/?query=${queryValue}`
         response = await fetch(apiUrlEndpoint);
         data = await response.json();
       } else {
-        apiUrlEndpoint = `/api/${getTableName}/cellphones/inactive/?query=${queryValue}`
+        apiUrlEndpoint = `/api/${getTableName}/cellphone/inactive/?query=${queryValue}`
         response = await fetch(apiUrlEndpoint);
         data = await response.json();
       }
@@ -112,12 +112,12 @@ useEffect(() => {
 
       } else {
         if (triggerValue === 'active') {
-          apiUrlEndpoint = `/api/${getTableName}/cellphones`;
+          apiUrlEndpoint = `/api/${getTableName}/cellphone`;
           response = await fetch(apiUrlEndpoint);
           data = await response.json()
           get_serial = data.data?.map((res: { serial_number: any; }) => res.serial_number)
         } else {
-          apiUrlEndpoint = `/api/${getTableName}/cellphones/inactive`
+          apiUrlEndpoint = `/api/${getTableName}/cellphone/inactive`
           response = await fetch(apiUrlEndpoint);
           data = await response.json();
           get_serial = data.data?.map((res: { serial_number: any; }) => res.serial_number)
@@ -187,11 +187,11 @@ const handlePageClick = async (selected: { selected: number }) => {
     let data;
     if (newPage > currentPage) {
       if(triggerValue === 'active') {
-        apiUrlEndpoint = `/api/${getTableName}/cellphones?page=${newPage}`;
+        apiUrlEndpoint = `/api/${getTableName}/cellphone?page=${newPage}`;
         response = await fetch(apiUrlEndpoint);
         data = await response.json()
       } else {
-        apiUrlEndpoint = `/api/${getTableName}/cellphones/inactive?page=${newPage}`;
+        apiUrlEndpoint = `/api/${getTableName}/cellphone/inactive?page=${newPage}`;
         response = await fetch(apiUrlEndpoint);
         data = await response.json()
       }
@@ -203,11 +203,11 @@ const handlePageClick = async (selected: { selected: number }) => {
         setTotalPages(data.totalPages)
     } else if (newPage < currentPage) {
       if (triggerValue === 'active') {
-        apiUrlEndpoint = `/api/${getTableName}/cellphones?page=${newPage}`;
+        apiUrlEndpoint = `/api/${getTableName}/cellphone?page=${newPage}`;
         response = await fetch(apiUrlEndpoint);
         data = await response.json()
       } else {
-        apiUrlEndpoint = `/api/${getTableName}/cellphones/inactive?page=${newPage}`;
+        apiUrlEndpoint = `/api/${getTableName}/cellphone/inactive?page=${newPage}`;
         response = await fetch(apiUrlEndpoint);
         data = await response.json()
       }
@@ -245,7 +245,7 @@ const qrModal = async (id: number) => {
 
   console.log("Generate QR Code Button, Getting id: ",selectedId)
   try {
-    const res = await fetch (`/api/${getTableName}/cellphones/${id}`)
+    const res = await fetch (`/api/${getTableName}/cellphone/${id}`)
     if(!res.ok){
       throw new Error (`Failed to fetch seleted Data`)
     }
@@ -264,7 +264,7 @@ const openModal = async (id: number) => {
   setSelectedId(id)
   setIsModalOpen(true)
   try {
-    const res = await fetch (`/api/${getTableName}/cellphones/${id}`)
+    const res = await fetch (`/api/${getTableName}/cellphone/${id}`)
     if(!res.ok){
       throw new Error (`Failed to fetch seleted Data`)
     }
@@ -280,7 +280,7 @@ const openDeleteModal = async (id: number) => {
   setIsDeleteModalOpen(true)
   console.log(selectedId)
   try {
-    const res = await fetch (`/api/${getTableName}/cellphones/${id}`)
+    const res = await fetch (`/api/${getTableName}/cellphone/${id}`)
     if(!res.ok){
       throw new Error (`Failed to fetch seleted Data`)
     }
@@ -346,7 +346,7 @@ const openDeleteModal = async (id: number) => {
                         {triggerValue === 'active' && inventory.date_issued}
                         {triggerValue === 'inactive' && inventory.date_returned}
                       </td>
-                      <td className="py-3 pl-6 whitespace-nowrap ">
+                      <td className="py-3 whitespace-nowrap ">
                         <div className="flex justify-center items-center gap-3">
                           <UpdateInventory id={inventory.id} onClick={openModal}/>
       
@@ -365,7 +365,7 @@ const openDeleteModal = async (id: number) => {
               </tbody>
             </table>
                   {isQRModalOpen && (
-                    <TransferModal triggerValue={triggerValue} onClose={closeModal} onSubmit={handleEditSubmit} id={selectedId} tablename={getTableName}/>
+                    <TransferMobileModal triggerValue={triggerValue} onClose={closeModal} onSubmit={handleEditSubmit} id={selectedId} tablename={getTableName}/>
                   )}
                   {isModalOpen && (
       

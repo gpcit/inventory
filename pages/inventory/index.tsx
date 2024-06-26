@@ -1,7 +1,7 @@
 "use client"
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import  {branchName, branchTableMap, tableName, tableNameMap} from "@/lib/company";
+import  {branchName, branchTableMap, tableName, tableInventoryMap} from "@/lib/company";
 import { lusitana } from "@/styles/font";
 import GPCInventoryTable from "@/components/ui/tables/inventorytable";
 import Dropdown from "@/components/ui/dropdowns/dropdown";
@@ -32,7 +32,7 @@ export default function Page({searchParams,}:{searchParams?: {search?: string}})
     const { data: session, status } = useSession();
     const router = useRouter();
     
-    let initial = tableNameMap[tblName] || ''
+    let initial = tableInventoryMap[tblName] || ''
     let name = tableName.find(companyName => companyName.name === company)?.displayName || ''
         
     let table = tableName.find(company => company.name === tblName)?.name || ''
@@ -113,7 +113,7 @@ export default function Page({searchParams,}:{searchParams?: {search?: string}})
      return (
         
         <Layout>
-            <div className={`p-2 border rounded shadow-2xl shadow-black relative ${name === '' ? 'h-screen' : 'h-full'} bg-gray-100`}>
+            <div className={`p-2 border rounded shadow-2xl shadow-black relative ${initial === '' ? 'h-screen' : 'h-full'} bg-gray-100`}>
                 <div className="p-5 border bg-white rounded">
                     <div className="grid grid-rows-1 self-end w-full">
                         <h1 className={`${lusitana.className} text-2xl`}> {initial} Inventory</h1>
@@ -142,7 +142,7 @@ export default function Page({searchParams,}:{searchParams?: {search?: string}})
                             </div>
                         </div>
                         <div className="mx-2">
-                            {name !=='' &&  <StatusToggle loading={false} onChange={handleTrigger} /> }
+                            {initial !=='' &&  <StatusToggle loading={false} onChange={handleTrigger} /> }
                         </div>
                     </div>
                 

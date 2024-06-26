@@ -29,7 +29,8 @@ const EditInventoryModal: React.FC<ModalProps> = ({triggerValue, onClose, onSubm
     supplier: '',
     is_active_id: '',
     date_purchased: '',
-    date_installed: ''
+    date_installed: '',
+    date_pullout: '',
   });
 
   const getCompany = accountTables[tablename] || ""
@@ -108,6 +109,7 @@ const EditInventoryModal: React.FC<ModalProps> = ({triggerValue, onClose, onSubm
           is_active_id: formData.is_active_id,
           date_purchased: formattedDate,
           date_installed: formData.date_installed,
+          date_pullout: formData.date_pullout,
           
           user_id: userDetails.userId,
           user_name: userDetails.userName.toUpperCase(),
@@ -140,6 +142,7 @@ const EditInventoryModal: React.FC<ModalProps> = ({triggerValue, onClose, onSubm
             is_active_id: '',
             date_purchased: '',
             date_installed: '',
+            date_pullout: '',
           });
         onSubmit();
         toast.success('Data has been successfully updated.', {id: editInventoryToast})
@@ -181,7 +184,7 @@ const EditInventoryModal: React.FC<ModalProps> = ({triggerValue, onClose, onSubm
           </div>
           <div className="flex-auto pt-2 px-2">
           <form onSubmit={updateInventory}>
-          <div className="p-4 rounded-md grid grid-cols-6 border-2 border-x-gray-400 shadow-2xl mx-2 gap-1 bg-gray-200">
+            <div className="p-4 rounded-md grid grid-cols-6 border-2 border-x-gray-400 shadow-2xl mx-2 gap-1 bg-gray-200">
         
               {/* Name */}
               <div className="mb-4 col-span-4">

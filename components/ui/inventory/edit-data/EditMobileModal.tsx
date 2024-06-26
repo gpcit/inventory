@@ -60,7 +60,7 @@ const EditMobileModal: React.FC<ModalProps> = ({triggerValue, onClose, onSubmit,
   useEffect(() => {
     async function fetchInventoryItem() {
       try {
-        const res = await fetch(`/api/${tablename}/${id}`);
+        const res = await fetch(`/api/${tablename}/cellphone/${id}`);
         if(!res.ok){
           throw new Error('Failed to fetch inventory item')
         }
@@ -112,7 +112,7 @@ const EditMobileModal: React.FC<ModalProps> = ({triggerValue, onClose, onSubmit,
           actions: "EDIT"
         }),
       };
-      const res = await fetch(`/api/${tablename}/cellphones/${id}`, putInventory);
+      const res = await fetch(`/api/${tablename}/cellphone/${id}`, putInventory);
       if(!res.ok){
         throw new Error('Failed to update inventory')
       }

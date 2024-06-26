@@ -12,6 +12,7 @@ import ViewModal from "@/components/ViewInventoryModal";
 import { XCircleIcon, CheckCircleIcon } from "@heroicons/react/24/solid";
 import DeleteInventoryModal from "../inventory/delete-data/DeleteInventory";
 import ActivityLog from "./activity_log";
+import TransferComputerModal from "../inventory/transfer-data/TransferComputerModal";
 
 interface GPCInventoryTableProps {
   gettableName: string;
@@ -294,11 +295,11 @@ export default function GPCInventoryTable ({inventory_type, triggerValue, gettab
                       <td className="px-3 py-3 whitespace-nowrap">
                         <div className="flex items-center justify-center gap-3 edit-button">
                           <UpdateInventory id={inventory.id} onClick={openModal}/>
-                          {/* <QRGeneratorButton
+                          <QRGeneratorButton
                             id={inventory.id}
                             onClick={qrModal}
                             onSave={handleSave}
-                          /> */}
+                          />
                           <DeleteInventory id={inventory.id} onClick={openDeleteModal}/>
                         </div>
                       </td>
@@ -316,8 +317,8 @@ export default function GPCInventoryTable ({inventory_type, triggerValue, gettab
                             <DeleteInventoryModal triggerValue={triggerValue} onSubmit={handleFormSubmit} onClose={closeModal} id={selectedId} tablename={gettableName}/>
               )}
               {isQRModalOpen && (
-                          <BarcodeModal modalData={modalData} tablename={gettableName} id={selectedId} onClose={closeQrModal} company={company}/>
-                        )}
+                    <TransferComputerModal triggerValue={triggerValue} onClose={closeModal} onSubmit={handleFormSubmit} id={selectedId} tablename={gettableName}/>
+                )}
             </div>
             {!queryvalue && totalPages > 0 &&
             <CustomPagination

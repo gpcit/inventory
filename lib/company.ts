@@ -8,14 +8,25 @@ export const tableName = [
         {name: 'steniel_inventory', accounts: 'steniel_accounts',company: 'Steniel.', table: 'steniel_mobile_inventory', displayName: "STENIEL"},   
     ]
 
-export const tableNameMap: { [key: string]: string } = {
-    gpc_inventory: 'GPC',
+export const tableInventoryMap: { [key: string]: string } = {
+    gpc_inventory: 'GPC-CCP',
+    gpc_sq_inventory: 'GPC-SQ',
     gkc_inventory: 'GKC',
-    lsi_inventory: 'LSI',
+    lsi_inventory: 'LSI-V',
+    lsi_can_inventory: 'LSI-C',
     gsrc_inventory: 'GSRC',
     gcc_inventory: 'GCC',
     steniel_inventory: 'STENIEL',
     baling_inventory: 'BALING'
+}
+
+export const tableMobileMap: { [key: string]: string } = {
+    gpc_mobile_inventory: 'GPC',
+    gkc_mobile_inventory: 'GKC',
+    lsi_mobile_inventory: 'LSI-V',
+    gsrc_mobile_inventory: 'GSRC',
+    gcc_mobile_inventory: 'GCC',
+    steniel_mobile_inventory: 'STENIEL',
 }
 
 export const allTables = [

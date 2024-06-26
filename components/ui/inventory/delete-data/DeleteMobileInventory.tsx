@@ -39,7 +39,7 @@ const DeleteMobileModal: React.FC<ModalProps> = ({triggerValue, onClose, onSubmi
   useEffect(() => {
     async function fetchMobileTable() {
       try {
-        const res = await fetch(`/api/${tablename}/${id}`);
+        const res = await fetch(`/api/${tablename}/cellphone/${id}`);
         if(!res.ok){
           throw new Error('Failed to fetch inventory item')
         }
@@ -74,7 +74,7 @@ const DeleteMobileModal: React.FC<ModalProps> = ({triggerValue, onClose, onSubmi
           actions: "DELETE"
         })
       }
-      const res = await fetch(`/api/${tablename}/cellphones/${id}`, deleteRequest)
+      const res = await fetch(`/api/${tablename}/cellphone/${id}`, deleteRequest)
 
       if(!res.ok) {
         throw new Error ('Failed to delete data')

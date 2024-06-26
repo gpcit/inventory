@@ -106,7 +106,7 @@ export default function Form({triggerValue, tablename, onDataSubmitted }: FormPr
         }),
       };
       // if(triggerValue === 'active') {
-        res = await fetch(`/api/${tablename}/cellphones`, postInventory);
+        res = await fetch(`/api/${tablename}/cellphone`, postInventory);
       // } else {
       //   res = await fetch(`/api/${tablename}/cellphones/inactive`, postInventory);
       // }

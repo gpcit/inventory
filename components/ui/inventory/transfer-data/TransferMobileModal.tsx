@@ -2,7 +2,8 @@ import { accountTables, status } from '@/lib/company';
 import { getSession } from 'next-auth/react';
 import React, { FormEvent, useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
-import TransferDropdown from './ui/dropdowns/transferDropdown';
+import TransferDropdown from '../../dropdowns/transferDropdown';
+import { usePathname } from 'next/navigation';
 
 interface ModalProps {
   onClose: () => void;
@@ -14,7 +15,7 @@ interface ModalProps {
 
 
 
-const TransferModal: React.FC<ModalProps> = ({triggerValue, onClose, onSubmit, tablename, id}) => {
+const TransferMobileModal: React.FC<ModalProps> = ({triggerValue, onClose, onSubmit, tablename, id}) => {
   const [formData, setFormData] = useState({
     assigned_to: '',
     department: '',
@@ -42,7 +43,7 @@ const TransferModal: React.FC<ModalProps> = ({triggerValue, onClose, onSubmit, t
     userId: 0,
     userName: ''
   })
- 
+  const pathname = usePathname();
   useEffect(() => {
     const fetchUserDetails = async () => {
       const session = await getSession();
@@ -65,7 +66,7 @@ const TransferModal: React.FC<ModalProps> = ({triggerValue, onClose, onSubmit, t
   useEffect(() => {
     async function fetchInventoryItem() {
       try {
-        const res = await fetch(`/api/${tablename}/cellphones/transfer/${id}`);
+        const res = await fetch(`/api/${tablename}${pathname}/transfer/${id}`);
         console.log("Result res:", res)
         if(!res.ok){
           throw new Error('Failed to fetch inventory item')
@@ -78,7 +79,7 @@ const TransferModal: React.FC<ModalProps> = ({triggerValue, onClose, onSubmit, t
       }
     }
     fetchInventoryItem()
-  }, [tablename, id])
+  }, [tablename, id, pathname])
   
   // this function to be called upon clicking the save button in edit modal and automaticall save in the database and show in the table
   
@@ -118,7 +119,7 @@ const TransferModal: React.FC<ModalProps> = ({triggerValue, onClose, onSubmit, t
           actions: "TRANSFER"
         }),
       };
-      const res = await fetch(`/api/${tablename}/cellphones/transfer`, addInventory);
+      const res = await fetch(`/api/${tablename}${pathname}/transfer`, addInventory);
       if(!res.ok){
         throw new Error('Failed to update inventory')
       }
@@ -407,7 +408,7 @@ const TransferModal: React.FC<ModalProps> = ({triggerValue, onClose, onSubmit, t
                     <label htmlFor="is_active_id" className="block mb-1 mx-2 w-full text-sm font-semibold">
                       Transfer To:
                     </label>
-                    <TransferDropdown onCompanyChange={handleDropdown} tablename={tablename} />
+                  <TransferDropdown onCompanyChange={handleDropdown} tablename={tablename} />
                   </div>
                   {/* Status */}
                   <div className="flex flex-row items-center">
@@ -447,5 +448,5 @@ const TransferModal: React.FC<ModalProps> = ({triggerValue, onClose, onSubmit, t
 
 };
 
-export default TransferModal
+export default TransferMobileModal
 ;

@@ -57,7 +57,7 @@ const [dataUploaderHandler, setDataUploaderHandler] = useState<() => void>(() =>
         const handleDataUploaded = async () => {
         try {
             let apiUrlEndpoint
-            apiUrlEndpoint = `/api/${getTable}/cellphones`
+            apiUrlEndpoint = `/api/${getTable}/cellphone`
             const response = await fetch(apiUrlEndpoint);
             const data = await response.json();
             setMobileInventory(data.results)
