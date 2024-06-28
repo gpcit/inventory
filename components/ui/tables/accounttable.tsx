@@ -127,13 +127,13 @@ const handlePageClick = async (selected: { selected: number }) => {
     const newPage = selected.selected + 1
     
     if (newPage > currentPage) {
-    const apiUrlEndpoint = `/api/${getTableName}/cellphones?page=${newPage}`;
+    const apiUrlEndpoint = `/api/${getTableName}/accounts?page=${newPage}`;
     const response = await fetch(apiUrlEndpoint);
     const data = await response.json()
     setAccountInventories(data.results)
     setTotalPages(data.totalPages)
     } else if (newPage < currentPage) {
-    const apiUrlEndpoint = `/api/${getTableName}/cellphones?page=${newPage}`;
+    const apiUrlEndpoint = `/api/${getTableName}/accounts?page=${newPage}`;
     const response = await fetch(apiUrlEndpoint);
     const data = await response.json()
     setAccountInventories(data.results)
