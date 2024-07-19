@@ -6,6 +6,7 @@ import { CreateInventory } from "@/components/ui/buttons";
 import NasTableInventory from "@/components/ui/tables/nastable";
 import Modal from "@/components/modal";
 import NasForm from "@/components/ui/inventory/create-data/CreateNas";
+import Head from "next/head";
 
 export default function Page () {
     const [isModalOpen, setIsModalOpen] = useState(false)
@@ -35,6 +36,11 @@ export default function Page () {
     }
     return (
         <Layout>
+            <Head>
+            <title>GPC | Nas</title>
+            <meta name="description" content="List of inventory for NAS" />
+            <meta name='viewport' content='width=device-width, initial-scale=1' />
+            </Head>
         <div className={`bg-white max-h-full `}>
             <div className="h-full" >
                 <div className="px-2 ">

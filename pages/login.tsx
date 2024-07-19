@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { signIn, useSession } from 'next-auth/react';
 import { lato } from '@/styles/font';
 import AnimatedName from '@/components/AnimatedName';
+import Head from 'next/head';
 
 
 export default function LoginPage() {
@@ -51,6 +52,13 @@ export default function LoginPage() {
     };
 
     return (
+        <>
+        <Head>
+            <title>GPC | Login</title>
+            <meta name="description" content="Simple Inventory APP using Next.js and TypeScript" />
+            <meta name='viewport' content='width=device-width, initial-scale=1' />
+            <link rel="icon" href="/logo/greenstone-logo.png" />
+        </Head>
         <div className={`flex justify-center items-center ${lato.className} h-screen bg-gradient-to-r from-green-600`}>
             <Toaster position="top-center" reverseOrder={false} />
             <div className='border shadow-lg rounded-lg bg-white shadow-black p-5 relative w-96'>
@@ -79,5 +87,6 @@ export default function LoginPage() {
             </div>
             <AnimatedName />
         </div>
+        </>
     );
 }

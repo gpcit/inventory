@@ -14,6 +14,7 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { User } from '@/lib/definition';
 import jwt, { JwtPayload} from 'jsonwebtoken';
+import Head from 'next/head';
 
 export default function Page() {
   const [user, setUser] = useState<User | null>(null);
@@ -77,6 +78,12 @@ export default function Page() {
   
   return (
     <Layout>
+      <>
+      <Head>
+            <title>GPC | Dashboard</title>
+            <meta name="description" content="Summary of the inventory" />
+            <meta name='viewport' content='width=device-width, initial-scale=1' />
+        </Head>
       <div className='p-1 border rounded shadow-2xl relative  h-full bg-white'>
         <div className="p-3 rounded-t-lg bg-[#74d1a4cc] mb-1">
           <h1 className={`${lato.className} text-xl md:text-xl text-black sm:text-left`}>Summary</h1>
@@ -164,6 +171,7 @@ export default function Page() {
             </>
             ) : !triggerValue }
       </div>
+      </>
     </Layout>
   );
 }

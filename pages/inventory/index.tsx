@@ -19,6 +19,7 @@ import toast from "react-hot-toast";
 import { duration } from "html2canvas/dist/types/css/property-descriptors/duration";
 import StatusToggle from "@/components/StatusToggle";
 import { useSession } from "next-auth/react";
+import Head from "next/head";
 
 export default function Page({searchParams,}:{searchParams?: {search?: string}}) {
     let search = searchParams?.search || ''
@@ -113,6 +114,11 @@ export default function Page({searchParams,}:{searchParams?: {search?: string}})
      return (
         
         <Layout>
+            <Head>
+            <title>GPC | Computers and Laptops</title>
+            <meta name="description" content="List of inventory for Computers and Laptops" />
+            <meta name='viewport' content='width=device-width, initial-scale=1' />
+            </Head>
             <div className={`p-2 border rounded shadow-2xl shadow-black relative ${initial === '' ? 'h-screen' : 'h-full'} bg-gray-100`}>
                 <div className="p-5 border bg-white rounded">
                     <div className="grid grid-rows-1 self-end w-full">

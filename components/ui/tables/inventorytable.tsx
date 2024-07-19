@@ -2,7 +2,7 @@
 'use client'
 import { ChangeEvent, useEffect, useState } from "react";
 import { InventoryList } from "@/lib/definition";
-import { DeleteInventory, QRGeneratorButton, UpdateInventory, ViewInventory } from "../buttons";
+import { DeleteInventory, TransferButton, UpdateInventory } from "../buttons";
 import  {tableName}  from "@/lib/company";
 import EditInventoryModal from "@/components/ui/inventory/edit-data/EditInventoryModal";
 import CustomPagination from "@/components/Pagination";
@@ -295,7 +295,7 @@ export default function GPCInventoryTable ({inventory_type, triggerValue, gettab
                       <td className="px-3 py-3 whitespace-nowrap">
                         <div className="flex items-center justify-center gap-3 edit-button">
                           <UpdateInventory id={inventory.id} onClick={openModal}/>
-                          <QRGeneratorButton
+                          <TransferButton
                             id={inventory.id}
                             onClick={qrModal}
                             onSave={handleSave}

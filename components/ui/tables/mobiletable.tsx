@@ -2,7 +2,7 @@
 import EditMobileModal from "@/components/ui/inventory/edit-data/EditMobileModal";
 import { MobileInventoryList } from "@/lib/definition"
 import { useEffect, useState } from "react"
-import { QRGeneratorButton, UpdateInventory, DeleteInventory } from "../../../components/ui/buttons";
+import { TransferButton, UpdateInventory, DeleteInventory, ExportData } from "../../../components/ui/buttons";
 import CustomPagination from "@/components/Pagination";
 import {tableName} from "@/lib/company";
 import DeleteMobileModal from "../inventory/delete-data/DeleteMobileInventory";
@@ -138,7 +138,6 @@ useEffect(() => {
   }
     fetchMobileInventory()
 }, [getTableName, onDataSubmitted, queryValue, triggerValue ])
-console.log("Result of mobileInventory: ", mobileInventory)
 // action button for edit
 const handleEditSubmit = async () => {
  
@@ -256,6 +255,42 @@ const qrModal = async (id: number) => {
   }
 }
 
+const exportData = async (id: number) => {
+   setSelectedId(id)
+
+    console.log(id)
+  try {
+    const res = await fetch (`/api/${getTableName}/cellphone/${id}/exportData`, {
+      method: "POST",
+      headers: {
+          'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({sheetName: 'text1'})
+    })
+    if(!res.ok){
+      throw new Error (`Failed to fetch seleted Data`)
+    }
+      const blob = await res.blob();
+    
+      // Create a temporary object URL for the blob
+      const url = window.URL.createObjectURL(blob);
+
+      // Create a temporary anchor element to trigger download
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${getTableName}.xlsx`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+
+      // Revoke the object URL to release browser resources
+      window.URL.revokeObjectURL(url);
+ 
+  } catch (error: any){
+    console.error('Error exporting data:', error.message);
+  }
+}
+
 const viewDetails = async (id: number) => {
   console.log(id)
 }
@@ -349,8 +384,8 @@ const openDeleteModal = async (id: number) => {
                       <td className="py-3 whitespace-nowrap ">
                         <div className="flex justify-center items-center gap-3">
                           <UpdateInventory id={inventory.id} onClick={openModal}/>
-      
-                          <QRGeneratorButton
+                          <ExportData id={inventory.id} onClick={exportData}/>
+                          <TransferButton
                             id={inventory.id}
                             onClick={qrModal}
                             onSave={handleSave}

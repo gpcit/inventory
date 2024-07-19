@@ -1,4 +1,4 @@
-import { PencilIcon, PlusIcon, TrashIcon, QrCodeIcon, EyeIcon,  } from '@heroicons/react/24/outline';
+import { PencilIcon, PlusIcon, TrashIcon, QrCodeIcon, EyeIcon, ArrowUpTrayIcon  } from '@heroicons/react/24/outline';
 import { useState } from 'react';
 import { FaFileExport } from 'react-icons/fa';
 import Link from 'next/link';
@@ -53,18 +53,23 @@ export function CreateInventory({ onClick}: CreateInventoryProps) {
 //   );
 // }
 
-export function ViewInventory({ id, onClick }: PropsForID) {
+export function ExportData({ id, onClick }: PropsForID) {
+  const [isHovered, setIsHovered] = useState(false);
   return (
     <button
       onClick={() => onClick(id)}
-      className="p-2 border rounded-md hover:bg-gray-100"
+      className={`p-2 border rounded-md hover:bg-gray-100 relative`}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
-      <EyeIcon className="w-5" />
+      <ArrowUpTrayIcon className="w-5" />
+      <div className={`${isHovered ? 'flex' : 'hidden'} text-green-700 flex-col justify-center items-center absolute -top-4 -right-1 text-xs z-50 font-bold`}>Export Data</div>
     </button>
   );
 }
 
-export function QRGeneratorButton ({ id, onClick, onSave }:  {id: number, onClick: (id: number, onSave: () => void) => void, onSave: () => void}) {
+export function TransferButton ({ id, onClick, onSave }:  {id: number, onClick: (id: number, onSave: () => void) => void, onSave: () => void}) {
+  const [isHovered, setIsHovered] = useState(false)
   const handleSave = () => {
     onSave()
   }
@@ -72,31 +77,42 @@ export function QRGeneratorButton ({ id, onClick, onSave }:  {id: number, onClic
   return (
     <button 
       onClick={() => onClick(id, handleSave)}
-      className="p-2 border rounded-md hover:bg-gray-100"
+      className="p-2 border rounded-md hover:bg-gray-100 relative"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
-      <ArrowRightLeft className='w-5' />  
+      <ArrowRightLeft className='w-5' /> 
+      <div className={`${isHovered ? 'flex' : 'hidden'} text-green-700 flex-col justify-center items-center absolute -top-4 -right-1 text-xs z-50 font-bold`}>Transfer Data</div>
     </button>
   )
 }
 
 export function UpdateInventory({ id, onClick }: PropsForID) {
+  const [isHovered, setIsHovered] = useState(false);
   return (
     <button
       onClick={() => onClick(id)}
-      className="p-2 border rounded-md hover:bg-gray-100"
+      className="p-2 border rounded-md hover:bg-gray-100 relative"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
       <PencilIcon className="w-5" />
+      <div className={`${isHovered ? 'flex' : 'hidden'} text-green-700 flex-col justify-center items-center absolute -top-4 -right-1 text-xs z-50 font-bold`}>Edit Data</div>
     </button>
   );
 }
 
 export function DeleteInventory({ id, onClick }: PropsForID) {
+  const [isHovered, setIsHovered] = useState(false);
   return (
     <button
       onClick={() => onClick(id)}
-      className="p-2 border rounded-md hover:bg-gray-100"
+      className="p-2 border rounded-md hover:bg-gray-100 relative"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
       <TrashIcon className="w-5" />
+      <div className={`${isHovered ? 'flex' : 'hidden'} text-green-700 flex-col justify-center items-center absolute -top-4 -right-1 text-xs z-50 font-bold`}>Delete Data</div>
     </button>
   );
 }

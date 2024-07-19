@@ -15,6 +15,7 @@ import GetBranch from "@/components/ui/dropdowns/select-company";
 import toast from "react-hot-toast";
 import StatusToggle from "@/components/StatusToggle";
 import ActivityLog from "@/components/ui/tables/activity_log";
+import Head from "next/head";
 
 export default function Page() {
     const [valueX, setValueX] = useState<string>("")
@@ -103,6 +104,11 @@ export default function Page() {
 
     return (
         <Layout>
+            <Head>
+            <title>GPC | Accounts</title>
+            <meta name="description" content="List of inventory for User Credentials" />
+            <meta name='viewport' content='width=device-width, initial-scale=1' />
+            </Head>
             <div className={`p-2 border rounded shadow-2xl shadow-black relative ${name === '' ? 'h-screen' : 'h-full'} bg-gray-100`}>
                 <div className="border rounded p-5 bg-white">
                     <div className="grid grid-rows-1 self-end w-full">

@@ -8,11 +8,17 @@ import { lato } from "@/styles/font";
 import { Toaster } from 'react-hot-toast'
 import AnimatedTitle from "@/components/AnimatedTitle";
 import LoggedUser from "@/components/LoggedUser";
+import Head from "next/head";
+
 
 export default function Layout({ children }: {children: React.ReactNode}){
     return (
         <>
         <ProtectedRoute>
+        <Head>
+            
+            <link rel="icon" href="/logo/greenstone-logo.png" />
+        </Head>
             {/* <ThemeToggle /> */}
         
         {/* <div className="flex flex-row h-full md:flex-row md:overflow-hidden p-1"> */}

@@ -174,11 +174,11 @@ const closeModal = () => {
   setSelectedId(null)
 }
     return (  
-    <div className=" grid grid-rows-5">
-      <div className="overflow-x-auto sm:p-2 row-span-3">
+    <div className="gap-2">
+      <div className="overflow-x-auto sm:p-2">
         <div className="inline-block min-w-full align-middle">
-          <div className="p-2 rounded  md:pt-0">
-            <table className="min-w-full   md:table">
+          <div className="p-2 rounded-lg md:pt-0">
+            <table className="min-w-full md:table">
               <thead className="text-sm text-left bg-gradient-to-r  from-green-600 text-black border rounded-lg border-black">
                 <tr>
                   {tables.header.map((headerItem, index) => (

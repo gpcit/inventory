@@ -72,11 +72,11 @@ export function SidebarDesktop(props: SidebarDesktopProps) {
                           <SidebarButton className={` w-full focus:ring-2 hover:underline hover:text-green-200 ${pathname === '/supplies/supply' ? 'border border-green-600 ' : ''}`} icon={Container}>I.T Supply</SidebarButton>
                         </Link>
                       </div>
-                      <div className='ml-4'>
+                      {/* <div className='ml-4'>
                         <Link href='/supplies/switches-routers'>
                           <SidebarButton className={`w-full focus:ring-2 hover:underline hover:text-green-200 ${pathname === '/supplies/switches-routers' ? 'border border-green-600 ' : ''}`} icon={Router}>Switches | Routers</SidebarButton>
                         </Link>
-                      </div>
+                      </div> */}
                       <div className='ml-4'>
                         <Link href='/supplies/nas'>
                           <SidebarButton className={`w-full focus:ring-2 hover:underline hover:text-green-200 ${pathname === '/supplies/nas' ? 'border border-green-600 ' : ''}`} icon={Server}>NAS</SidebarButton>

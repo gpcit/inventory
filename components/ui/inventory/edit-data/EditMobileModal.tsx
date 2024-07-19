@@ -87,21 +87,21 @@ const EditMobileModal: React.FC<ModalProps> = ({triggerValue, onClose, onSubmit,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          assigned_to: formData.assigned_to,
-          department: formData.department,
-          brand: formData.brand,
-          model_specs: formData.model_specs,
-          imei: formData.imei,
-          number: formData.number,
-          email_password: formData.email_password,
-          serial_number: formData.serial_number,
-          inclusion: formData.inclusion,
-          plan: formData.plan,
-          comment: formData.comment,
-          date_issued: formData.date_issued,
-          date_purchased: formData.date_purchased,
-          date_returned: formData.date_returned,
-          is_active_id: formData.is_active_id,
+          assigned_to: formData?.assigned_to,
+          department: formData?.department,
+          brand: formData?.brand,
+          model_specs: formData?.model_specs,
+          imei: formData?.imei,
+          number: formData?.number,
+          email_password: formData?.email_password,
+          serial_number: formData?.serial_number,
+          inclusion: formData?.inclusion,
+          plan: formData?.plan,
+          comment: formData?.comment,
+          date_issued: formData?.date_issued,
+          date_purchased: formData?.date_purchased,
+          date_returned: formData?.date_returned,
+          is_active_id: formData?.is_active_id,
           
           user_id: userDetails.userId,
           user_name: userDetails.userName.toUpperCase(),
@@ -269,7 +269,7 @@ const EditMobileModal: React.FC<ModalProps> = ({triggerValue, onClose, onSubmit,
                   <textarea
                     id="email_password"
                     name="email_password"
-                    value={formData.email_password}
+                    value={formData?.email_password}
                     onChange={handleChange}
                     className="block w-full px-3 py-2 text-sm border border-gray-200 rounded-md focus:outline-none focus:border-black shadow-md"
                     placeholder="Enter Email and Password"
@@ -283,7 +283,7 @@ const EditMobileModal: React.FC<ModalProps> = ({triggerValue, onClose, onSubmit,
                   <textarea
                     id="plan"
                     name="plan"
-                    value={formData.plan}
+                    value={formData?.plan}
                     onChange={handleChange}
                     className="block w-full px-3 py-2 text-sm border border-gray-200 rounded-md focus:outline-none focus:border-black shadow-md"
                     placeholder="Enter Plan"
@@ -297,7 +297,7 @@ const EditMobileModal: React.FC<ModalProps> = ({triggerValue, onClose, onSubmit,
                   <textarea
                     id="imei"
                     name="imei"
-                    value={formData.imei}
+                    value={formData?.imei}
                     onChange={handleChange}
                     className="block w-full px-3 py-2 text-sm border border-gray-200 rounded-md focus:outline-none focus:border-black shadow-md"
                     placeholder="Enter IMEI"
@@ -312,7 +312,7 @@ const EditMobileModal: React.FC<ModalProps> = ({triggerValue, onClose, onSubmit,
                   <textarea
                     id="inclusion"
                     name="inclusion"
-                    value={formData.inclusion}
+                    value={formData?.inclusion}
                     onChange={handleChange}
                     className="block w-full px-3 py-2 text-sm border border-gray-200 rounded-md focus:outline-none focus:border-black shadow-md"
                     placeholder="Enter Inclusion"
@@ -326,7 +326,7 @@ const EditMobileModal: React.FC<ModalProps> = ({triggerValue, onClose, onSubmit,
                   <textarea
                     id="model_specs"
                     name="model_specs"
-                    value={formData.model_specs}
+                    value={formData?.model_specs}
                     onChange={handleChange}
                     className="block w-full px-3 py-2 text-sm border border-gray-200 rounded-md focus:outline-none focus:border-black shadow-md"
                     placeholder="Enter Model / Specs"
@@ -340,7 +340,7 @@ const EditMobileModal: React.FC<ModalProps> = ({triggerValue, onClose, onSubmit,
                   <textarea
                     id="comment"
                     name="comment"
-                    value={formData.comment}
+                    value={formData?.comment}
                     onChange={handleChange}
                     className="block w-full px-3 py-2 text-sm border border-gray-200 rounded-md focus:outline-none focus:border-black shadow-md"
                     placeholder="Enter Comment"
@@ -418,7 +418,6 @@ const EditMobileModal: React.FC<ModalProps> = ({triggerValue, onClose, onSubmit,
                   Save
                 </button>
               </div>
-              
             </form>
             </div>
           </div>

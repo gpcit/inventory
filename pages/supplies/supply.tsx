@@ -7,6 +7,7 @@ import Modal from "@/components/modal";
 import Form from "@/components/ui/inventory/create-data/CreateSupply";
 import DeliverForm from "@/components/ui/inventory/create-data/CreateDeliver";
 import { setActive } from "@material-tailwind/react/components/Tabs/TabsContext";
+import Head from "next/head";
 
 export default function Page() {
     const [isModalOpen, setIsModalOpen] = useState(false)
@@ -26,6 +27,11 @@ export default function Page() {
     }
    return (
     <Layout>
+        <Head>
+            <title>GPC | Supply</title>
+            <meta name="description" content="List of inventory for Supplies" />
+            <meta name='viewport' content='width=device-width, initial-scale=1' />
+        </Head>
         <div className={`bg-white max-h-full `}>
             <div className="h-full" >
                 <div className="px-2 ">

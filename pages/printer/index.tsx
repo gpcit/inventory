@@ -14,6 +14,7 @@ import Form from "@/components/ui/inventory/create-data/CreatePrinter";
 import GetBranch from "@/components/ui/dropdowns/select-company";
 import toast from "react-hot-toast";
 import StatusToggle from "@/components/StatusToggle";
+import Head from "next/head";
 
 export default function Page() {
     const [value, setValue] = useState<string>("")
@@ -117,6 +118,11 @@ export default function Page() {
 
     return (
         <Layout>
+            <Head>
+            <title>GPC | Printer</title>
+            <meta name="description" content="List of inventory for Printers" />
+            <meta name='viewport' content='width=device-width, initial-scale=1' />
+            </Head>
             <div className={`p-2 border rounded shadow-2xl shadow-black relative ${name === '' ? 'h-screen' : 'h-full'} bg-gray-100`}>
                 <div className="p-5 border bg-white rounded">
                     <div className="grid grid-rows-1 self-end w-full">
