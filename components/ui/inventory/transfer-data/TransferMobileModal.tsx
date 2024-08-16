@@ -38,7 +38,7 @@ const TransferMobileModal: React.FC<ModalProps> = ({triggerValue, onClose, onSub
 
   const fromCompany = accountTables[tablename] || ""
   const toCompany = accountTables[value] || ""
-
+  console.log(tablename)
   const [userDetails, setUserDetails] = useState({
     userId: 0,
     userName: ''
@@ -408,7 +408,7 @@ const TransferMobileModal: React.FC<ModalProps> = ({triggerValue, onClose, onSub
                     <label htmlFor="is_active_id" className="block mb-1 mx-2 w-full text-sm font-semibold">
                       Transfer To:
                     </label>
-                  <TransferDropdown onCompanyChange={handleDropdown} tablename={tablename} />
+                  <TransferDropdown onCompanyChange={handleDropdown} tablename={fromCompany} />
                   </div>
                   {/* Status */}
                   <div className="flex flex-row items-center">

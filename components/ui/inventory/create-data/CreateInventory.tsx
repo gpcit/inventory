@@ -139,10 +139,10 @@ export default function Form({triggerValue, tablename, onDataSubmitted }: FormPr
   return (
     <form onSubmit={addInventory}>
       <div className="p-4 rounded-md grid grid-cols-6 border-2 border-x-gray-400 shadow-2xl mx-2 gap-1 bg-gray-200">
-        {/* Name */}
+        {/* Person In-charge */}
         <div className="mb-4 col-span-4">
           <label htmlFor="name" className="block mb-2 text-sm font-medium">
-            Name:
+            Person-In-Charge:
           </label>
           <input
             type="text"
@@ -151,7 +151,7 @@ export default function Form({triggerValue, tablename, onDataSubmitted }: FormPr
             value={formData.name}
             onChange={handleChange}
             className="block w-full px-3 py-2 text-sm border border-gray-600/35 rounded-md focus:outline-none focus:border-gray-400 shadow-md"
-            placeholder="Enter Name"
+            placeholder="Enter Person In-charge"
             required
           />
         </div>
@@ -309,7 +309,7 @@ export default function Form({triggerValue, tablename, onDataSubmitted }: FormPr
         {/* Date Purchased */}
         <div className="mb-4 col-span-3">
           <label htmlFor="date_purchased" className="block mb-2 text-sm font-medium">
-            Date Purchased:
+            Invoice Date:
           </label>
           <input
             type="date"

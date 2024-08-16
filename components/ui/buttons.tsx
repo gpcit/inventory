@@ -63,7 +63,7 @@ export function ExportData({ id, onClick }: PropsForID) {
       onMouseLeave={() => setIsHovered(false)}
     >
       <ArrowUpTrayIcon className="w-5" />
-      <div className={`${isHovered ? 'flex' : 'hidden'} text-green-700 flex-col justify-center items-center absolute -top-4 -right-1 text-xs z-50 font-bold`}>Export Data</div>
+      <div className={`${isHovered ? 'flex' : 'hidden'} text-green-700 flex-col justify-center items-center absolute -top-4 -right-1 text-xs z-50 font-bold transition ease-in duration-1000`}>Export Data</div>
     </button>
   );
 }

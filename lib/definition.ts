@@ -165,3 +165,14 @@ export interface NasInventory {
     date_installed: string;
     status?: boolean;
 }
+
+export interface AssetInventory {
+    id: number;
+    person_in_charge: string;
+    asset_type: string;
+    amount: string;
+    supplier: string;
+    po_number: number | string;
+    invoice_date: string;
+    delivery_date: string
+}

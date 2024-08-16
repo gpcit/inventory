@@ -38,7 +38,7 @@ export default async function handler (req, res) {
         }
     } else if (req.method === 'POST') {
       try {
-        const { assigned_to, department, brand, model_specs, imei, number, email_password, serial_number, inclusion, comment, date_issued, is_active_id, date_purchased, date_returned, user_id, user_name, company_name, details, db_table, actions, inventory_type} = req.body
+        const { assigned_to, department, brand, model_specs, imei, number, email_password, serial_number, inclusion, comment, date_issued, is_active_id, date_purchased, date_returned, user_id, user_name, company_name, details, db_table, plan, actions, inventory_type} = req.body
         
         if (!serial_number || serial_number === ' ') {
           return res.status(400).json({ error: 'Type "N/A + Brand Name" if Serial number is not applicable' });
@@ -48,7 +48,7 @@ export default async function handler (req, res) {
         if(duplicateCheck.length > 0){
           return res.status(400).json({ error: `Serial Number belongs to ${seperate} Department`})
         }
-        const addInventory = await query(`INSERT INTO ${tableName} (assigned_to, department, brand, model_specs, serial_number, imei, number, email_password, inclusion, comment, date_issued, date_purchased, is_active_id, date_returned) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, [assigned_to, department, brand, model_specs, serial_number, imei, number, email_password, inclusion, comment, date_issued, date_purchased, is_active_id, date_returned],);
+        const addInventory = await query(`INSERT INTO ${tableName} (assigned_to, department, brand, model_specs, serial_number, imei, number, email_password, plan, inclusion, comment, date_issued, date_purchased, is_active_id, date_returned) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, [assigned_to, department, brand, model_specs, serial_number, imei, number, email_password, plan, inclusion, comment, date_issued, date_purchased, is_active_id, date_returned],);
         let message;
         if (addInventory.insertId) {
           message = 'success';

@@ -348,7 +348,7 @@ const EditMobileModal: React.FC<ModalProps> = ({triggerValue, onClose, onSubmit,
                 </div>
                 {/* Date Issued */}
                 {triggerValue === 'active' ? ( 
-                  <div className="mb-2 col-span-3">
+                <div className="mb-2 col-span-3">
                   <label htmlFor="date_issued" className="block mb-2 text-sm font-medium">
                     Date Issued
                   </label>
@@ -362,7 +362,22 @@ const EditMobileModal: React.FC<ModalProps> = ({triggerValue, onClose, onSubmit,
                   />
                 </div>
                 ) : (
-                <div className="mb-2 col-span-3">
+                <>
+                <div className="mb-2 col-span-2">
+                  <label htmlFor="date_issued" className="block mb-2 text-sm font-medium">
+                    Date Issued
+                  </label>
+                  <input
+                    type="date"
+                    id="date_issued"
+                    name="date_issued"
+                    value={formData.date_issued}
+                    onChange={handleChange}
+                    disabled
+                    className="block w-full px-3 py-2 text-sm border border-gray-400 rounded-md focus:outline-none focus:border-black shadow-md"
+                  />
+                </div>
+                <div className="mb-2 col-span-2">
                   <label htmlFor="date_returned" className="block mb-2 text-sm font-medium">
                     Date Returned
                   </label>
@@ -375,10 +390,11 @@ const EditMobileModal: React.FC<ModalProps> = ({triggerValue, onClose, onSubmit,
                     className="block w-full px-3 py-2 text-sm border border-gray-200 rounded-md focus:outline-none focus:border-black shadow-md"
                   />
                 </div>
+                </>
                 )}
                 
                 {/* Date Issued */}
-                <div className="mb-2 col-span-3">
+                <div className={`${triggerValue === 'active' ? 'col-span-3' : 'col-span-2'} mb-2 col-span-2`}>
                   <label htmlFor="date_purchased" className="block mb-2 text-sm font-medium">
                     Date Purchased
                   </label>

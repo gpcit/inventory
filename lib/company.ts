@@ -23,7 +23,7 @@ export const tableInventoryMap: { [key: string]: string } = {
 export const tableMobileMap: { [key: string]: string } = {
     gpc_mobile_inventory: 'GPC',
     gkc_mobile_inventory: 'GKC',
-    lsi_mobile_inventory: 'LSI-V',
+    lsi_mobile_inventory: 'LSI',
     gsrc_mobile_inventory: 'GSRC',
     gcc_mobile_inventory: 'GCC',
     steniel_mobile_inventory: 'STENIEL',

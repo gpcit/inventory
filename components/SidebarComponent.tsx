@@ -2,11 +2,15 @@ import {
   Laptop,
   Smartphone,
   Home,
+  Building2,
   Server,
+  ListTree,
   Printer,
   List,
   UserRoundCheck
 } from 'lucide-react';
+
+import BusinesIcon from '@mui/icons-material/Business'
 import { SidebarDesktop } from './sidebar-desktop';
 import { SidebarItems } from '@/types';
 import { SidebarButton } from './sidebar-button';
@@ -16,6 +20,8 @@ import { SidebarMobile } from './sidebar-mobile';
 const sidebarItems: SidebarItems = {
   links: [
     { label: 'Home', href: '/dashboard', icon: Home },
+    { label: 'IT Equipment', href: '/it-equipment', icon: ListTree },
+    { label: 'Company Assets', href: '/company-asset', icon: Building2 },
     { label: 'CPU / Laptop', href: '/inventory', icon: Laptop },
     { label: 'Printer', href: '/printer', icon: Printer },
     { label: 'Cellphone', href: '/cellphone', icon: Smartphone },

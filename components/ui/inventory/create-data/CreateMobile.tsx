@@ -242,8 +242,8 @@ export default function Form({triggerValue, tablename, onDataSubmitted }: FormPr
           <label htmlFor="email_password" className="block mb-2 text-sm font-semibold">
             Email and Password
           </label>
-          <input
-            type="text"
+          <textarea
+            rows={1}
             id="email_password"
             name="email_password"
             value={formData.email_password}
